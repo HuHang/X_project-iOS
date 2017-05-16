@@ -1,0 +1,16 @@
+platform :ios, '8.0'
+
+target 'CarGPS' do
+pod 'AFNetworking', '~> 3.0'
+pod 'Masonry', '~> 1.0.2'
+pod 'MBProgressHUD', '~> 1.0.0'
+pod 'IQKeyboardManager', '~> 4.0.8'
+pod 'MJRefresh', '~> 3.1.12'
+pod 'LTNavigationBar', '~> 2.1.9'
+pod 'MJExtension', '~> 3.0.13'
+pod "RATreeView", "~> 2.1.2"
+pod 'DZNEmptyDataSet', '~> 1.8.1'
+pod 'RKNotificationHub', '~> 2.0.4'
+pod 'SDWebImage', '~> 4.0.0'
+pod 'iOS-Echarts', '~> 1.4.3'
+end

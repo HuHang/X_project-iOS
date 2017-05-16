@@ -1,0 +1,142 @@
+//
+//  PrefixHeader.pch
+//  CarGPS
+//
+//  Created by Charlot on 2017/3/22.
+//  Copyright © 2017年 Charlot. All rights reserved.
+//
+
+/*
+ *
+ *                             _ooOoo_
+ *                            o8888888o
+ *                            88" . "88
+ *                            (| -_- |)
+ *                            O\  =  /O
+ *                         ____/`---'\____
+ *                       .'  \\|     |//  `.
+ *                      /  \\|||  :  |||//  \
+ *                     /  _||||| -:- |||||-  \
+ *                     |   | \\\  -  /// |   |
+ *                     | \_|  ''\---/''  |   |
+ *                     \  .-\__  `-`  ___/-. /
+ *                   ___`. .'  /--.--\  `. . __
+ *                ."" '<  `.___\_<|>_/___.'  >'"".
+ *               | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+ *               \  \ `-.   \_ __\ /__ _/   .-` /  /
+ *          ======`-.____`-.___\_____/___.-`____.-'======
+ *                             `=---='
+ *          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ *                     佛祖保佑        永无BUG
+ *            佛曰:
+ *                   写字楼里写字间，写字间里程序员；
+ *                   程序人员写程序，又拿程序换酒钱。
+ *                   酒醒只在网上坐，酒醉还来网下眠；
+ *                   酒醉酒醒日复日，网上网下年复年。
+ *                   但愿老死电脑间，不愿鞠躬老板前；
+ *                   奔驰宝马贵者趣，公交自行程序员。
+ *                   别人笑我忒疯癫，我笑自己命太贱；
+ *                   不见满街漂亮妹，哪个归得程序员？
+ */
+
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+
+#ifdef DEBUG
+#define HHCodeLog(...) NSLog(__VA_ARGS__)
+#else
+#define HHCodeLog(...)
+#endif
+
+
+#import "UITextField+Util.h"
+#import "UIButton+Util.h"
+#import "UILabel+Util.h"
+#import "NSString+FontAwesome.h"
+#import "NSString+Init.h"
+#import "NSString+TimeFormat.h"
+#import "UITableView+EmptyData.h"
+
+#import "CallHttpManager.h"
+#import "PCMBProgressHUD.h"
+#import "URLDictionary.h"
+
+#import "HLGifHeader.h"
+#import "HLNormalHeader.h"
+
+
+#import "Masonry.h"
+#import "UIAlertViewManager.h"
+#import "IQKeyboardManager.h"
+#import "MJRefresh.h"
+#import "MJExtension.h"
+#import "UIScrollView+EmptyDataSet.h"
+#import "UINavigationBar+Awesome.h"
+
+
+#pragma mark - NSUserdefault存储字段
+#define FIRSTLUNCH @"firstLaunch"
+#define SHOPCHANGENOTICE @"shopChangedNotification"
+
+#define USERID @"user_id"
+#define USERNAME @"user_name"
+#define USERLOGINNAME @"user_loginName"
+#define USERPHONE @"user_phone"
+#define USEREMAIL @"user_email"
+#define PASSWORD @"password"
+#define USERROLETYPE @"user_roleType"
+#define USERROLETYPEDISPLAY @"user_roleTypeDisplay"
+#define USERSHOP @"user_shop"
+#define USERSHOPID @"user_shopId"
+#define USERCARTROOP @"user_carTroop"
+#define USERCARTROOPID @"user_carTroopId"
+#define PASSWORD @"password"
+#define USERBANCK @"user_banck"
+#define USERBANCKID @"user_banckID"
+
+#define SAVE_PWD @"save_pwd"
+#define Basic_Auth @"strForBasicAuth"
+#define BaseURL @"baseUrlStr"
+#define BasePORT @"basePort"
+
+
+#define DefaultShopID @"defaultShopID"
+#define DefaultShopName @"defaultShopName"
+#define DefaultLatitude @"defaultLatitude"
+#define DefaultLongitude @"defaultLongitude"
+#define BindShopName @"bindShopName"
+#define BindShopID @"bindShopID"
+
+#define app_Version [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]
+
+
+/*--------------------------------------importantStr------------------------------------*/
+#define Basic_Auth @"strForBasicAuth"
+
+/*----------------------------Application KeyWindow---------------------------------*/
+#define AppMainWindow [UIApplication sharedApplication].keyWindow
+/*--------------------------------------screenWidth&Height------------------------------------*/
+#define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
+#define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
+#define SCREEN_HEIGHT_WithNavigationBar [UIScreen mainScreen].bounds.size.height - 64
+#define SCREEN_HEIGHT_WithTabBar [UIScreen mainScreen].bounds.size.height - 49
+#define SCREEN_HEIGHT_WithNavAndTabBar [UIScreen mainScreen].bounds.size.height - 113
+
+/*--------------------------------------color------------------------------------*/
+
+#define ZDRedColor [UIColor colorWithRed:191.0/255.0 green:31.0/255.0 blue:30.0/255.0 alpha:1.0]
+//D4000F
+#define UIColorFromHEX(rgbValue,a) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:a]
+#define UIColorFromRGB(r,g,b) [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1.0]
+#define UIColorFromRGBA(r,g,b,a) [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a]
+
+/*--------------------------------------Font------------------------------------*/
+#define SystemFont(font) [UIFont systemFontOfSize:font]
+
+/*--------------------------------------FontAwe------------------------------------*/
+#define FontAweStr(name) [NSString fontAwesomeIconStringForEnum:name]
+#define FontAweStrFont(font) [UIFont fontWithName:kFontAwesomeFamilyName size:font]
+
+#endif /* PrefixHeader_pch */
