@@ -88,8 +88,6 @@ static NSInteger segmentViewHeight = 40;
         [_segmentView loadTitleArray:arrar];
     }
     return _segmentView;
-
-    
 }
 
 - (UITableView *)tableView{

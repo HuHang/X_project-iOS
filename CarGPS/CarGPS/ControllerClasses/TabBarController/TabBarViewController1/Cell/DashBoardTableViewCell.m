@@ -42,23 +42,24 @@
 
 - (void)initLayout{
     UIView *backgroundView = [[UIView alloc] init];
-    backgroundView.backgroundColor = [UIColor whiteColor];
     self.titleContentView = [[UIView alloc] init];
     self.titleImageView = [[UIImageView alloc] init];
-    self.titleLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor blackColor] withFont:SystemFont(16.f)];
+    self.titleLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(14.f)];
     
-    self.firstTitleLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(14.f)];
-    self.firstCountLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(26.f)];
-    self.firstUnitLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(14.f)];
+    self.firstTitleLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
+    self.firstCountLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(28.f)];
+    self.firstUnitLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
     
-    self.secondTitleLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(14.f)];
-    self.secondCountLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(26.f)];
-    self.secondUnitLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(14.f)];
+    self.secondTitleLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
+    self.secondCountLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(28.f)];
+    self.secondUnitLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
     
-    self.thirdTitleLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(14.f)];
-    self.thirdCountLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(26.f)];
-    self.thirdUnitLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(14.f)];
+    self.thirdTitleLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
+    self.thirdCountLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(28.f)];
+    self.thirdUnitLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
     
+    UIView *lineView = [[UIView alloc] init];
+    UILabel *buttonLabel = [UILabel labelWithString:@"立即查看" withTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor lightGrayColor] withFont:SystemFont(12.f)];
     [self.contentView addSubview:backgroundView];
     [backgroundView addSubview:self.titleContentView];
     [self.titleContentView addSubview:self.titleImageView];
@@ -75,6 +76,9 @@
     [backgroundView addSubview:self.thirdTitleLabel];
     [backgroundView addSubview:self.thirdCountLabel];
     [backgroundView addSubview:self.thirdUnitLabel];
+    
+    [backgroundView addSubview:lineView];
+    [backgroundView addSubview:buttonLabel];
     
     
     [backgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -106,9 +110,9 @@
         UILabel *titleLabel = titleArray[i];
         UILabel *countLabel = countArray[i];
         [countLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(CONTENTWIDTH/[titleArray count], 60));
+            make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH/[titleArray count], 60));
             make.top.equalTo(self.titleContentView.mas_bottom).with.mas_offset(10);
-            make.left.mas_equalTo(0).with.mas_offset(i * CONTENTWIDTH/[titleArray count]);
+            make.left.mas_equalTo(0).with.mas_offset(i * SCREEN_WIDTH/[titleArray count]);
         }];
         
         [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -118,6 +122,21 @@
         }];
         
     }
+    
+    [buttonLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.right.and.bottom.mas_equalTo(0);
+        make.height.mas_equalTo(30);
+    }];
+    [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(10);
+        make.right.mas_equalTo(-10);
+        make.bottom.equalTo(buttonLabel.mas_top);
+        make.height.mas_equalTo(1);
+    }];
+    self.backgroundColor = [UIColor clearColor];
+    
+    lineView.backgroundColor = UIColorFromHEX(0xD9D9D9,1.0);
+    backgroundView.backgroundColor = [UIColor whiteColor];
     backgroundView.layer.cornerRadius = 5.f;
     backgroundView.layer.masksToBounds = YES;
     [backgroundView.layer setShadowColor:[UIColor grayColor].CGColor];
@@ -152,18 +171,14 @@
     self.titleLabel.text = titleStr;
     self.titleContentView.backgroundColor = titleBackColor;
     
-    
-    self.firstTitleLabel.text = titleArray[0];
-    self.firstCountLabel.text = countArray[0];
-    self.firstUnitLabel.text = unitArray[0];
-    
-    self.secondTitleLabel.text = titleArray[1];
-    self.secondCountLabel.text = countArray[1];
-    self.secondUnitLabel.text = unitArray[1];
-    
-    self.thirdTitleLabel.text = titleArray[2];
-    self.thirdCountLabel.text = countArray[2];
-    self.thirdUnitLabel.text = unitArray[2];
+    NSArray *titleLabelArray = @[self.firstTitleLabel,self.secondTitleLabel,self.thirdTitleLabel];
+    NSArray *countLabelArray = @[self.firstCountLabel,self.secondCountLabel,self.thirdCountLabel];
+    for (NSInteger i = 0; i < [titleLabelArray count] ; i ++) {
+        UILabel *title = titleLabelArray[i];
+        UILabel *count = countLabelArray[i];
+        title.text = [NSString stringWithFormat:@"%@(%@)",titleArray[i],unitArray[i]];
+        count.text = countArray[i];
+    }
     
     self.firstCountLabel.textColor = titleColorArray[0];
     self.secondCountLabel.textColor = titleColorArray[1];

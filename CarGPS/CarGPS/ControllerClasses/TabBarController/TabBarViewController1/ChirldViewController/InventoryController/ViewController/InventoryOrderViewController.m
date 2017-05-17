@@ -10,6 +10,8 @@
 #import "InventoryOrderTableViewCell.h"
 #import "InventoryDetailViewController.h"
 
+
+
 @interface InventoryOrderViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)UITableView *tableView;
 @end

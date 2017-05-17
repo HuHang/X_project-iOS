@@ -95,6 +95,7 @@
 #define PASSWORD @"password"
 #define USERBANCK @"user_banck"
 #define USERBANCKID @"user_banckID"
+#define TOKEN @"token"
 
 #define SAVE_PWD @"save_pwd"
 #define Basic_Auth @"strForBasicAuth"

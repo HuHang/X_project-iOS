@@ -290,6 +290,7 @@
     [user setValue:[NSString stringWithFormat:@"shopids[]=%u",infoDic.shopId]forKey:USERSHOPID];
     [user setValue:infoDic.bankName forKey:USERBANCK];
     [user setValue:[NSString stringWithFormat:@"%u",infoDic.bankId]forKey:USERBANCKID];
+    [user setValue:infoDic.token forKey:TOKEN];
     [user synchronize];
 
 }

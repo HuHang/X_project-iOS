@@ -68,6 +68,9 @@ static CGFloat showTableButton_Height = 44.f;
 }
 
 - (void)dealloc{
+    if (_effectView) {
+        [self.effectView removeFromSuperview];
+    }
     self.mapView.delegate = nil;
     HHCodeLog(@"dealloc");
 }

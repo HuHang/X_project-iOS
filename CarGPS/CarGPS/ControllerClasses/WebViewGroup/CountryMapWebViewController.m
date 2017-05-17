@@ -7,21 +7,26 @@
 //
 
 #import "CountryMapWebViewController.h"
-//#import "AppDelegate.h"
+#import "ChartDataModel.h"
+#import "YJWebProgressLayer.h"
 
-@interface CountryMapWebViewController ()<UIWebViewDelegate>
+
+@interface CountryMapWebViewController ()<UIWebViewDelegate,UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)UIWebView *webView;
+@property (nonatomic, strong) YJWebProgressLayer *webProgressLayer;
+@property (strong, nonatomic) UITableView *tableView;
+@property (nonatomic,strong)NSArray *dataArray;
 @end
 
 @implementation CountryMapWebViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    [self forceOrientationLandscape];
     self.view.backgroundColor = [UIColor whiteColor];
+    [self.navigationController.navigationBar.layer addSublayer:self.webProgressLayer];
     [[UIDevice currentDevice] setValue: [NSNumber numberWithInteger: UIInterfaceOrientationLandscapeRight] forKey:@"orientation"];
-    [self createWebView];
-    [self loadWebViewData];
+    [self.view addSubview:self.tableView];
+    [self callHttpForMapData];
     // Do any additional setup after loading the view.
 }
 
@@ -29,73 +34,137 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-//-(void)viewWillDisappear:(BOOL)animated{
-//    [super viewWillDisappear:YES];
-//    //释放约束
-//    AppDelegate *appdelegate=(AppDelegate *)[UIApplication sharedApplication].delegate;
-//    appdelegate.isForcePortrait=NO;
-//    appdelegate.isForceLandscape=NO;
-//    [appdelegate application:[UIApplication sharedApplication] supportedInterfaceOrientationsForWindow:self.view.window];
-//    //退出界面前恢复竖屏
-//    if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
-//        SEL selector = NSSelectorFromString(@"setOrientation:");
-//        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[UIDevice instanceMethodSignatureForSelector:selector]];
-//        [invocation setSelector:selector];
-//        [invocation setTarget:[UIDevice currentDevice]];
-//        int val = UIInterfaceOrientationPortrait;
-//        [invocation setArgument:&val atIndex:2];
-//        [invocation invoke];
-//    }
-//    
-//}
+
+- (void)dealloc {
+    
+    [_webProgressLayer closeTimer];
+    [_webProgressLayer removeFromSuperlayer];
+    _webProgressLayer = nil;
+}
 
 
+
+- (NSArray *)dataArray{
+    if (_dataArray == nil) {
+        _dataArray = [NSArray new];
+    }
+    return _dataArray;
+}
+- (UITableView *)tableView{
+    if (_tableView == nil) {
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT) style:(UITableViewStylePlain)];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.tableFooterView = [UIView new];
+//        _tableView.emptyDataSetSource = self;
+//        _tableView.emptyDataSetDelegate = self;
+        _tableView.backgroundColor = UIColorFromHEX(0xFBF4F4, 1.0);
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }
+    return _tableView;
+}
 - (UIWebView *)webView{
     if (_webView == nil) {
-        _webView = [[UIWebView alloc] init];
+        _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_HEIGHT, 1)];
+        _webView.backgroundColor = [UIColor whiteColor];
+        _webView.delegate = self;
+        _webView.scrollView.scrollEnabled = NO;
+//        [_webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://www.baidu.com"]]];
+
     }
     return _webView;
 }
+- (YJWebProgressLayer *)webProgressLayer{
+    if (_webProgressLayer == nil) {
+        _webProgressLayer = [[YJWebProgressLayer alloc] init];
+        _webProgressLayer.frame = CGRectMake(0, 42, SCREEN_WIDTH, 2);
 
-- (void)createWebView{
-    [self.view addSubview:self.webView];
-    [_webView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT));
-        make.left.and.top.mas_equalTo(0);
-    }];
+    }
+    return _webProgressLayer;
 }
 
-- (void)loadWebViewData{
-    
-    NSString *filePath = [[NSBundle mainBundle]pathForResource:@"ECharts" ofType:@"html"];
-    NSString *htmlString = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-    
-//    [_webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:filePath]];
-    
-    
-    NSURLRequest *request =[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://139.224.134.254:9001/Report_DailySupervision/Mui?request_from=app"]];
-    [self.webView loadRequest:request];
+#pragma mark - http 
+- (void)callHttpForMapData{
+    __weak CountryMapWebViewController *weakself = self;
+    NSString *dataStr = [NSString stringWithFormat:@"type=%@",@"enterStock"];
+    HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary getFirstDashboard_url],dataStr]);
+    [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@%@",[URLDictionary getFirstDashboard_url],dataStr]
+                              success:^(id data) {
+                                  weakself.dataArray = [[ChartDataModel alloc] getData:data[0][@"data"]];
+                                  [weakself reloadWebView];
+
+        
+    }
+                              failure:^(NSError *error) {
+        
+                              }];
+}
+
+
+
+- (void)reloadWebView{
+    ChartDataModel *item = (ChartDataModel *)self.dataArray[0];
+    NSString *urlStr = [NSString stringWithFormat:@"%@%@",item.url,[[NSUserDefaults standardUserDefaults] valueForKey:TOKEN]];
+    HHCodeLog(@"%@",urlStr);
+    [self.webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]]];
 
 }
 
-//webview加载完成后加载图表数据
+#pragma mark -
+#pragma mark - tableView
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 2;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([UITableViewCell class])];
+        [cell.contentView addSubview:self.webView];
+        /* 忽略点击效果 */
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    }
+    return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return _webView.frame.size.height;
+}
+
+
+#pragma mark - UIWebView Delegate Methods
 -(void)webViewDidFinishLoad:(UIWebView *)webView
 {
+    [_webProgressLayer finishedLoadWithError:nil];
     HHCodeLog(@"finish");
-    //传值标题
-    NSString *setTitle = @"数量（吨)";
-    [_webView stringByEvaluatingJavaScriptFromString:setTitle];
-    
-    //传值X轴
-    [_webView stringByEvaluatingJavaScriptFromString:@"setData(['桔子','香蕉','苹果','西瓜'])"];
-    //柱状图
-    NSString *setValueData = [NSString stringWithFormat:@"setValueData([%@,%@,%@,%@])",@"200",@"100",@"260",@"400"];
-    
-    //传值Y轴数据
-    [_webView stringByEvaluatingJavaScriptFromString:setValueData];
-    
-    
-    
+    //获取到webview的高度
+    CGFloat height = [[self.webView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] floatValue];
+    self.webView.frame = CGRectMake(self.webView.frame.origin.x,self.webView.frame.origin.y, SCREEN_WIDTH, height);
+    [self.tableView reloadData];
+}
+- (void)webViewDidStartLoad:(UIWebView *)webView
+{
+    [_webProgressLayer startLoad];
+    NSLog(@"webViewDidStartLoad");
+}
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
+    [_webProgressLayer finishedLoadWithError:error];
+    NSLog(@"didFailLoadWithError===%@", error);
 }
 
 #pragma  mark 横屏设置

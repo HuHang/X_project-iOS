@@ -323,4 +323,17 @@
     NSString *url = @"/api/globals/QSVINOrIMEI?";
     return  [NSString stringWithFormat:@"%@%@",[self baseUrlWithPort],url];
 }
+
+
+
+/**
+ dashboard
+ enterStock
+ @return 快速搜索vin
+ */
++ (NSString *) getFirstDashboard_url{
+    NSString *url = @"/api/Report_DailySupervisions/GetReportByType?";
+    return  [NSString stringWithFormat:@"%@%@",[self baseUrlWithPort],url];
+}
+
 @end

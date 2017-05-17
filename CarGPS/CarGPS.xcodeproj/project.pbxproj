@@ -20,6 +20,14 @@
 		021CB98E1ECABAD600448E8B /* icon_tabBar_selected2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 021CB98A1ECABAD600448E8B /* icon_tabBar_selected2@2x.png */; };
 		021CB99A1ECADC6B00448E8B /* InventoryOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 021CB9991ECADC6B00448E8B /* InventoryOrderViewController.m */; };
 		021CB99D1ECADC9D00448E8B /* InventoryOrderTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 021CB99C1ECADC9D00448E8B /* InventoryOrderTableViewCell.m */; };
+		021D2F591ECBEEC600D72716 /* SwiftTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021D2F581ECBEEC600D72716 /* SwiftTest.swift */; };
+		021D2F6A1ECBF55A00D72716 /* PieChartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 021D2F691ECBF55A00D72716 /* PieChartViewController.m */; };
+		021D2F721ECC428700D72716 /* ChartDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 021D2F711ECC428700D72716 /* ChartDataModel.m */; };
+		021D2F781ECC4EF900D72716 /* NSTimer+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 021D2F751ECC4EF900D72716 /* NSTimer+addition.m */; };
+		021D2F791ECC4EF900D72716 /* YJWebProgressLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 021D2F771ECC4EF900D72716 /* YJWebProgressLayer.m */; };
+		021D2F7C1ECC546800D72716 /* DashboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 021D2F7B1ECC546800D72716 /* DashboardViewController.m */; };
+		021D2F7F1ECC55B300D72716 /* WebviewTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 021D2F7E1ECC55B300D72716 /* WebviewTableViewCell.m */; };
+		021D2F821ECC6D2600D72716 /* CarMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 021D2F811ECC6D2600D72716 /* CarMapViewController.m */; };
 		022220081EBC897B00047956 /* SegmentCustomStyleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 022220071EBC897B00047956 /* SegmentCustomStyleManager.m */; };
 		0222200B1EBC8B5000047956 /* MessageTypeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0222200A1EBC8B5000047956 /* MessageTypeTableViewCell.m */; };
 		0237FDC81E828D7600A9651B /* UIAlertViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0237FDC61E828D7600A9651B /* UIAlertViewManager.m */; };
@@ -79,7 +87,6 @@
 		027045851EB1AC1C003E28E4 /* DeviceListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0270457A1EB1AC1C003E28E4 /* DeviceListTableViewController.m */; };
 		027045861EB1AC1C003E28E4 /* CarModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0270457D1EB1AC1C003E28E4 /* CarModel.m */; };
 		027045891EB1AC90003E28E4 /* DeviceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 027045881EB1AC90003E28E4 /* DeviceModel.m */; };
-		027045921EB1D6AC003E28E4 /* DashBoardTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 027045911EB1D6AC003E28E4 /* DashBoardTableView.m */; };
 		027045981EB1DBF2003E28E4 /* MovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 027045971EB1DBF2003E28E4 /* MovieViewController.m */; };
 		027045C01EB31338003E28E4 /* DashBoardTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 027045BF1EB31338003E28E4 /* DashBoardTableViewCell.m */; };
 		027045D31EB316C0003E28E4 /* icon_carBtn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 027045CF1EB316C0003E28E4 /* icon_carBtn@2x.png */; };
@@ -259,19 +266,6 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		027FDF651ECB0CD000DB531B /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		021CB9701ECA9E1300448E8B /* MyAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAnnotation.h; sourceTree = "<group>"; };
 		021CB9711ECA9E1300448E8B /* MyAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAnnotation.m; sourceTree = "<group>"; };
@@ -292,6 +286,23 @@
 		021CB9991ECADC6B00448E8B /* InventoryOrderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InventoryOrderViewController.m; sourceTree = "<group>"; };
 		021CB99B1ECADC9D00448E8B /* InventoryOrderTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InventoryOrderTableViewCell.h; sourceTree = "<group>"; };
 		021CB99C1ECADC9D00448E8B /* InventoryOrderTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InventoryOrderTableViewCell.m; sourceTree = "<group>"; };
+		021D2F581ECBEEC600D72716 /* SwiftTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftTest.swift; sourceTree = "<group>"; };
+		021D2F5A1ECBEF7500D72716 /* CarGPS-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CarGPS-Bridging-Header.h"; sourceTree = "<group>"; };
+		021D2F681ECBF55A00D72716 /* PieChartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PieChartViewController.h; sourceTree = "<group>"; };
+		021D2F691ECBF55A00D72716 /* PieChartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PieChartViewController.m; sourceTree = "<group>"; };
+		021D2F6F1ECC16A000D72716 /* ChartsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartsManager.h; sourceTree = "<group>"; };
+		021D2F701ECC428700D72716 /* ChartDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartDataModel.h; sourceTree = "<group>"; };
+		021D2F711ECC428700D72716 /* ChartDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChartDataModel.m; sourceTree = "<group>"; };
+		021D2F741ECC4EF900D72716 /* NSTimer+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+addition.h"; sourceTree = "<group>"; };
+		021D2F751ECC4EF900D72716 /* NSTimer+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+addition.m"; sourceTree = "<group>"; };
+		021D2F761ECC4EF900D72716 /* YJWebProgressLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YJWebProgressLayer.h; sourceTree = "<group>"; };
+		021D2F771ECC4EF900D72716 /* YJWebProgressLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YJWebProgressLayer.m; sourceTree = "<group>"; };
+		021D2F7A1ECC546800D72716 /* DashboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DashboardViewController.h; sourceTree = "<group>"; };
+		021D2F7B1ECC546800D72716 /* DashboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DashboardViewController.m; sourceTree = "<group>"; };
+		021D2F7D1ECC55B300D72716 /* WebviewTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebviewTableViewCell.h; sourceTree = "<group>"; };
+		021D2F7E1ECC55B300D72716 /* WebviewTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebviewTableViewCell.m; sourceTree = "<group>"; };
+		021D2F801ECC6D2600D72716 /* CarMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarMapViewController.h; sourceTree = "<group>"; };
+		021D2F811ECC6D2600D72716 /* CarMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarMapViewController.m; sourceTree = "<group>"; };
 		022220061EBC897B00047956 /* SegmentCustomStyleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentCustomStyleManager.h; sourceTree = "<group>"; };
 		022220071EBC897B00047956 /* SegmentCustomStyleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentCustomStyleManager.m; sourceTree = "<group>"; };
 		022220091EBC8B5000047956 /* MessageTypeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTypeTableViewCell.h; sourceTree = "<group>"; };
@@ -384,8 +395,6 @@
 		0270457D1EB1AC1C003E28E4 /* CarModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarModel.m; sourceTree = "<group>"; };
 		027045871EB1AC90003E28E4 /* DeviceModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceModel.h; sourceTree = "<group>"; };
 		027045881EB1AC90003E28E4 /* DeviceModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceModel.m; sourceTree = "<group>"; };
-		027045901EB1D6AC003E28E4 /* DashBoardTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DashBoardTableView.h; sourceTree = "<group>"; };
-		027045911EB1D6AC003E28E4 /* DashBoardTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DashBoardTableView.m; sourceTree = "<group>"; };
 		027045961EB1DBF2003E28E4 /* MovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieViewController.h; sourceTree = "<group>"; };
 		027045971EB1DBF2003E28E4 /* MovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieViewController.m; sourceTree = "<group>"; };
 		027045BE1EB31338003E28E4 /* DashBoardTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DashBoardTableViewCell.h; sourceTree = "<group>"; };
@@ -701,6 +710,28 @@
 			path = ViewController;
 			sourceTree = "<group>";
 		};
+		021D2F571ECBEEA100D72716 /* ChartViewManagerGroup */ = {
+			isa = PBXGroup;
+			children = (
+				021D2F581ECBEEC600D72716 /* SwiftTest.swift */,
+				021D2F681ECBF55A00D72716 /* PieChartViewController.h */,
+				021D2F691ECBF55A00D72716 /* PieChartViewController.m */,
+				021D2F6F1ECC16A000D72716 /* ChartsManager.h */,
+			);
+			path = ChartViewManagerGroup;
+			sourceTree = "<group>";
+		};
+		021D2F731ECC4EE500D72716 /* WebProgressBar */ = {
+			isa = PBXGroup;
+			children = (
+				021D2F741ECC4EF900D72716 /* NSTimer+addition.h */,
+				021D2F751ECC4EF900D72716 /* NSTimer+addition.m */,
+				021D2F761ECC4EF900D72716 /* YJWebProgressLayer.h */,
+				021D2F771ECC4EF900D72716 /* YJWebProgressLayer.m */,
+			);
+			path = WebProgressBar;
+			sourceTree = "<group>";
+		};
 		022220051EBC897B00047956 /* SegmentStyleManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -842,6 +873,8 @@
 			children = (
 				0270455D1EB1A96F003E28E4 /* HomeViewController.h */,
 				0270455E1EB1A96F003E28E4 /* HomeViewController.m */,
+				021D2F7A1ECC546800D72716 /* DashboardViewController.h */,
+				021D2F7B1ECC546800D72716 /* DashboardViewController.m */,
 			);
 			path = HomeViewController;
 			sourceTree = "<group>";
@@ -1205,6 +1238,8 @@
 				027045BF1EB31338003E28E4 /* DashBoardTableViewCell.m */,
 				027045DD1EB31DCD003E28E4 /* MoreFunctionCollectionViewCell.h */,
 				027045DE1EB31DCD003E28E4 /* MoreFunctionCollectionViewCell.m */,
+				021D2F7D1ECC55B300D72716 /* WebviewTableViewCell.h */,
+				021D2F7E1ECC55B300D72716 /* WebviewTableViewCell.m */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -1212,8 +1247,6 @@
 		0286A5441E9742D900075582 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				027045901EB1D6AC003E28E4 /* DashBoardTableView.h */,
-				027045911EB1D6AC003E28E4 /* DashBoardTableView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1347,6 +1380,7 @@
 			isa = PBXGroup;
 			children = (
 				02AE1FEC1E6FA14A00382F94 /* main.m */,
+				021D2F5A1ECBEF7500D72716 /* CarGPS-Bridging-Header.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1417,6 +1451,8 @@
 				02C5E0D11EAF069500B94221 /* MainMapListViewController.m */,
 				02C5E1071EB02ED400B94221 /* DeviceMapViewController.h */,
 				02C5E1081EB02ED400B94221 /* DeviceMapViewController.m */,
+				021D2F801ECC6D2600D72716 /* CarMapViewController.h */,
+				021D2F811ECC6D2600D72716 /* CarMapViewController.m */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -1551,6 +1587,8 @@
 		02C691581EADA965004636BB /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				021D2F701ECC428700D72716 /* ChartDataModel.h */,
+				021D2F711ECC428700D72716 /* ChartDataModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1723,6 +1761,8 @@
 		02F415A71E7F7E350058C2D8 /* ServiceGroup */ = {
 			isa = PBXGroup;
 			children = (
+				021D2F731ECC4EE500D72716 /* WebProgressBar */,
+				021D2F571ECBEEA100D72716 /* ChartViewManagerGroup */,
 				02E253A01EC823360008D819 /* AutoSearchTextField */,
 				025EAC581EC329AD0063ECEC /* CameraManager */,
 				025EAB8A1EC2EEEF0063ECEC /* CleanCache */,
@@ -1806,7 +1846,6 @@
 				02AE1FE61E6FA14A00382F94 /* Resources */,
 				B129DD04E00990A473947BA9 /* [CP] Embed Pods Frameworks */,
 				0E90F429FD1A847E3337D970 /* [CP] Copy Pods Resources */,
-				027FDF651ECB0CD000DB531B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2123,12 +2162,13 @@
 				02AE1FF01E6FA14A00382F94 /* AppDelegate.m in Sources */,
 				02C5E0AB1EADE02000B94221 /* URLDictionary.m in Sources */,
 				02FCB2A61EC4350A00FE96EF /* DeviceInfoModel.m in Sources */,
+				021D2F6A1ECBF55A00D72716 /* PieChartViewController.m in Sources */,
 				027045C01EB31338003E28E4 /* DashBoardTableViewCell.m in Sources */,
 				0286A5101E96519900075582 /* NSString+FontAwesome.m in Sources */,
 				02C5E0C31EAE0FD600B94221 /* ShopModel.m in Sources */,
 				021CB99A1ECADC6B00448E8B /* InventoryOrderViewController.m in Sources */,
-				027045921EB1D6AC003E28E4 /* DashBoardTableView.m in Sources */,
 				02C5E1001EAF8F3500B94221 /* SGQRCodeConst.m in Sources */,
+				021D2F791ECC4EF900D72716 /* YJWebProgressLayer.m in Sources */,
 				027045831EB1AC1C003E28E4 /* UnBindTableViewCell.m in Sources */,
 				02D3F58E1EBB389400D1EC5B /* MonitorModel.m in Sources */,
 				0270457F1EB1AC1C003E28E4 /* BindViewController.m in Sources */,
@@ -2168,6 +2208,8 @@
 				02AE1FF91E6FA14A00382F94 /* CarGPS.xcdatamodeld in Sources */,
 				02C5E1021EAF8F3500B94221 /* SGQRCodeScanningView.m in Sources */,
 				02C5E0FE1EAF8F3500B94221 /* SGQRCodeScanningVC.m in Sources */,
+				021D2F7C1ECC546800D72716 /* DashboardViewController.m in Sources */,
+				021D2F821ECC6D2600D72716 /* CarMapViewController.m in Sources */,
 				02E253AF1EC823DA0008D819 /* UILabel+Boldify.m in Sources */,
 				027045811EB1AC1C003E28E4 /* CarTableViewCell.m in Sources */,
 				02C5E1011EAF8F3500B94221 /* SGQRCodeTool.m in Sources */,
@@ -2175,7 +2217,9 @@
 				02E2544B1EC9ACF50008D819 /* QuickSearchModel.m in Sources */,
 				0286A5371E97289300075582 /* PCMBProgressHUD.m in Sources */,
 				025EAB511EC165F00063ECEC /* UIView+Extension.m in Sources */,
+				021D2F7F1ECC55B300D72716 /* WebviewTableViewCell.m in Sources */,
 				02C5E0D21EAF069500B94221 /* MainMapListViewController.m in Sources */,
+				021D2F781ECC4EF900D72716 /* NSTimer+addition.m in Sources */,
 				022220081EBC897B00047956 /* SegmentCustomStyleManager.m in Sources */,
 				02FCB2EC1EC5904100FE96EF /* UserInfoModel.m in Sources */,
 				025EAB501EC165F00063ECEC /* NSDate+Extension.m in Sources */,
@@ -2191,6 +2235,7 @@
 				025EAB861EC2C09B0063ECEC /* DefaultModel.m in Sources */,
 				0286A53E1E972FF300075582 /* UIButton+MHExtra.m in Sources */,
 				02FCB2CF1EC5605200FE96EF /* SearchDeviceViewController.m in Sources */,
+				021D2F721ECC428700D72716 /* ChartDataModel.m in Sources */,
 				027045821EB1AC1C003E28E4 /* DeviceTableViewCell.m in Sources */,
 				02C5E10F1EB03CD200B94221 /* CoordinatesModel.m in Sources */,
 				027045891EB1AC90003E28E4 /* DeviceModel.m in Sources */,
@@ -2201,6 +2246,7 @@
 				0286A5031E964F2C00075582 /* NavigationController.m in Sources */,
 				0237FDFF1E851ED700A9651B /* CallHttpManager.m in Sources */,
 				025EAB3E1EC01F4D0063ECEC /* MessageDetailTableViewCell.m in Sources */,
+				021D2F591ECBEEC600D72716 /* SwiftTest.swift in Sources */,
 				02E1CE1C1E9F109100A4F15C /* HLGifHeader.m in Sources */,
 				02C6915E1EADB2C0004636BB /* UITableView+EmptyData.m in Sources */,
 				02C5E0FD1EAF8F3500B94221 /* UIImage+SGHelper.m in Sources */,
@@ -2369,7 +2415,7 @@
 				PODS_ROOT = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.charlot.CarGPS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "CarGPS/ServiceGroup/ChartViewManagerGroup/CarGPS-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/charlot/project/IOSCode/X_project-iOS/CarGPS/CarGPS/CarGPS-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2390,7 +2436,7 @@
 				PODS_ROOT = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.charlot.CarGPS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "CarGPS/ServiceGroup/ChartViewManagerGroup/CarGPS-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/charlot/project/IOSCode/X_project-iOS/CarGPS/CarGPS/CarGPS-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -2399,6 +2445,7 @@
 		02AE201C1E6FA14A00382F94 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 58FSFGRL4P;
 				INFOPLIST_FILE = CarGPSTests/Info.plist;
@@ -2412,6 +2459,7 @@
 		02AE201D1E6FA14A00382F94 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 58FSFGRL4P;
 				INFOPLIST_FILE = CarGPSTests/Info.plist;
@@ -2425,6 +2473,7 @@
 		02AE201F1E6FA14A00382F94 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 58FSFGRL4P;
 				INFOPLIST_FILE = CarGPSUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -2437,6 +2486,7 @@
 		02AE20201E6FA14A00382F94 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 58FSFGRL4P;
 				INFOPLIST_FILE = CarGPSUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

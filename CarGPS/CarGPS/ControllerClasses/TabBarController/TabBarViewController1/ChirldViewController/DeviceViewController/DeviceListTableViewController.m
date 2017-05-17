@@ -10,12 +10,12 @@
 #import "DeviceTableViewCell.h"
 #import "UnusedDeviceTableViewCell.h"
 #import "DeviceModel.h"
-#import "DeviceMapViewController.h"
+#import "CarMapViewController.h"
 #import "PopoverView.h"
 #import "SearchDeviceViewController.h"
 
 
-@interface DeviceListTableViewController ()<UISearchBarDelegate,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
+@interface DeviceListTableViewController ()<UISearchBarDelegate,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate,UIScrollViewDelegate>
 @property (nonatomic,strong)NSMutableArray *dataArray;
 @property (nonatomic,strong)UIButton *shopSelectButton;
 @property (nonatomic,strong)UIButton *titleButton;
@@ -31,8 +31,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.navigationController.navigationBar lt_setTranslationY:(0)];
-
     self.dataArray = [[NSMutableArray alloc] init];
     self.selectedIndex = 1;
     self.pageIndex = 0;
@@ -72,7 +70,6 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self.navigationController.navigationBar lt_setTranslationY:(0)];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -81,20 +78,20 @@
 
 
 
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-//{
-//    CGFloat offsetY = scrollView.contentOffset.y;
-//    if (offsetY > 0) {
-//        if (offsetY >= 44) {
-//            [self setNavigationBarTransformProgress:1];
-//        } else {
-//            [self setNavigationBarTransformProgress:(offsetY / 44)];
-//        }
-//    } else {
-//        [self setNavigationBarTransformProgress:0];
-//        //        self.navigationController.navigationBar.backIndicatorImage = [UIImage new];
-//    }
-//}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGFloat offsetY = scrollView.contentOffset.y;
+    if (offsetY > 0) {
+        if (offsetY >= 44) {
+            [self setNavigationBarTransformProgress:1];
+        } else {
+            [self setNavigationBarTransformProgress:(offsetY / 44)];
+        }
+    } else {
+        [self setNavigationBarTransformProgress:0];
+        //        self.navigationController.navigationBar.backIndicatorImage = [UIImage new];
+    }
+}
 - (void)setNavigationBarTransformProgress:(CGFloat)progress
 {
     [self.navigationController.navigationBar lt_setTranslationY:(-44 * progress)];
@@ -242,9 +239,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (self.selectedIndex == 1) {
-        DeviceMapViewController *mapView = [[DeviceMapViewController alloc] init];
+        CarMapViewController *mapView = [[CarMapViewController alloc] init];
         mapView.deviceID = [(DeviceModel *)self.dataArray[indexPath.row] ID];
-        [self.navigationController pushViewController:mapView animated:YES];
+        [self presentViewController:mapView animated:YES completion:nil];
     }else{
         [PCMBProgressHUD showLoadingTipsInView:self.view title:@"提示" detail:@"请切换至使用中设备列表查看" withIsAutoHide:YES];
     }

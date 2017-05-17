@@ -53,7 +53,9 @@
 /*--------------------------------------搜索------------------------------------*/
 + (NSString *) QSAll_url;
 
-
 + (NSString *) getByGPS_url;
 + (NSString *) allMessage_url;
+
+/*--------------------------------------dashboard------------------------------------*/
++ (NSString *) getFirstDashboard_url;
 @end

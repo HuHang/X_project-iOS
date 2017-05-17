@@ -10,12 +10,12 @@
 #import "CarTableViewCell.h"
 #import "UnBindTableViewCell.h"
 #import "CarModel.h"
-#import "DeviceMapViewController.h"
+#import "CarMapViewController.h"
 #import "PopoverView.h"
 #import "UINavigationBar+Awesome.h"
 #import "SearchCarViewController.h"
 
-@interface CarListTableViewController ()<UISearchBarDelegate,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
+@interface CarListTableViewController ()<UISearchBarDelegate,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate,UIScrollViewDelegate>
 @property (nonatomic,strong)NSMutableArray *dataArray;
 @property (nonatomic,strong)UIButton *titleButton;
 @property NSInteger selectedIndex;
@@ -53,7 +53,7 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self.navigationController.navigationBar lt_setTranslationY:(0)];
+    
 
 }
 #pragma mark - view
@@ -136,20 +136,20 @@
     }];
 }
 
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-//{
-//    CGFloat offsetY = scrollView.contentOffset.y;
-//    if (offsetY > 0) {
-//        if (offsetY >= 44) {
-//            [self setNavigationBarTransformProgress:1];
-//        } else {
-//            [self setNavigationBarTransformProgress:(offsetY / 44)];
-//        }
-//    } else {
-//        [self setNavigationBarTransformProgress:0];
-////        self.navigationController.navigationBar.backIndicatorImage = [UIImage new];
-//    }
-//}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGFloat offsetY = scrollView.contentOffset.y;
+    if (offsetY > 0) {
+        if (offsetY >= 44) {
+            [self setNavigationBarTransformProgress:1];
+        } else {
+            [self setNavigationBarTransformProgress:(offsetY / 44)];
+        }
+    } else {
+        [self setNavigationBarTransformProgress:0];
+//        self.navigationController.navigationBar.backIndicatorImage = [UIImage new];
+    }
+}
 - (void)setNavigationBarTransformProgress:(CGFloat)progress
 {
     [self.navigationController.navigationBar lt_setTranslationY:(-44 * progress)];
@@ -237,9 +237,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (self.selectedIndex == 1) {
-        DeviceMapViewController *mapView = [[DeviceMapViewController alloc] init];
+        CarMapViewController *mapView = [[CarMapViewController alloc] init];
         mapView.deviceID = [(CarModel *)self.dataArray[indexPath.row] deviceId];
-        [self.navigationController pushViewController:mapView animated:YES];
+//        [self.navigationController pushViewController:mapView animated:YES];
+        [self presentViewController:mapView animated:YES completion:nil];
     }else{
         [PCMBProgressHUD showLoadingTipsInView:self.view title:@"提示" detail:@"请切换至已绑车辆列表查看" withIsAutoHide:YES];
     }

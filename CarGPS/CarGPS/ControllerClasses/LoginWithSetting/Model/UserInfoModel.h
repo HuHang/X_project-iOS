@@ -21,6 +21,8 @@
 @property (copy, nonatomic)NSString *roleTypeDisplay;
 @property (copy, nonatomic)NSString *shopName;
 @property (copy, nonatomic)NSString *bankName;
+@property (copy, nonatomic)NSString *token;
+
 
 - (UserInfoModel *)getData:(NSDictionary *)dictionary;
 

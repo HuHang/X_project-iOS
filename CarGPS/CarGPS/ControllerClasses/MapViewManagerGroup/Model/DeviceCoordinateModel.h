@@ -12,7 +12,7 @@
 
 @property (assign, nonatomic)double lng;
 @property (assign, nonatomic)double lat;
-
+@property (assign, nonatomic)int fenceState;
 @property (copy, nonatomic)NSString *vin;
 @property (copy, nonatomic)NSString *imei;
 @property (copy, nonatomic)NSString *signalTime;
