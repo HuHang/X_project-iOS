@@ -63,7 +63,7 @@
 +(void)saveImageToSandbox:(UIImage *)image andImageName:(NSString *)imageName andResultBlock:(resultBlock)block
 {
     //高保真压缩图片，此方法可将图片压缩，但是图片质量基本不变，第二个参数为质量参数
-    NSData *imageData=UIImageJPEGRepresentation(image, 0.5);
+    NSData *imageData=UIImageJPEGRepresentation(image, 0.3);
     //将图片写入文件
    NSString *filePath=[self filePath:imageName];
    //是否保存成功

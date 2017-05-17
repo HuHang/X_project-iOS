@@ -51,7 +51,7 @@
     UIView *backgroundView = [[UIView alloc] init];
     
     UILabel *imeiTitle = [UILabel labelWithString:@"设备编码:" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
-    UILabel *numberTitle = [UILabel labelWithString:@"设备编号:" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
+    UILabel *numberTitle = [UILabel labelWithString:@"车架编号:" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
     UILabel *bankTitle = [UILabel labelWithString:@"商户类型:" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
     UILabel *shopTitle = [UILabel labelWithString:@"商户名称:" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
     

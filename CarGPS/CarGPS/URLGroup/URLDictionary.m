@@ -20,7 +20,7 @@
     if ([[NSUserDefaults standardUserDefaults]valueForKey:BaseURL]) {
         baseUrl = [[NSUserDefaults standardUserDefaults]valueForKey:BaseURL];
     }else{
-        baseUrl = @"139.224.134.254";
+        baseUrl = @"119.254.66.151";
     }
     return baseUrl;
 }
@@ -35,7 +35,7 @@
     if ([[NSUserDefaults standardUserDefaults] valueForKey:BasePORT]) {
         port = [[NSUserDefaults standardUserDefaults] valueForKey:BasePORT];
     }else{
-        port = @"9001";
+        port = @"80";
     }
     return port;
 }

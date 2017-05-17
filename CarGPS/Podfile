@@ -1,5 +1,5 @@
 platform :ios, '8.0'
-
+use_frameworks!
 target 'CarGPS' do
 pod 'AFNetworking', '~> 3.0'
 pod 'Masonry', '~> 1.0.2'
@@ -12,5 +12,6 @@ pod "RATreeView", "~> 2.1.2"
 pod 'DZNEmptyDataSet', '~> 1.8.1'
 pod 'RKNotificationHub', '~> 2.0.4'
 pod 'SDWebImage', '~> 4.0.0'
-pod 'iOS-Echarts', '~> 1.4.3'
+pod 'PNChart', '~> 0.8.9'
+pod 'Charts'
 end

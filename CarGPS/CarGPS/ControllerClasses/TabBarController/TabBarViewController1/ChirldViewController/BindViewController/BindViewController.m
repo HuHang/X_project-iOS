@@ -248,10 +248,12 @@
     __weak BindViewController *weakself = self;
     NSString *urlData = [NSString stringWithFormat:@"shopId=%@&imei=%@&vin=%@",[[NSUserDefaults standardUserDefaults] valueForKey:BindShopID],self.imeiString,self.vinString];
     HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary bind_url],urlData]);
+    [PCMBProgressHUD showLoadingImageInView:self.view text:@"上传图片..." isResponse:NO];
     [CallHttpManager uploadWithUrlString:[NSString stringWithFormat:@"%@%@",[URLDictionary bind_url],urlData] parameters:nil dataArray:uploadPhotoArray progress:^(NSProgress *progress) {
 
         HHCodeLog(@"进度---%@",progress);
     } success:^(id data) {
+        [PCMBProgressHUD hideWithView:weakself.view];
         DefaultModel *result = [[DefaultModel alloc] getData:data];
         if (result.Success) {
             [PCMBProgressHUD showLoadingTipsInView:weakself.view title:@"绑定成功" detail:result.Content withIsAutoHide:YES];
@@ -260,6 +262,7 @@
         }
         [weakself cleanData];
     } failure:^(NSError *error) {
+        [PCMBProgressHUD hideWithView:weakself.view];
         [weakself cleanData];
         HHCodeLog(@"error:%@",error);
     }];

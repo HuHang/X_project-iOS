@@ -218,7 +218,7 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     DeviceModel *item = (DeviceModel *)self.dataArray[indexPath.row];
     [cell loadDataWithIMEI:item.imei
-                    number:item.nr
+                    number:item.vin
                       time:[NSString formatDateTimeForCN:item.signalTime]
                 signalType:item.singleType
               signalStatus:item.signalLevelDisplay

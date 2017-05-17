@@ -130,7 +130,7 @@
             // 设置时间格式
             [formatter setDateFormat:@"yyyyMMddHHmmss"];
             NSString *dateString = [formatter stringFromDate:[NSDate date]];
-            NSString *fileName = [NSString  stringWithFormat:@"%@.jpg", dateString];
+            NSString *fileName = [NSString  stringWithFormat:@"%@_%d.jpg", dateString,i];
             /*
              *该方法的参数
              1. appendPartWithFileData：要上传的照片[二进制流]

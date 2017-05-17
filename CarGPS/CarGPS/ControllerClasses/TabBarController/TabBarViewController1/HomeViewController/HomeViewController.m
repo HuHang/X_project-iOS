@@ -18,8 +18,9 @@
 #import "UnBindViewController.h"
 
 #import "MoreFuncationTableViewController.h"
-#import "MapChartViewController.h"
 #import "CountryMapWebViewController.h"
+
+#import "InventoryOrderViewController.h"
 
 
 static CGFloat functionHeaderViewHeight = 95;
@@ -347,8 +348,9 @@ static CGFloat widthFormWidth = 0.54;
             break;
         case 3:
         {
-//            DeviceListTableViewController *deviceView = [[DeviceListTableViewController alloc] init];
-//            [self.navigationController pushViewController:deviceView animated:YES];
+            //InventoryOrderViewController CarGPS-Bridging-Header
+            InventoryOrderViewController *deviceView = [[InventoryOrderViewController alloc] init];
+            [self.navigationController pushViewController:deviceView animated:YES];
         }
             
             break;

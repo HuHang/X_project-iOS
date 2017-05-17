@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Charts.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>DZNEmptyDataSet.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -44,6 +49,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>PNChart.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-CarGPS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -64,12 +74,7 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>iOS-Echarts-iOS-Echarts.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>iOS-Echarts.xcscheme</key>
+		<key>UICountingLabel.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -77,72 +82,77 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>04CF549EBEEE7BC87AEAE35397184D94</key>
+		<key>0FC1CB21D1B64FAAC47A6478616DA728</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>5437890023F30CA85DFCA260CA914D48</key>
+		<key>41FA54D12162DAD51D02FC58A2CD5034</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>57B256DB6060A76BBDEBB5528FD87BB9</key>
+		<key>52E73AAD2C94906D4C88BFEC7DE4BB2E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>586F2DFA9BDCC6675C2546793A69E5CC</key>
+		<key>596C5E819CB3886C5340CDAA98272C84</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>58A1104FDCFBD1E053198D95455251F2</key>
+		<key>5AA17C95E926B760FD08E0B487DAEFA2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7D366383E6411AA7B8E54B8C417DF8B6</key>
+		<key>757676DF1D40CFABFA6E64332EC7253F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>95093673222E0CCF809EDE42F5A4300B</key>
+		<key>993CDDA5D771D36244928243833F3A21</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9650B5ADCE86F1A055FAFC635284BDB5</key>
+		<key>A3153874773D9F3A3C8301B6D68C8BBE</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9DC8D9E02903E93BD0B2FEC9D846EA20</key>
+		<key>C36CB2CB977A4E7D954935096D00A1ED</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9E033EDB5EC0819481B0546434FA577B</key>
+		<key>CF671F7E57B92905F1CC91D036D6B4A7</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A316B54C67E947D23CECD230FA5BFAEF</key>
+		<key>D386C75EFD4F03725E4EFB866B600B9A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>CF38EA93C85B2EB4C51AF70570D6B6E6</key>
+		<key>D52144DE9D7255DE912490FF5A806573</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>DABE90E0F0947167ABC83E27C73FF15C</key>
+		<key>DA392EE8E5B24D16FB9910405A0AFC2E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>DF5952F16FC50F0A074D3C54CB59EB15</key>
+		<key>E14A62900910444707A5504D25EC98DC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F307B842FF76B2DE6C55DB67C0885325</key>
 		<dict>
 			<key>primary</key>
 			<true/>
