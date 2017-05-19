@@ -49,7 +49,7 @@ static NSInteger segmentViewHeight = 40;
         self.viewIsFirstLoad = NO;
         [self.tableView.mj_header beginRefreshing];
     }else{
-        [self callHttpWithSelectedIndex];
+        
     }
 }
 
@@ -155,7 +155,7 @@ static NSInteger segmentViewHeight = 40;
 #pragma mark - segment delegate
 - (void)segmentCustomView:(SegmentCustomStyleManager *)segmentCustomView index:(NSInteger)index{
     self.segmentViewSelectedIndex = index;
-    [self.tableView.mj_header beginRefreshing];
+    [self callHttpWithSelectedIndex];
 
 }
 
@@ -177,11 +177,12 @@ static NSInteger segmentViewHeight = 40;
     cell.subscribeButtonTapAction = ^(UIButton *sender) {
         if (!sender.selected) {
             [weakself callHttpForSubAndDissubMsg:[URLDictionary subscribeMessageTypeList_url] alarmType:item.KeyValue];
-
+            
         }else{
             [weakself callHttpForSubAndDissubMsg:[URLDictionary unSubscribeMessageTypeList_url] alarmType:item.KeyValue];
         }
     };
+
     return cell;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{

@@ -28,6 +28,8 @@ static CGFloat showTableButton_Height = 44.f;
 @property (nonatomic,strong)UIVisualEffectView *effectView;
 
 @property (nonatomic,strong)UILabel *countLabel;
+
+
 @end
 
 @implementation MainMapListViewController
@@ -48,6 +50,7 @@ static CGFloat showTableButton_Height = 44.f;
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     }
+
     
 }
 - (void)didReceiveMemoryWarning {
@@ -256,10 +259,12 @@ static CGFloat showTableButton_Height = 44.f;
     MonitorModel *item = (MonitorModel *)self.dataArray[indexPath.row];
     if (cell == nil) {
         cell = [[MonitorTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([MonitorTableViewCell class])];
+        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+        cell.backgroundColor = [UIColor clearColor];
+        
     }
-    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-    cell.backgroundColor = [UIColor clearColor];
     [cell loadDataWithVin:item.vin imei:item.imei shopName:item.currentShopName brand:item.brand carType:item.carType time:[NSString formatDateTimeForCN:item.signalTime]  status:item.fenceStateDisplay  withStatus:item.fenceState];
+    
     return cell;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{

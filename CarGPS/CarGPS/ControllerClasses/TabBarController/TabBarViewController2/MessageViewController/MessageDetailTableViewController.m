@@ -280,13 +280,16 @@ static NSInteger segmentViewHeight = 40;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+
+    
     MessageDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([MessageDetailTableViewCell class])];
     MessageDetailModel *item = (MessageDetailModel *)self.dataArray[indexPath.row];
     if (cell == nil) {
         cell = [[MessageDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([MessageDetailTableViewCell class])];
+        [cell loadDataWithVin:item.vin imei:item.imei shopName:item.shopName carType:item.carType carColor:item.carColor shopTypeStr:item.shopTypeDisplay time:item.createdAt status:item.AlarmFenceStateDisplay withStatus:[item.AlarmFenceState integerValue]];
     }
-    [cell loadDataWithVin:item.vin imei:item.imei shopName:item.shopName carType:item.carType carColor:item.carColor shopTypeStr:item.shopTypeDisplay time:item.createdAt status:item.AlarmFenceStateDisplay withStatus:[item.AlarmFenceState integerValue]];
     return cell;
+    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{

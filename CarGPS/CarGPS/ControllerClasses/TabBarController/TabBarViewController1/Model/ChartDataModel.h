@@ -10,8 +10,12 @@
 
 @interface ChartDataModel : NSObject
 
-@property (nonatomic,copy)NSString *type;
-@property (nonatomic,copy)NSString *name;
+@property BOOL isOpen;
+@property unsigned int chartType;
+@property unsigned int headerId;
+@property (nonatomic,copy)NSString *header;
+@property (nonatomic,copy)NSString *footer;
 @property (nonatomic,copy)NSString *url;
+@property (nonatomic,copy)NSArray *summary;
 - (NSArray *)getData:(NSArray *)array;
 @end

@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import<WebKit/WebKit.h>
 
-@interface WebviewTableViewCell : UITableViewCell
-@property (nonatomic,strong)UIWebView *webView;
+@interface WebviewTableViewCell : UITableViewCell<WKNavigationDelegate>
+@property (nonatomic,strong)WKWebView *webView;
+@property (nonatomic, strong) UIProgressView *progressView;
+@property (nonatomic, assign) CGFloat delayTime;
 
 - (void)loadDataForCellWithURl:(NSString *)urlStr;
 @end

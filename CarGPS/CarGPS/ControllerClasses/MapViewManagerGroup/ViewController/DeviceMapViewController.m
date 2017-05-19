@@ -10,6 +10,7 @@
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "MyAnnotation.h"
+#import "MyAnnotationNormal.h"
 #import "MKMapView+ZoomLevel.h"
 #import "DeviceCoordinateModel.h"
 #import "CoordinatesModel.h"
@@ -19,7 +20,7 @@
 #import "UIView+WhenTappedBlocks.h"
 #import "StartAnnotation.h"
 #import "EndAnnotation.h"
-
+#import "EnlargeImage.h"
 
 
 
@@ -94,11 +95,14 @@
 }
 - (void)dealloc{
     HHCodeLog(@"dealloc");
+    if (_tapGesture) {
+        [_coverView removeGestureRecognizer:_tapGesture];
+    }
     if (_coverView) {
-        [self.coverView removeFromSuperview];
+        [_coverView removeFromSuperview];
     }
     if (_effectView) {
-        [self.effectView removeFromSuperview];
+        [_effectView removeFromSuperview];
     }
     self.mapView.delegate = nil;
 }
@@ -157,6 +161,13 @@
     
 }
 
+- (UITapGestureRecognizer *)tapGesture{
+    if (_tapGesture == nil) {
+        _tapGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeSubView)];
+        [_tapGesture setNumberOfTapsRequired:1];
+    }
+    return _tapGesture;
+}
 //遮罩层
 - (UIView *)coverView{
     if (_coverView == nil) {
@@ -164,9 +175,7 @@
         _coverView.frame = CGRectMake(0, 0,SCREEN_WIDTH,SCREEN_HEIGHT);
         _coverView.backgroundColor = [UIColor colorWithRed:(40/255.0f) green:(40/255.0f) blue:(40/255.0f) alpha:0.5f];
         _coverView.alpha = 0.f;
-        self.tapGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeSubView)];
-        [_coverView addGestureRecognizer:_tapGesture];
-        [_tapGesture setNumberOfTapsRequired:1];
+        [_coverView addGestureRecognizer:self.tapGesture];
     }
     return _coverView;
 }
@@ -409,7 +418,8 @@
     if (_bindImage1 == nil) {
         _bindImage1 = [[UIImageView alloc] init];
         [_bindImage1 whenTapped:^{
-            HHCodeLog(@"112");
+//            __weak DeviceMapViewController *weakself = self;
+            [EnlargeImage scanBigImageWithImageView:_bindImage1];
         }];
 
     }
@@ -420,7 +430,8 @@
     if (_bindImage2 == nil) {
         _bindImage2 = [[UIImageView alloc] init];
         [_bindImage2 whenTapped:^{
-            HHCodeLog(@"221");
+//            __weak DeviceMapViewController *weakself = self;
+            [EnlargeImage scanBigImageWithImageView:_bindImage2];
         }];
     }
     return _bindImage2;
@@ -446,7 +457,11 @@
                                   DeviceCoordinateModel *item = [[DeviceCoordinateModel alloc] getData:data];
                                   
                                   [weakself.mapView setCenterCoordinate:CLLocationCoordinate2DMake(item.lat, item.lng) zoomLevel:9 animated:YES];
-                                  [weakself.mapView addAnnotation:[[MyAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake(item.lat, item.lng) title:@"当前位置" subTitle:[NSString stringWithFormat:@"车架号:%@",item.vin]]];
+                                  if (item.fenceState == 100) {
+                                      [weakself.mapView addAnnotation:[[MyAnnotationNormal alloc] initWithCoordinates:CLLocationCoordinate2DMake(item.lat, item.lng) title:@"当前位置(围栏内)" subTitle:[NSString stringWithFormat:@"车架号:%@",item.vin]]];
+                                  }else{
+                                      [weakself.mapView addAnnotation:[[MyAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake(item.lat, item.lng) title:@"当前位置（围栏外）" subTitle:[NSString stringWithFormat:@"车架号:%@",item.vin]]];
+                                  }
                               }
                               failure:^(NSError *error) {
                                   
@@ -491,7 +506,6 @@
                               }];
 }
 
-
 #pragma mark - mapview delegate
 
 -(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
@@ -501,6 +515,12 @@
     if ([annotation isKindOfClass:[MyAnnotation class]]) {
         MKAnnotationView *annotationView = [[MKAnnotationView alloc]init];
         annotationView.image = [UIImage imageNamed:@"icon_annotation"];
+        annotationView.canShowCallout = YES;
+        return annotationView;
+    }
+    if ([annotation isKindOfClass:[MyAnnotationNormal class]]) {
+        MKAnnotationView *annotationView = [[MKAnnotationView alloc]init];
+        annotationView.image = [UIImage imageNamed:@"icon_annotationBlue"];
         annotationView.canShowCallout = YES;
         return annotationView;
     }

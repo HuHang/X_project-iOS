@@ -81,7 +81,7 @@
     
     
     self.IPTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-    self.countTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    self.countTextField.keyboardType = UIKeyboardTypeNumberPad;
     self.saveButton.layer.cornerRadius = 20;
     self.saveButton.layer.masksToBounds = YES;
     

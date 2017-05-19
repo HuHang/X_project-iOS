@@ -8,14 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol SearchInputtingDelegate <NSObject>
 
-- (void)searchMyInput:(NSString *)inputStr;
-
-@end
 
 @interface CarListTableViewController : UITableViewController
 
-@property(nonatomic,weak)id<SearchInputtingDelegate>delegate;
 
 @end

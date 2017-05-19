@@ -22,12 +22,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+    [self.navigationController.navigationBar lt_setBackgroundColor:UIColorFromHEX(0x333333, 1.0)];
+    self.view.backgroundColor = [UIColor blackColor];
     [self.navigationController.navigationBar.layer addSublayer:self.webProgressLayer];
-    [[UIDevice currentDevice] setValue: [NSNumber numberWithInteger: UIInterfaceOrientationLandscapeRight] forKey:@"orientation"];
+//    [[UIDevice currentDevice] setValue: [NSNumber numberWithInteger: UIInterfaceOrientationLandscapeRight] forKey:@"orientation"];
     [self.view addSubview:self.tableView];
-    [self callHttpForMapData];
+//    [self callHttpForMapData];
     // Do any additional setup after loading the view.
+    [self reloadWebView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -35,6 +37,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [self.navigationController.navigationBar lt_setBackgroundColor:ZDRedColor];
+    
+}
 - (void)dealloc {
     
     [_webProgressLayer closeTimer];
@@ -69,7 +76,7 @@
         _webView.backgroundColor = [UIColor whiteColor];
         _webView.delegate = self;
         _webView.scrollView.scrollEnabled = NO;
-//        [_webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://www.baidu.com"]]];
+//        [_webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://139.224.134.254:9001/Report_DailySupervision/AllCharts?request_from=app&request_type=enterStock&token=Basic%20YWRtaW46YWRtaW4="]]];
 
     }
     return _webView;
@@ -103,10 +110,11 @@
 
 
 - (void)reloadWebView{
-    ChartDataModel *item = (ChartDataModel *)self.dataArray[0];
-    NSString *urlStr = [NSString stringWithFormat:@"%@%@",item.url,[[NSUserDefaults standardUserDefaults] valueForKey:TOKEN]];
-    HHCodeLog(@"%@",urlStr);
-    [self.webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]]];
+//    ChartDataModel *item = (ChartDataModel *)self.dataArray[0];
+//    NSString *urlStr = @"http://139.224.134.254:9001/Report_DailySupervision/AllCharts?request_from=app&request_type=enterStock&token=Basic YWRtaW46YWRtaW4=";
+//    NSString *urlStr = [NSString stringWithFormat:@"%@%@",item.url,[[NSUserDefaults standardUserDefaults] valueForKey:TOKEN]];
+//    HHCodeLog(@"%@",urlStr);
+    [self.webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[self.urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]]];
 
 }
 
@@ -120,7 +128,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2;
+    return 1;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

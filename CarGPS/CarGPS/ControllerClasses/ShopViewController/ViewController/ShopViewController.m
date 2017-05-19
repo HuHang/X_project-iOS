@@ -13,9 +13,14 @@
 #import "ShopTableViewCell.h"
 #import "ShopModel.h"
 
-@interface ShopViewController ()<RATreeViewDelegate, RATreeViewDataSource>
+@interface ShopViewController ()<RATreeViewDelegate, RATreeViewDataSource,UISearchBarDelegate,UISearchControllerDelegate>
+{
+    BOOL isbool;
+}
 @property (strong, nonatomic) NSArray *dataArray;
+@property (strong, nonatomic) NSMutableArray *searchResultArray;
 @property (strong, nonatomic) NSMutableArray *selectArray;
+@property (strong, nonatomic)UISearchBar *searchBar;
 @property (weak, nonatomic) RATreeView *treeView;
 @end
 
@@ -25,10 +30,11 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     [self.navigationController.navigationBar lt_setBackgroundColor:ZDRedColor];
-    self.navigationItem.title = @"选择4S商店";
+//    self.navigationItem.title = @"选择4S商店";
     self.dataArray = [NSArray new];
     self.selectArray = [[NSMutableArray alloc] init];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"保存" style:(UIBarButtonItemStylePlain) target:self action:@selector(saveChange)];
+    [self creatNnavigationView];
     [self createTableView];
     [self callHttpForShopData];
 }
@@ -36,6 +42,27 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (NSMutableArray *)searchResultArray{
+    if (_searchResultArray == nil) {
+        _searchResultArray = [[NSMutableArray alloc] init];
+    }
+    return _searchResultArray;
+}
+
+- (UISearchBar * )searchBar{
+    if (_searchBar == nil) {
+        _searchBar = [[UISearchBar alloc] init];
+        _searchBar.frame = CGRectMake(0, 0 , SCREEN_WIDTH/2, 44);
+        _searchBar.placeholder = @"搜索";
+        _searchBar.delegate = self;
+    }
+    return _searchBar;
+}
+
+- (void)creatNnavigationView{
+    self.navigationItem.titleView = self.searchBar;
 }
 
 - (void)createTableView{
@@ -80,7 +107,11 @@
 - (NSInteger)treeView:(RATreeView *)treeView numberOfChildrenOfItem:(id)item
 {
     if (item == nil) {
-        return [self.dataArray count];
+        if (!isbool) {
+            return [self.dataArray count];
+        }
+        return [self.searchResultArray count];
+        
     }
     
     ShopModel *data = item;
@@ -91,11 +122,15 @@
 {
     ShopModel *data = item;
     if (item == nil) {
-        return [self.dataArray objectAtIndex:index];
+        if (!isbool) {
+            return [self.dataArray objectAtIndex:index];
+        }
+        return [self.searchResultArray objectAtIndex:index];
+        
     }
-    
     return data.ChildShops[index];
 }
+
 #pragma mark TreeView Delegate methods
 
 - (CGFloat)treeView:(RATreeView *)treeView heightForRowForItem:(id)item
@@ -139,6 +174,51 @@
         [PCMBProgressHUD hideWithView:weakself.view];
     }];
 }
+
+
+-(void)searchBar:(UISearchBar*)searchBar textDidChange:(NSString*)text
+{
+    //NSLog(@"searchBar ... text.length: %d", text.length);
+    
+    if(text.length == 0)
+    {
+        isbool = NO;
+        [self.searchResultArray removeAllObjects];
+    }
+    else
+    {
+        isbool = YES;
+        for (ShopModel *item in self.dataArray) {
+            if ([item.name rangeOfString:text options:NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch].location != NSNotFound)
+            {
+                if (![self.searchResultArray containsObject:item]) {
+                    [self.searchResultArray addObject:item];
+                }
+            }
+        }
+    }
+    
+    [self.treeView reloadData];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [searchBar resignFirstResponder];
+}
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
+    [searchBar setShowsCancelButton:YES animated:YES];
+}
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    searchBar.text=@"";
+    isbool= NO;
+    [searchBar setShowsCancelButton:NO animated:YES];
+    [searchBar resignFirstResponder];
+    [self.treeView reloadData];
+}
+
 
 
 #pragma mark - action

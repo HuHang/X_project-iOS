@@ -12,19 +12,20 @@
 #import "DeviceModel.h"
 #import "CarMapViewController.h"
 #import "PopoverView.h"
-#import "SearchDeviceViewController.h"
 
 
-@interface DeviceListTableViewController ()<UISearchBarDelegate,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate,UIScrollViewDelegate>
+@interface DeviceListTableViewController ()<UISearchBarDelegate,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate,UIScrollViewDelegate,UISearchBarDelegate,UISearchControllerDelegate>
+{
+    BOOL isbool;
+}
+@property (strong, nonatomic) NSArray *searchResultArray;
 @property (nonatomic,strong)NSMutableArray *dataArray;
 @property (nonatomic,strong)UIButton *shopSelectButton;
 @property (nonatomic,strong)UIButton *titleButton;
 @property (nonatomic,strong)NSString *selectesShopIDStr;
 @property NSInteger selectedIndex;
 @property NSInteger pageIndex;
-
-@property (nonatomic, strong) SearchDeviceViewController *searchVC;
-@property (nonatomic, strong) UISearchController *searchController;
+@property (strong, nonatomic)UISearchBar *searchBar;
 @end
 
 @implementation DeviceListTableViewController
@@ -36,11 +37,11 @@
     self.pageIndex = 0;
     self.tableView.emptyDataSetSource = self;
     self.tableView.emptyDataSetDelegate = self;
+    self.tableView.tableHeaderView = self.searchBar;
     self.tableView.tableFooterView = [UIView new];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.selectesShopIDStr = [[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopID];
     [self createNavigationView];
-    [self initMySearchBar];
     self.tableView.mj_header = [HLNormalHeader headerWithRefreshingBlock:^{
         [self setMJRefreshHeader];
     }];
@@ -78,20 +79,20 @@
 
 
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    CGFloat offsetY = scrollView.contentOffset.y;
-    if (offsetY > 0) {
-        if (offsetY >= 44) {
-            [self setNavigationBarTransformProgress:1];
-        } else {
-            [self setNavigationBarTransformProgress:(offsetY / 44)];
-        }
-    } else {
-        [self setNavigationBarTransformProgress:0];
-        //        self.navigationController.navigationBar.backIndicatorImage = [UIImage new];
-    }
-}
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+//{
+//    CGFloat offsetY = scrollView.contentOffset.y;
+//    if (offsetY > 0) {
+//        if (offsetY >= 44) {
+//            [self setNavigationBarTransformProgress:1];
+//        } else {
+//            [self setNavigationBarTransformProgress:(offsetY / 44)];
+//        }
+//    } else {
+//        [self setNavigationBarTransformProgress:0];
+//        //        self.navigationController.navigationBar.backIndicatorImage = [UIImage new];
+//    }
+//}
 - (void)setNavigationBarTransformProgress:(CGFloat)progress
 {
     [self.navigationController.navigationBar lt_setTranslationY:(-44 * progress)];
@@ -117,33 +118,21 @@
     });
 }
 
+- (NSArray *)searchResultArray{
+    if (_searchResultArray == nil) {
+        _searchResultArray = [NSArray new];
+    }
+    return _searchResultArray;
+}
 #pragma mark - view
-- (void) initMySearchBar
-{
-    // 搜索页
-    _searchVC = [[SearchDeviceViewController alloc] init];
-    //遵守代理，用于后面传值
-    self.delegate = _searchVC;
-    _searchController = [[UISearchController alloc] initWithSearchResultsController:_searchVC];
-    //设置后可以看到实时输入内容,可以在结果页的代理里面设置输入长度
-    [_searchController setSearchResultsUpdater: _searchVC];
-    [_searchController.searchBar setPlaceholder:@"搜索"];
-    [_searchController.searchBar setBarTintColor:[UIColor colorWithRed:0.95f green:0.95f blue:0.95f alpha:1.00f]];
-    //设置搜索logo
-    [_searchController.searchBar setImage:[UIImage imageNamed:@"last.png"] forSearchBarIcon:UISearchBarIconSearch state:UIControlStateNormal];
-    [_searchController.searchBar sizeToFit];
-    [_searchController.searchBar setDelegate:self];
-    [_searchController.searchBar.layer setBorderWidth:0.5f];
-    [_searchController.searchBar.layer setBorderColor:[UIColor colorWithRed:220.0/255.0 green:220.0/255.0 blue:220.0/255.0 alpha:1.0].CGColor];
-    [self.tableView setTableHeaderView:_searchController.searchBar];
-    
-    _searchVC.searchVC = _searchController;
-    __weak UISearchController *searchVC = _searchController;
-    
-    _searchVC.backBlock = ^{
-        [searchVC dismissViewControllerAnimated:YES completion:nil];
-        searchVC.searchBar.text = @"";
-    };
+- (UISearchBar * )searchBar{
+    if (_searchBar == nil) {
+        _searchBar = [[UISearchBar alloc] init];
+        _searchBar.frame = CGRectMake(0, 0 , SCREEN_WIDTH/2, 40);
+        _searchBar.placeholder = @"搜索";
+        _searchBar.delegate = self;
+    }
+    return _searchBar;
 }
 
 - (void)createNavigationView{
@@ -194,6 +183,21 @@
                               }];
 }
 
+- (void)callHttpForSearch:(NSString *)searchString{
+    __weak DeviceListTableViewController *weakself= self;
+    NSString *dataStr = [NSString stringWithFormat:@"%@&searchStr=%@&isBind=&pageIndex=%d",[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopID],searchString,0];
+    HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary searchDevice_url],dataStr]);
+    [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@%@",[URLDictionary searchDevice_url],dataStr] success:^(id data) {
+        weakself.searchResultArray = [[DeviceModel alloc] getData:data];
+        [weakself.tableView reloadData];
+        //            [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
+
+    } failure:^(NSError *error) {
+        
+    }];
+    
+}
+
 
 #pragma mark - Table view data source
 
@@ -202,7 +206,9 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    HHCodeLog(@"[self.dataArray count] :%lu",(unsigned long)[self.dataArray count]);
+    if (isbool) {
+        return [self.searchResultArray count];
+    }
     return [self.dataArray count];
 }
 
@@ -211,9 +217,11 @@
     DeviceTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([DeviceTableViewCell class])];
     if (cell == nil) {
         cell = [[DeviceTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([DeviceTableViewCell class])];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
     }
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    DeviceModel *item = (DeviceModel *)self.dataArray[indexPath.row];
+    DeviceModel *item = isbool ? (DeviceModel *)self.searchResultArray[indexPath.row] : (DeviceModel *)self.dataArray[indexPath.row];
+
     [cell loadDataWithIMEI:item.imei
                     number:item.vin
                       time:[NSString formatDateTimeForCN:item.signalTime]
@@ -238,40 +246,56 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (self.selectedIndex == 1) {
-        CarMapViewController *mapView = [[CarMapViewController alloc] init];
-        mapView.deviceID = [(DeviceModel *)self.dataArray[indexPath.row] ID];
-        [self presentViewController:mapView animated:YES completion:nil];
+    DeviceModel *item = isbool ? (DeviceModel *)self.searchResultArray[indexPath.row] : (DeviceModel *)self.dataArray[indexPath.row];
+    if ([item.vin isEqualToString:@""]) {
+        [PCMBProgressHUD showLoadingTipsInView:self.view title:@"提示" detail:@"设备未使用，暂无定位信息" withIsAutoHide:YES];
     }else{
-        [PCMBProgressHUD showLoadingTipsInView:self.view title:@"提示" detail:@"请切换至使用中设备列表查看" withIsAutoHide:YES];
+        CarMapViewController *mapView = [[CarMapViewController alloc] init];
+        mapView.deviceID = item.ID;
+        [self presentViewController:mapView animated:YES completion:nil];
     }
-
 
 
 }
 
 #pragma mark - UISearchBarDelegate
 
-- (void) searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+-(void)searchBar:(UISearchBar*)searchBar textDidChange:(NSString*)text
 {
-    [self.tabBarController.tabBar setHidden:YES];
-}
-
-- (void) searchBarCancelButtonClicked:(UISearchBar *)searchBar
-{
-    //这里也可以不做取消操作，而是该用确认搜索的操作，使用.h中的代理把值传到搜索结果那里进行网络请求
-    [self.tabBarController.tabBar setHidden:NO];
-    NSLog(@"---------------Cancel");
+    
+    if(text.length == 0)
+    {
+        isbool = NO;
+        self.searchResultArray = @[];
+        [self.tableView reloadData];
+    }
+    else
+    {
+        isbool = YES;
+        
+    }
     
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-    NSLog(@"---------------%@",searchBar.text);
-    
-    if ([self.delegate respondsToSelector:@selector(searchMyInput:)]) {
-        [self.delegate searchMyInput:searchBar.text];
-    }
+    HHCodeLog(@"123");
+    [self callHttpForSearch:self.searchBar.text];
+    [searchBar resignFirstResponder];
+    [searchBar setShowsCancelButton:NO animated:YES];
+}
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
+    [searchBar setShowsCancelButton:YES animated:YES];
+}
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    searchBar.text=@"";
+    isbool= NO;
+    [searchBar setShowsCancelButton:NO animated:YES];
+    [searchBar resignFirstResponder];
+    [self.tableView reloadData];
 }
 
 

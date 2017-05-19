@@ -36,6 +36,9 @@
 
 @property (nonatomic,strong)UIImageView *batteryImage;
 
+@property (nonatomic,strong)UILongPressGestureRecognizer *longPressGestureRecognizer;
+
+
 /**
  cell
 

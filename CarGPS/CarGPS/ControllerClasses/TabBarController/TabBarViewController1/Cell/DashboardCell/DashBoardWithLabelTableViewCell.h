@@ -1,15 +1,15 @@
 //
-//  DashBoardTableViewCell.h
+//  DashBoardWithLabelTableViewCell.h
 //  CarGPS
 //
-//  Created by Charlot on 2017/4/28.
+//  Created by Charlot on 2017/5/19.
 //  Copyright © 2017年 Charlot. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface DashBoardTableViewCell : UITableViewCell
-@property (nonatomic,strong)UIView *titleContentView;
+
+@interface DashBoardWithLabelTableViewCell : UITableViewCell
 @property (nonatomic,strong)UIImageView *titleImageView;
 @property (nonatomic,strong)UILabel *titleLabel;
 
@@ -26,12 +26,5 @@
 @property (nonatomic,strong)UILabel *thirdUnitLabel;
 
 
-- (void)setCellDataWithtitleImageNamge:(NSString *)titleImageStr
-                                 title:(NSString *)titleStr
-                        titleBackColor:(UIColor *)titleBackColor
-                        chartImageName:(NSString *)chartImageStr
-                            titleArray:(NSArray *)titleArray
-                             counArray:(NSArray *)countArray
-                             unitArray:(NSArray *)unitArray
-                       titleColorArray:(NSArray *)titleColorArray;
+- (void)setCellDataWithData:(NSArray *)dataAry withtitle:(NSString *)titleString withType:(int)type;
 @end

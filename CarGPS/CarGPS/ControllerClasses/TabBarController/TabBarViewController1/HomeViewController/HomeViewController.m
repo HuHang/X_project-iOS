@@ -9,7 +9,6 @@
 #import "HomeViewController.h"
 #import "ShopViewController.h"
 #import "MoreFunctionCollectionViewCell.h"
-#import "DashBoardTableViewCell.h"
 #import "MainMapListViewController.h"
 #import "CarListTableViewController.h"
 #import "DeviceListTableViewController.h"
@@ -18,9 +17,16 @@
 
 #import "MoreFuncationTableViewController.h"
 #import "DashboardViewController.h"
-
+#import "DashboardWebViewController.h"
+#import "CountryMapWebViewController.h"
 #import "InventoryOrderViewController.h"
 
+#import "DashBoardWithLabelTableViewCell.h"
+#import "DashBoardWithSublabelTableViewCell.h"
+#import "DashBoardWithListTableViewCell.h"
+#import "DashBoardWithImageTableViewCell.h"
+
+#import "ChartDataModel.h"
 
 static CGFloat functionHeaderViewHeight = 95;
 static CGFloat moreFuncationViewHeight = 70;
@@ -34,7 +40,8 @@ static CGFloat widthFormWidth = 0.54;
 @property (nonatomic,strong)UIView *functionHeaderView;
 @property (nonatomic,strong)UITableView *tableView;
 @property (nonatomic,strong)UIButton *shopButton;
-
+@property (nonatomic,strong)NSArray *dataArray;
+@property (nonatomic, strong) YYFPSLabel *fpsLabel;
 @end
 
 @implementation HomeViewController
@@ -43,6 +50,13 @@ static CGFloat widthFormWidth = 0.54;
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     [self viewLayout];
+    
+//    _fpsLabel = [YYFPSLabel new];
+//    _fpsLabel.frame = CGRectMake(200, 200, 50, 30);
+//    [_fpsLabel sizeToFit];
+//    [self.view addSubview:_fpsLabel];
+    
+    [self callHttpForDashBoard];
 //    __weak typeof (self) weakself = self;
 //    self.mainScrollView.mj_footer = [MJRefreshFooter footerWithRefreshingBlock:^{
 //        [weakself.mainTableView loadMoreData];
@@ -55,6 +69,12 @@ static CGFloat widthFormWidth = 0.54;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+//- (BOOL)shouldAutorotate{
+//    return YES;
+//}
+//- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+//    return UIInterfaceOrientationMaskPortrait;
+//}
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
@@ -102,6 +122,12 @@ static CGFloat widthFormWidth = 0.54;
         make.left.and.right.mas_equalTo(0);
         make.height.mas_equalTo(SCREEN_HEIGHT_WithNavAndTabBar-functionHeaderViewHeight);
     }];
+}
+- (NSArray *)dataArray{
+    if (_dataArray == nil) {
+        _dataArray = [NSArray new];
+    }
+    return _dataArray;
 }
 
 - (void)dealloc{
@@ -168,10 +194,24 @@ static CGFloat widthFormWidth = 0.54;
         _tableView.emptyDataSetDelegate = self;
         _tableView.backgroundColor = UIColorFromHEX(0xFBF4F4, 1.0);
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//        _tableView.estimatedRowHeight = 100;
+//        _tableView.rowHeight = UITableViewAutomaticDimension;
     }
     return _tableView;
 }
 
+
+#pragma mark - http
+- (void)callHttpForDashBoard{
+    __weak HomeViewController *weakself = self;
+    HHCodeLog(@"%@",[URLDictionary dashBoard_url]);
+    [CallHttpManager getWithUrlString:[URLDictionary dashBoard_url] success:^(id data) {
+        weakself.dataArray = [[ChartDataModel alloc] getData:data];
+        [weakself.tableView reloadData];
+    } failure:^(NSError *error) {
+        
+    }];
+}
 #pragma mark -
 #pragma mark - tableView
 
@@ -182,30 +222,129 @@ static CGFloat widthFormWidth = 0.54;
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 10;
+    if ([self.dataArray count] > 1) {
+        return 1;
+    }
+    return [self.dataArray count];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    DashBoardTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([DashBoardTableViewCell class])];
-    if (cell == nil) {
-        cell = [[DashBoardTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([DashBoardTableViewCell class])];
+    ChartDataModel *item = (ChartDataModel *)self.dataArray[0];
+    if (item.chartType == 1) {
+        DashBoardWithLabelTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([DashBoardWithLabelTableViewCell class])];
+        if (cell == nil) {
+            cell = [[DashBoardWithLabelTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([DashBoardWithLabelTableViewCell class])];
+        }
+        [cell setCellDataWithData:item.summary withtitle:item.header withType:item.headerId];
+        return cell;
+    }else{
+        UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+                    if (cell == nil) {
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([UITableViewCell class])];
+                    }
+                    cell.textLabel.text = @"default";
+                    return cell;
+        
     }
-    [cell setCellDataWithtitleImageNamge:@"dash_titleImage0" title:@"日常监管情况" titleBackColor:[UIColor whiteColor] chartImageName:@"dash_chartImage0" titleArray:@[@"入库",@"出库",@"在库"] counArray:@[@"400",@"100",@"500"] unitArray:@[@"台",@"台",@"台"] titleColorArray:@[UIColorFromHEX(0xFFBF00,1.0),UIColorFromHEX(0xFF9094,1.0),UIColorFromHEX(0x7DAFEA,1.0)]];
-    return cell;
+//    switch (item.chartType) {
+//        case 1:case 6:
+//        {
+//            DashBoardWithLabelTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([DashBoardWithLabelTableViewCell class])];
+//            if (cell == nil) {
+//                cell = [[DashBoardWithLabelTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([DashBoardWithLabelTableViewCell class])];
+//            }
+//            [cell setCellDataWithData:item.summary withtitle:item.header withType:item.headerId];
+//            return cell;
+//        }
+//            
+//            break;
+//        case 2:case 4:case 5:case 9:
+//        {
+////            UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+////            if (cell == nil) {
+////                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([UITableViewCell class])];
+////            }
+////            cell.textLabel.text = @"hahahhah2346";
+////            return cell;
+//            DashBoardWithSublabelTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([DashBoardWithSublabelTableViewCell class])];
+//            if (cell == nil) {
+//                cell = [[DashBoardWithSublabelTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([DashBoardWithSublabelTableViewCell class])];
+//            }
+//            [cell setCellDataWithData:item.summary withtitle:item.header withType:item.chartType];
+//            return cell;
+//        }
+//            
+//            break;
+//        case 3:case 7:
+//        {
+//            UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+//            if (cell == nil) {
+//                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([UITableViewCell class])];
+//            }
+//            cell.textLabel.text = @"hahahhah38";
+//            return cell;
+//            
+////            DashBoardWithListTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([DashBoardWithListTableViewCell class])];
+////            if (cell == nil) {
+////                cell = [[DashBoardWithListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([DashBoardWithListTableViewCell class])];
+////            }
+////            [cell setCellDataWithData:item.summary withtitle:item.header withType:item.headerId];
+////            return cell;
+//        }
+//            break;
+//        case 8:
+//        {
+//            DashBoardWithImageTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([DashBoardWithImageTableViewCell class])];
+//            if (cell == nil) {
+//                cell = [[DashBoardWithImageTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([DashBoardWithImageTableViewCell class])];
+//            }
+//            [cell setCellDataWithData:item.summary withtitle:item.header withType:item.headerId];
+//            return cell;
+//        }
+//            break;
+//            
+//        default:
+//        {
+//            UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+//            if (cell == nil) {
+//                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([UITableViewCell class])];
+//            }
+//            cell.textLabel.text = @"default";
+//            return cell;
+//        }
+//            break;
+//    }
+    
+    
+    return nil;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    DashboardViewController *chartView = [[DashboardViewController alloc] init];
+            CountryMapWebViewController *chartView = [[CountryMapWebViewController alloc] init];
+     ChartDataModel *item = (ChartDataModel *)self.dataArray[indexPath.row];
+    chartView.urlStr = item.url;
+            [self.navigationController pushViewController:chartView animated:YES];
+//    if (indexPath.row == 0) {
+//        DashboardWebViewController *chartView = [[DashboardWebViewController alloc] init];
+//        [self presentViewController:chartView animated:YES completion:nil];
+//    }else{
+//        CountryMapWebViewController *chartView = [[CountryMapWebViewController alloc] init];
+////        [self presentViewController:chartView animated:YES completion:nil];
+//            [self.navigationController pushViewController:chartView animated:YES];
+//
+//    }
+    
+
 //    [self.navigationController pushViewController:chartView animated:YES];
-    [self presentViewController:chartView animated:YES completion:nil];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 200;
+
+    return 180;
 }
 
 
@@ -293,6 +432,7 @@ static CGFloat widthFormWidth = 0.54;
 }
 
 - (void)shopChanged{
+    self.shopButton.titleLabel.text = [[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopName];
     [self.shopButton setTitle:[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopName] forState:(UIControlStateNormal)];
 }
 

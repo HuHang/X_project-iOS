@@ -32,6 +32,7 @@
 //时间
 @property (nonatomic,strong) UILabel *timeLabel;
 
+@property (nonatomic,strong)UILongPressGestureRecognizer *longPressGestureRecognizer;
 
 - (void)loadDataWithVin:(NSString *)vinStr
                shopType:(NSString *)shopTypeStr

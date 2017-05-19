@@ -20,7 +20,7 @@
 #import "UIView+WhenTappedBlocks.h"
 #import "StartAnnotation.h"
 #import "EndAnnotation.h"
-
+#import "EnlargeImage.h"
 
 
 @interface CarMapViewController ()<MKMapViewDelegate>
@@ -93,6 +93,9 @@
 }
 - (void)dealloc{
     HHCodeLog(@"dealloc");
+    if (_tapGesture) {
+        [_coverView removeGestureRecognizer:_tapGesture];
+    }
     if (_coverView) {
         [self.coverView removeFromSuperview];
     }
@@ -155,6 +158,13 @@
     [rightButton addTarget:self action:@selector(showActionView) forControlEvents:(UIControlEventTouchUpInside)];
     
 }
+- (UITapGestureRecognizer *)tapGesture{
+    if (_tapGesture == nil) {
+        _tapGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeSubView)];
+        [_tapGesture setNumberOfTapsRequired:1];
+    }
+    return _tapGesture;
+}
 
 //遮罩层
 - (UIView *)coverView{
@@ -163,9 +173,7 @@
         _coverView.frame = CGRectMake(0, 0,SCREEN_WIDTH,SCREEN_HEIGHT);
         _coverView.backgroundColor = [UIColor colorWithRed:(40/255.0f) green:(40/255.0f) blue:(40/255.0f) alpha:0.5f];
         _coverView.alpha = 0.f;
-        self.tapGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeSubView)];
-        [_coverView addGestureRecognizer:_tapGesture];
-        [_tapGesture setNumberOfTapsRequired:1];
+        [_coverView addGestureRecognizer:self.tapGesture];
     }
     return _coverView;
 }
@@ -408,7 +416,8 @@
     if (_bindImage1 == nil) {
         _bindImage1 = [[UIImageView alloc] init];
         [_bindImage1 whenTapped:^{
-            HHCodeLog(@"112");
+            //            __weak DeviceMapViewController *weakself = self;
+            [EnlargeImage scanBigImageWithImageView:_bindImage1];
         }];
         
     }
@@ -419,7 +428,8 @@
     if (_bindImage2 == nil) {
         _bindImage2 = [[UIImageView alloc] init];
         [_bindImage2 whenTapped:^{
-            HHCodeLog(@"221");
+            //            __weak DeviceMapViewController *weakself = self;
+            [EnlargeImage scanBigImageWithImageView:_bindImage2];
         }];
     }
     return _bindImage2;

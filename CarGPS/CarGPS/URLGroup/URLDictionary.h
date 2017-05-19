@@ -21,6 +21,8 @@
 + (NSString *) login_url;
 /*--------------------------------------用户相关------------------------------------*/
 + (NSString *) userInfo_url;
+
++ (NSString *) dashBoard_url;
 /*--------------------------------------设备------------------------------------*/
 + (NSString *) allDevice_url;
 + (NSString *) allMonitorDevice_url;

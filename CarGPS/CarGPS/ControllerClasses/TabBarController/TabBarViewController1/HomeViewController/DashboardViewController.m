@@ -13,24 +13,20 @@
 #import "SegmentCustomStyleManager.h"
 
 
-@interface DashboardViewController ()<UIWebViewDelegate,UITableViewDelegate,UITableViewDataSource,SegmentCustomViewDelegate>
-@property (nonatomic,strong)UIWebView *webView;
+@interface DashboardViewController ()<UITableViewDelegate,UITableViewDataSource,SegmentCustomViewDelegate>
 @property (nonatomic, strong) YJWebProgressLayer *webProgressLayer;
 @property (strong, nonatomic) UITableView *tableView;
 @property (nonatomic,strong)NSArray *dataArray;
 @property (nonatomic,strong) SegmentCustomStyleManager *segmentView;
 @property (nonatomic,strong)UILabel *titleLabel;
+@property NSInteger selectedIndex;
 @end
 
 @implementation DashboardViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
-    [self.navigationController.navigationBar.layer addSublayer:self.webProgressLayer];
-//    [[UIDevice currentDevice] setValue: [NSNumber numberWithInteger: UIInterfaceOrientationLandscapeRight] forKey:@"orientation"];
-    [self viewLayout];
-    [self callHttpForMapData];
+    self.selectedIndex = 0;
     // Do any additional setup after loading the view.
 }
 
@@ -39,11 +35,34 @@
     // Dispose of any resources that can be recreated.
 }
 
+//- (BOOL)shouldAutorotate{
+//    return YES;
+//}
+//
+//- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+//    return UIInterfaceOrientationMaskLandscapeLeft;
+//}
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+//    NSNumber *orientationUnknown = [NSNumber numberWithInt:UIInterfaceOrientationUnknown];
+//    [[UIDevice currentDevice] setValue:orientationUnknown forKey:@"orientation"];
+//    
+//    NSNumber *orientationTarget = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeLeft];
+//    [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
+//    
+//    self.view.backgroundColor = [UIColor whiteColor];
+//    [self.navigationController.navigationBar.layer addSublayer:self.webProgressLayer];
+//    [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationLandscapeRight) forKey:@"orientation"];
+    //    [[UIDevice currentDevice] setValue: [NSNumber numberWithInteger: UIInterfaceOrientationLandscapeRight] forKey:@"orientation"];
+    [self viewLayout];
+    [self callHttpForMapDataWithType:@"enterStock"];
+}
+
+
 - (void)dissMissView{
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (void)dealloc {
-    
     [_webProgressLayer closeTimer];
     [_webProgressLayer removeFromSuperlayer];
     _webProgressLayer = nil;
@@ -70,17 +89,7 @@
     }
     return _tableView;
 }
-- (UIWebView *)webView{
-    if (_webView == nil) {
-        _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_HEIGHT, 1)];
-        _webView.backgroundColor = [UIColor whiteColor];
-        _webView.delegate = self;
-        _webView.scrollView.scrollEnabled = NO;
-        //        [_webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://www.baidu.com"]]];
-        
-    }
-    return _webView;
-}
+
 - (YJWebProgressLayer *)webProgressLayer{
     if (_webProgressLayer == nil) {
         _webProgressLayer = [[YJWebProgressLayer alloc] init];
@@ -136,29 +145,25 @@
     [button addTarget:self action:@selector(dissMissView) forControlEvents:(UIControlEventTouchUpInside)];
 }
 #pragma mark - http
-- (void)callHttpForMapData{
+- (void)callHttpForMapDataWithType:(NSString *)type{
+    [PCMBProgressHUD showLoadingImageInView:self.view isResponse:YES];
     __weak DashboardViewController *weakself = self;
-    NSString *dataStr = [NSString stringWithFormat:@"type=%@",@"enterStock"];
+    NSString *dataStr = [NSString stringWithFormat:@"type=%@",type];
     HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary getFirstDashboard_url],dataStr]);
     [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@%@",[URLDictionary getFirstDashboard_url],dataStr]
                               success:^(id data) {
+                                  [PCMBProgressHUD hideWithView:weakself.view];
                                   weakself.dataArray = [[ChartDataModel alloc] getData:data[0][@"data"]];
                                   [weakself.tableView reloadData];
                               }
                               failure:^(NSError *error) {
-                                  
+                                  [PCMBProgressHUD hideWithView:weakself.view];
                               }];
 }
 
 
 
-- (void)reloadWebView{
-    ChartDataModel *item = (ChartDataModel *)self.dataArray[0];
-    NSString *urlStr = [NSString stringWithFormat:@"%@%@",item.url,[[NSUserDefaults standardUserDefaults] valueForKey:TOKEN]];
-    HHCodeLog(@"%@",urlStr);
-    [self.webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]]];
-    
-}
+
 
 #pragma mark -
 #pragma mark - tableView
@@ -170,28 +175,35 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
-//    return [self.dataArray count];
+//    return 1;
+    return [self.dataArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-//    HHCodeLog(@"%lu-%ld",(unsigned long)[self.dataArray count],(long)indexPath.row);
-
-
+//    static NSString *identifier;
+//    switch (self.selectedIndex) {
+//        case 0:
+//            identifier = @"WebviewTableViewCell0";
+//            break;
+//        case 1:
+//            identifier = @"WebviewTableViewCell1";
+//            break;
+//        case 2:
+//            identifier = @"WebviewTableViewCell2";
+//            break;
+//        default:
+//            break;
+//    }
     WebviewTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([WebviewTableViewCell class])];
-    
     if (cell == nil) {
-        HHCodeLog(@"hahah");
         cell = [[WebviewTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([WebviewTableViewCell class])];
-        
-//        ChartDataModel *item = (ChartDataModel *)self.dataArray[indexPath.row];
-        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-//        NSString *urlStr = [NSString stringWithFormat:@"%@%@",item.url,[[NSUserDefaults standardUserDefaults] valueForKey:TOKEN]];
-        NSString *urlStr = @"http://139.224.134.254:9001/Report_DailySupervision/ProvinceMap?request_from=app&request_type=enterStock&token=Basic YWRtaW46YWRtaW4=";
-        [cell loadDataForCellWithURl:urlStr];
     }
+    ChartDataModel *item = (ChartDataModel *)self.dataArray[indexPath.row];
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    NSString *urlStr = [NSString stringWithFormat:@"%@%@",item.url,[[NSUserDefaults standardUserDefaults] valueForKey:TOKEN]];
+    //        NSString *urlStr = @"http://139.224.134.254:9001/Report_DailySupervision/ProvinceMap?request_from=app&request_type=enterStock&token=Basic YWRtaW46YWRtaW4=";
+    [cell loadDataForCellWithURl:urlStr];
     
     return cell;
 }
@@ -214,28 +226,22 @@
 
 #pragma mark - segment delegate
 - (void)segmentCustomView:(SegmentCustomStyleManager *)segmentCustomView index:(NSInteger)index{
-
+    self.selectedIndex = index;
+    switch (index) {
+        case 0:
+            [self callHttpForMapDataWithType:@"enterStock"];
+            break;
+        case 1:
+            [self callHttpForMapDataWithType:@"outStock"];
+            break;
+        case 2:
+            [self callHttpForMapDataWithType:@""];
+            break;
+            
+        default:
+            break;
+    }
     
-}
-#pragma mark - UIWebView Delegate Methods
--(void)webViewDidFinishLoad:(UIWebView *)webView
-{
-    [_webProgressLayer finishedLoadWithError:nil];
-    HHCodeLog(@"finish");
-    //获取到webview的高度
-    CGFloat height = [[self.webView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] floatValue];
-    self.webView.frame = CGRectMake(self.webView.frame.origin.x,self.webView.frame.origin.y, SCREEN_WIDTH, height);
-    [self.tableView reloadData];
-}
-- (void)webViewDidStartLoad:(UIWebView *)webView
-{
-    [_webProgressLayer startLoad];
-    NSLog(@"webViewDidStartLoad");
-}
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
-{
-    [_webProgressLayer finishedLoadWithError:error];
-    NSLog(@"didFailLoadWithError===%@", error);
 }
 
 @end

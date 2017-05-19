@@ -41,7 +41,6 @@
 }
 
 - (void)initLayout{
-    UIView *backgroundView = [[UIView alloc] init];
     self.titleContentView = [[UIView alloc] init];
     self.titleImageView = [[UIImageView alloc] init];
     self.titleLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(14.f)];
@@ -60,46 +59,37 @@
     
     UIView *lineView = [[UIView alloc] init];
     UILabel *buttonLabel = [UILabel labelWithString:@"立即查看" withTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor lightGrayColor] withFont:SystemFont(12.f)];
-    [self.contentView addSubview:backgroundView];
-    [backgroundView addSubview:self.titleContentView];
-    [self.titleContentView addSubview:self.titleImageView];
-    [self.titleContentView addSubview:self.titleLabel];
     
-    [backgroundView addSubview:self.firstTitleLabel];
-    [backgroundView addSubview:self.firstCountLabel];
-    [backgroundView addSubview:self.firstUnitLabel];
+    [self.contentView addSubview:self.titleImageView];
+    [self.contentView addSubview:self.titleLabel];
     
-    [backgroundView addSubview:self.secondTitleLabel];
-    [backgroundView addSubview:self.secondCountLabel];
-    [backgroundView addSubview:self.secondUnitLabel];
+    [self.contentView addSubview:self.firstTitleLabel];
+    [self.contentView addSubview:self.firstCountLabel];
+    [self.contentView addSubview:self.firstUnitLabel];
     
-    [backgroundView addSubview:self.thirdTitleLabel];
-    [backgroundView addSubview:self.thirdCountLabel];
-    [backgroundView addSubview:self.thirdUnitLabel];
+    [self.contentView addSubview:self.secondTitleLabel];
+    [self.contentView addSubview:self.secondCountLabel];
+    [self.contentView addSubview:self.secondUnitLabel];
     
-    [backgroundView addSubview:lineView];
-    [backgroundView addSubview:buttonLabel];
+    [self.contentView addSubview:self.thirdTitleLabel];
+    [self.contentView addSubview:self.thirdCountLabel];
+    [self.contentView addSubview:self.thirdUnitLabel];
     
+    [self.contentView addSubview:lineView];
+    [self.contentView addSubview:buttonLabel];
     
-    [backgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.contentView).with.insets(UIEdgeInsetsMake(5, 0, 20, 0));
-    }];
+
     //标题view
-    [self.titleContentView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.and.top.mas_equalTo(0);
-        make.height.mas_equalTo(30);
-    }];
     [self.titleImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(10);
-        make.centerY.mas_equalTo(0);
-        make.size.mas_equalTo(CGSizeMake(18, 20));
+        make.left.and.top.mas_equalTo(10);
+        make.size.mas_equalTo(CGSizeMake(20, 20));
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.and.right.mas_equalTo(0);
         make.left.equalTo(self.titleImageView.mas_right).with.mas_offset(8);
-        make.height.equalTo(self.titleImageView);
+        make.right.mas_equalTo(0);
+        make.height.and.top.equalTo(self.titleImageView);
     }];
-    
+    self.titleLabel.preferredMaxLayoutWidth = SCREEN_WIDTH - 30;
     
     //信息
     NSArray *titleArray = @[self.firstTitleLabel,self.secondTitleLabel,self.thirdTitleLabel];
@@ -127,22 +117,25 @@
         make.left.and.right.and.bottom.mas_equalTo(0);
         make.height.mas_equalTo(30);
     }];
+    buttonLabel.preferredMaxLayoutWidth = SCREEN_WIDTH;
     [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(10);
         make.right.mas_equalTo(-10);
         make.bottom.equalTo(buttonLabel.mas_top);
         make.height.mas_equalTo(1);
     }];
+
+    
     self.backgroundColor = [UIColor clearColor];
     
     lineView.backgroundColor = UIColorFromHEX(0xD9D9D9,1.0);
-    backgroundView.backgroundColor = [UIColor whiteColor];
-    backgroundView.layer.cornerRadius = 5.f;
-    backgroundView.layer.masksToBounds = YES;
-    [backgroundView.layer setShadowColor:[UIColor grayColor].CGColor];
-    [backgroundView.layer setShadowOpacity:0.8f];
-    [backgroundView.layer setShadowOffset:CGSizeMake(0, 0)];
-    [backgroundView.layer setShadowRadius:5.f];
+//    backgroundView.backgroundColor = [UIColor whiteColor];
+//    backgroundView.layer.cornerRadius = 5.f;
+//    backgroundView.layer.masksToBounds = YES;
+//    [backgroundView.layer setShadowColor:[UIColor grayColor].CGColor];
+//    [backgroundView.layer setShadowOpacity:0.8f];
+//    [backgroundView.layer setShadowOffset:CGSizeMake(0, 0)];
+//    [backgroundView.layer setShadowRadius:5.f];
 }
 
 

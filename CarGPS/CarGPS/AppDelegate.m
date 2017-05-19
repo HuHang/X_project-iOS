@@ -33,7 +33,6 @@
     
     if (![[NSUserDefaults standardUserDefaults] boolForKey:FIRSTLUNCH]) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:FIRSTLUNCH];
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:SAVE_PWD];
         MovieViewController *wsCtrl = [[MovieViewController alloc]init];
         wsCtrl.movieURL = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@"qidong"ofType:@"mp4"]];
         self.window.rootViewController = wsCtrl;
@@ -45,13 +44,15 @@
     return YES;
 }
 
+//- (BOOL)shouldAutorotate{
+//    return YES;
+//}
+//
+//- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+//    return UIInterfaceOrientationMaskPortrait;
+//}
 //-(UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
-//    if (self.isForceLandscape) {
-//        return UIInterfaceOrientationMaskLandscape;
-//    }else if (self.isForcePortrait){
-//        return UIInterfaceOrientationMaskPortrait;
-//    }
-//    return UIInterfaceOrientationMaskAll;
+//    return UIInterfaceOrientationMaskAllButUpsideDown;
 //}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -83,6 +84,7 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FIRSTLUNCH];
     [self saveContext];
 }
 

@@ -72,6 +72,16 @@
 }
 
 /**
+ dashboard
+ 
+ @return dashboard
+ */
++ (NSString *) dashBoard_url{
+    NSString *loginUrl = @"/api/dashboards/Dashboard";
+    return  [NSString stringWithFormat:@"%@%@",[self baseUrlWithPort],loginUrl];
+}
+
+/**
  所有商店
  
  @return 所有商店

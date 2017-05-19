@@ -199,7 +199,7 @@
     self.statusLabel.layer.cornerRadius = 12.f;
     self.statusLabel.layer.masksToBounds = YES;
     
-    
+    [self addGestureRecognizer:self.longPressGestureRecognizer];
 }
 
 - (void)loadDataWithIMEI:(NSString *)imeiStr
@@ -272,6 +272,26 @@
     view.backgroundColor = viewColor;
     return view;
 }
+- (UILongPressGestureRecognizer *)longPressGestureRecognizer{
+    if (_longPressGestureRecognizer == nil) {
+        _longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressGestureRecognizer:)];
+        _longPressGestureRecognizer.minimumPressDuration = 1;
+    }
+    return _longPressGestureRecognizer;
+}
 
+-(void)longPressGestureRecognizer:(UILongPressGestureRecognizer *)lpGR{
+    
+    if (lpGR.state == UIGestureRecognizerStateBegan) {
+        [self becomeFirstResponder];
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        [pasteboard setString:self.imeiLabel.text];
+        [PCMBProgressHUD showLoadingTipsInView:self.window title:self.imeiLabel.text detail:@"已复制" withIsAutoHide:YES];
+    }
+}
+- (void)dealloc{
+    HHCodeLog(@"dealloc");
+    [self removeGestureRecognizer:_longPressGestureRecognizer];
+}
 
 @end
