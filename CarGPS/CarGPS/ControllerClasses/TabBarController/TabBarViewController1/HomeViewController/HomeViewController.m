@@ -56,12 +56,11 @@ static CGFloat widthFormWidth = 0.54;
 //    [_fpsLabel sizeToFit];
 //    [self.view addSubview:_fpsLabel];
     
-    [self callHttpForDashBoard];
-//    __weak typeof (self) weakself = self;
-//    self.mainScrollView.mj_footer = [MJRefreshFooter footerWithRefreshingBlock:^{
-//        [weakself.mainTableView loadMoreData];
-//        [weakself.mainScrollView.mj_footer endRefreshing];
-//    }];
+    
+    __weak HomeViewController *weakself = self;
+    self.tableView.mj_header = [HLNormalHeader headerWithRefreshingBlock:^{
+        [weakself setMJRefreshHeader];
+    }];
     // Do any additional setup after loading the view.
 }
 
@@ -69,14 +68,10 @@ static CGFloat widthFormWidth = 0.54;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-//- (BOOL)shouldAutorotate{
-//    return YES;
-//}
-//- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-//    return UIInterfaceOrientationMaskPortrait;
-//}
+
 
 - (void)viewDidAppear:(BOOL)animated{
+
     [super viewDidAppear:animated];
     if ([[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopID] length] == 0) {
         if ([[[NSUserDefaults standardUserDefaults] valueForKey:USERSHOPID] isEqualToString:@"shopids[]=0"]) {
@@ -91,16 +86,25 @@ static CGFloat widthFormWidth = 0.54;
     }else{
         [self createNavigationView];
     }
+    [self callHttpForDashBoard];
     HHCodeLog(@"HH==%@",[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopID]);
     
-    
+}
+
+- (void)setMJRefreshHeader{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self callHttpForDashBoard];
+        [self.tableView.mj_header endRefreshing];
+    });
 }
 
 - (void)createNavigationView{
     self.shopButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.shopButton.frame = CGRectMake(0, 0, SCREEN_WIDTH /2, 20);
+    self.shopButton.frame = CGRectMake(0, 0, SCREEN_WIDTH *2/3, 20);
     [self.shopButton setImage:[UIImage imageNamed:@"toMap"] forState:UIControlStateNormal];
     [self.shopButton setTitle:[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopName] forState:(UIControlStateNormal)];
+    self.shopButton.titleLabel.textAlignment = NSTextAlignmentLeft;
+    self.shopButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     self.shopButton.titleLabel.font = SystemFont(14.f);
     [self.shopButton addTarget:self action:@selector(salesChange) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *left = [[UIBarButtonItem alloc]initWithCustomView:self.shopButton];
@@ -323,10 +327,16 @@ static CGFloat widthFormWidth = 0.54;
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-            CountryMapWebViewController *chartView = [[CountryMapWebViewController alloc] init];
-     ChartDataModel *item = (ChartDataModel *)self.dataArray[indexPath.row];
+    ChartDataModel *item = (ChartDataModel *)self.dataArray[indexPath.row];
+
+    CountryMapWebViewController *chartView = [[CountryMapWebViewController alloc] init];
     chartView.urlStr = item.url;
-            [self.navigationController pushViewController:chartView animated:YES];
+    [self.navigationController pushViewController:chartView animated:YES];
+    
+//    DashboardWebViewController *chartView = [[DashboardWebViewController alloc] init];
+//    chartView.urlStr = item.url;
+//    [self presentViewController:chartView animated:YES completion:nil];
+    
 //    if (indexPath.row == 0) {
 //        DashboardWebViewController *chartView = [[DashboardWebViewController alloc] init];
 //        [self presentViewController:chartView animated:YES completion:nil];
@@ -356,7 +366,7 @@ static CGFloat widthFormWidth = 0.54;
     return 1;
 }
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    MoreFunctionCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([MoreFunctionCollectionViewCell class]) forIndexPath:indexPath];
+MoreFunctionCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([MoreFunctionCollectionViewCell class]) forIndexPath:indexPath];
     [cell initImageViewImage:[NSString stringWithFormat:@"icon_moreFunction_%ld",(long)indexPath.row]];
     return cell;
 }

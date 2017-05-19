@@ -138,7 +138,7 @@
         for (NSInteger i = 0; i < [titleArray count]; i ++) {
             UILabel *titleLabel = titleArray[i];
             UILabel *countLabel = countArray[i];
-            titleLabel.text = [dataArray[i] typeDisplay];
+            titleLabel.text = [NSString stringWithFormat:@"%@(台)",[dataArray[i] typeDisplay]];
             countLabel.text = [NSString stringWithFormat:@"%u",[dataArray[i] dataNr]];
         }
     }

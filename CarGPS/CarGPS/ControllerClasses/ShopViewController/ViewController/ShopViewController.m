@@ -22,6 +22,7 @@
 @property (strong, nonatomic) NSMutableArray *selectArray;
 @property (strong, nonatomic)UISearchBar *searchBar;
 @property (weak, nonatomic) RATreeView *treeView;
+@property (strong, nonatomic)NSMutableArray *allShopArray;
 @end
 
 @implementation ShopViewController
@@ -49,6 +50,12 @@
         _searchResultArray = [[NSMutableArray alloc] init];
     }
     return _searchResultArray;
+}
+- (NSMutableArray *)allShopArray{
+    if (_allShopArray == nil) {
+        _allShopArray = [[NSMutableArray alloc] init];
+    }
+    return _allShopArray;
 }
 
 - (UISearchBar * )searchBar{
@@ -162,13 +169,16 @@
 - (void)callHttpForShopData{
     __weak typeof(self) weakself = self;
     [PCMBProgressHUD showLoadingImageInView:self.view isResponse:YES];
+    HHCodeLog(@"%@",[URLDictionary allShop_url]);
     [CallHttpManager getWithUrlString:[URLDictionary allShop_url] success:^(id data) {
-        self.dataArray = [[ShopModel alloc] getData:data];
+        weakself.dataArray = [[ShopModel alloc] getData:data];
+        [weakself.allShopArray addObjectsFromArray:weakself.dataArray];
         for (NSInteger i = 0; i < [self.dataArray count]; i ++) {
-            ShopModel *parent = (ShopModel *)self.dataArray[i];
+            ShopModel *parent = (ShopModel *)weakself.dataArray[i];
             parent.ChildShops = [[ShopModel alloc] getData:parent.ChildShops];
+            [weakself.allShopArray addObjectsFromArray:parent.ChildShops];
         }
-        [self.treeView reloadData];
+        [weakself.treeView reloadData];
         [PCMBProgressHUD hideWithView:weakself.view];
     } failure:^(NSError *error) {
         [PCMBProgressHUD hideWithView:weakself.view];
@@ -188,7 +198,7 @@
     else
     {
         isbool = YES;
-        for (ShopModel *item in self.dataArray) {
+        for (ShopModel *item in self.allShopArray) {
             if ([item.name rangeOfString:text options:NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch].location != NSNotFound)
             {
                 if (![self.searchResultArray containsObject:item]) {

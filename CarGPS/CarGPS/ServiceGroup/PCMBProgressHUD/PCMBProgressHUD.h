@@ -67,10 +67,12 @@
  */
 + (void)showLoadingTipsInView:(UIView *)view title:(NSString *)title detail:(NSString *)detail withIsAutoHide:(BOOL)isAutoHide ;
 
+
++ (void)showLoadingTipsInView:(UIView *)view title:(NSString *)title detail:(NSString *)detail withIsAutoHideTime:(CGFloat)time;
 /**
  隐藏动画
  
- @param animated 隐藏动画
+ @param view 隐藏动画
  */
 + (void)hideWithView:(UIView *)view ;
 

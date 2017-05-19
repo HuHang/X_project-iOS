@@ -256,7 +256,7 @@
         [PCMBProgressHUD hideWithView:weakself.view];
         DefaultModel *result = [[DefaultModel alloc] getData:data];
         if (result.Success) {
-            [PCMBProgressHUD showLoadingTipsInView:weakself.view title:@"绑定成功" detail:result.Content withIsAutoHide:YES];
+            [PCMBProgressHUD showLoadingTipsInView:weakself.view title:@"绑定成功" detail:result.Content withIsAutoHideTime:2.5f];
         }else{
             [PCMBProgressHUD showLoadingTipsInView:weakself.view title:@"失败" detail:result.Content withIsAutoHide:YES];
         }
@@ -311,7 +311,6 @@
     [self presentViewController:shopNav animated:YES completion:nil];
 }
 - (void)cleanData{
-
     _imeiTextButton.enabled = YES;
     self.vinTextField.suggestionTextField.text = @"";
     self.imeiTextButton.titleLabel.text = @"扫描IMEI码";
@@ -368,7 +367,6 @@
 #pragma mark----SZKImagePickerVCDelegate
 -(void)imageChooseFinish:(UIImage *)image
 {
-    HHCodeLog(@"hahahah");
     if ([self.photoArray count] == 1) {
         [self.photoArray addObject:image];
         [self callHttpForBind:self.photoArray];

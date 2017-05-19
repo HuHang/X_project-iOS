@@ -244,7 +244,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     CarModel *item = isbool ? (CarModel *)self.searchResultArray[indexPath.row] : (CarModel *)self.dataArray[indexPath.row];
     if (item.deviceId == 0) {
-        [PCMBProgressHUD showLoadingTipsInView:self.view title:@"提示" detail:@"车辆未绑定，暂无定位信息" withIsAutoHide:YES];
+        [PCMBProgressHUD showLoadingTipsInView:self.view.window title:@"提示" detail:@"车辆未绑定，暂无定位信息" withIsAutoHide:YES];
     }else{
         CarMapViewController *mapView = [[CarMapViewController alloc] init];
         mapView.deviceID = item.deviceId;

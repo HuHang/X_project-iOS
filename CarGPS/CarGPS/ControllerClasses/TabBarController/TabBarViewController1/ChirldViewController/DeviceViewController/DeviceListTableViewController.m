@@ -248,7 +248,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     DeviceModel *item = isbool ? (DeviceModel *)self.searchResultArray[indexPath.row] : (DeviceModel *)self.dataArray[indexPath.row];
     if ([item.vin isEqualToString:@""]) {
-        [PCMBProgressHUD showLoadingTipsInView:self.view title:@"提示" detail:@"设备未使用，暂无定位信息" withIsAutoHide:YES];
+        [PCMBProgressHUD showLoadingTipsInView:self.view.window title:@"提示" detail:@"设备未使用，暂无定位信息" withIsAutoHide:YES];
     }else{
         CarMapViewController *mapView = [[CarMapViewController alloc] init];
         mapView.deviceID = item.ID;

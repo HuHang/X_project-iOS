@@ -163,6 +163,43 @@
 }
 
 /**
+ 信息提示（在1.5S后自动隐藏）
+ 
+ @param view 需要显示的view视图
+ @param title 需要显示的文字
+ @param detail 需要显示的描述文字
+ @param time 时间
+ */
++ (void)showLoadingTipsInView:(UIView *)view title:(NSString *)title detail:(NSString *)detail withIsAutoHideTime:(CGFloat)time {
+    
+    if (view == nil) {
+        return;
+    }
+    MBProgressHUD *hud = [MBProgressHUD HUDForView:view];
+    if (hud == nil) {
+        hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
+    }
+    // 设置模式和文字
+    hud.mode = MBProgressHUDModeText;
+    hud.bezelView.color = [UIColor blackColor];
+    if (title) {
+        
+        hud.label.text = title;
+        hud.label.textColor = [UIColor whiteColor];
+    }
+    if (detail) {
+        
+        hud.detailsLabel.text = detail;
+        hud.detailsLabel.textColor = [UIColor whiteColor];
+    }
+    if (time) {
+        
+        [hud hideAnimated:YES afterDelay:time];
+    }
+}
+
+
+/**
  隐藏动画
  
  @param view 是否隐藏动画

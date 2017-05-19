@@ -121,7 +121,7 @@
         for (int i = 0; i < dataArray.count; i++) {
             
             UIImage *image = dataArray[i];
-            NSData *imageData = UIImageJPEGRepresentation(image, 0.5);
+            NSData *imageData = UIImageJPEGRepresentation(image, 0.2);
             
             // 在网络开发中，上传文件时，是文件不允许被覆盖，文件重名
             // 要解决此问题，
