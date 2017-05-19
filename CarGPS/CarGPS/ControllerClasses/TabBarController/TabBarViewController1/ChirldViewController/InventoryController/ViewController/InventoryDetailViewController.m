@@ -7,10 +7,10 @@
 //
 
 #import "InventoryDetailViewController.h"
-#import "ChartsManager.h"
+//#import "ChartsManager.h"
 
 @interface InventoryDetailViewController ()
-@property (nonatomic,strong) PieChartView *pieChart;
+//@property (nonatomic,strong) PieChartView *pieChart;
 @end
 
 @implementation InventoryDetailViewController
@@ -27,9 +27,9 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    [self createChartView];
+//    [self createChartView];
 }
-
+/*
 #pragma mark -view
 - (PieChartView *)pieChart{
     if (_pieChart == nil) {
@@ -147,5 +147,6 @@
     [data setValueFont:[UIFont systemFontOfSize:10]];
     return data;
 }
+ */
 
 @end

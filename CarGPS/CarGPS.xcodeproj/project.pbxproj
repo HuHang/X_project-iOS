@@ -20,8 +20,6 @@
 		021CB98E1ECABAD600448E8B /* icon_tabBar_selected2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 021CB98A1ECABAD600448E8B /* icon_tabBar_selected2@2x.png */; };
 		021CB99A1ECADC6B00448E8B /* InventoryOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 021CB9991ECADC6B00448E8B /* InventoryOrderViewController.m */; };
 		021CB99D1ECADC9D00448E8B /* InventoryOrderTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 021CB99C1ECADC9D00448E8B /* InventoryOrderTableViewCell.m */; };
-		021D2F591ECBEEC600D72716 /* SwiftTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021D2F581ECBEEC600D72716 /* SwiftTest.swift */; };
-		021D2F6A1ECBF55A00D72716 /* PieChartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 021D2F691ECBF55A00D72716 /* PieChartViewController.m */; };
 		021D2F721ECC428700D72716 /* ChartDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 021D2F711ECC428700D72716 /* ChartDataModel.m */; };
 		021D2F781ECC4EF900D72716 /* NSTimer+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 021D2F751ECC4EF900D72716 /* NSTimer+addition.m */; };
 		021D2F791ECC4EF900D72716 /* YJWebProgressLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 021D2F771ECC4EF900D72716 /* YJWebProgressLayer.m */; };
@@ -255,7 +253,7 @@
 		02FCB31D1EC5B38700FE96EF /* icon_backWhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02FCB31B1EC5B38700FE96EF /* icon_backWhite@2x.png */; };
 		02FCB31F1EC5BB9C00FE96EF /* icon_back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02FCB31E1EC5BB9C00FE96EF /* icon_back@2x.png */; };
 		02FCB3431EC5BED300FE96EF /* icon_admin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 02FCB3421EC5BED300FE96EF /* icon_admin@2x.png */; };
-		792224EF1AAC61298D6AD11D /* Pods_CarGPS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92E640C20AD9F51A85EDC94 /* Pods_CarGPS.framework */; };
+		034096FA79D7382A92F682E2 /* libPods-CarGPS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 051C31C8A5E2D185F538F93C /* libPods-CarGPS.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -295,11 +293,6 @@
 		021CB9991ECADC6B00448E8B /* InventoryOrderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InventoryOrderViewController.m; sourceTree = "<group>"; };
 		021CB99B1ECADC9D00448E8B /* InventoryOrderTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InventoryOrderTableViewCell.h; sourceTree = "<group>"; };
 		021CB99C1ECADC9D00448E8B /* InventoryOrderTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InventoryOrderTableViewCell.m; sourceTree = "<group>"; };
-		021D2F581ECBEEC600D72716 /* SwiftTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftTest.swift; sourceTree = "<group>"; };
-		021D2F5A1ECBEF7500D72716 /* CarGPS-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CarGPS-Bridging-Header.h"; sourceTree = "<group>"; };
-		021D2F681ECBF55A00D72716 /* PieChartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PieChartViewController.h; sourceTree = "<group>"; };
-		021D2F691ECBF55A00D72716 /* PieChartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PieChartViewController.m; sourceTree = "<group>"; };
-		021D2F6F1ECC16A000D72716 /* ChartsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartsManager.h; sourceTree = "<group>"; };
 		021D2F701ECC428700D72716 /* ChartDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartDataModel.h; sourceTree = "<group>"; };
 		021D2F711ECC428700D72716 /* ChartDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChartDataModel.m; sourceTree = "<group>"; };
 		021D2F741ECC4EF900D72716 /* NSTimer+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+addition.h"; sourceTree = "<group>"; };
@@ -643,9 +636,9 @@
 		02FCB31B1EC5B38700FE96EF /* icon_backWhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_backWhite@2x.png"; sourceTree = "<group>"; };
 		02FCB31E1EC5BB9C00FE96EF /* icon_back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_back@2x.png"; sourceTree = "<group>"; };
 		02FCB3421EC5BED300FE96EF /* icon_admin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_admin@2x.png"; sourceTree = "<group>"; };
+		051C31C8A5E2D185F538F93C /* libPods-CarGPS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CarGPS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B784654EEB777258049FC6F /* Pods-CarGPS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CarGPS.release.xcconfig"; path = "Pods/Target Support Files/Pods-CarGPS/Pods-CarGPS.release.xcconfig"; sourceTree = "<group>"; };
 		7DEAA5C58E0DAED7CD82B31C /* Pods-CarGPS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CarGPS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CarGPS/Pods-CarGPS.debug.xcconfig"; sourceTree = "<group>"; };
-		D92E640C20AD9F51A85EDC94 /* Pods_CarGPS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CarGPS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -653,7 +646,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				792224EF1AAC61298D6AD11D /* Pods_CarGPS.framework in Frameworks */,
+				034096FA79D7382A92F682E2 /* libPods-CarGPS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -732,17 +725,6 @@
 				028C66BC1ECAE7DB008B7758 /* InventoryDetailViewController.m */,
 			);
 			path = ViewController;
-			sourceTree = "<group>";
-		};
-		021D2F571ECBEEA100D72716 /* ChartViewManagerGroup */ = {
-			isa = PBXGroup;
-			children = (
-				021D2F581ECBEEC600D72716 /* SwiftTest.swift */,
-				021D2F681ECBF55A00D72716 /* PieChartViewController.h */,
-				021D2F691ECBF55A00D72716 /* PieChartViewController.m */,
-				021D2F6F1ECC16A000D72716 /* ChartsManager.h */,
-			);
-			path = ChartViewManagerGroup;
 			sourceTree = "<group>";
 		};
 		021D2F731ECC4EE500D72716 /* WebProgressBar */ = {
@@ -1433,7 +1415,6 @@
 			isa = PBXGroup;
 			children = (
 				02AE1FEC1E6FA14A00382F94 /* main.m */,
-				021D2F5A1ECBEF7500D72716 /* CarGPS-Bridging-Header.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1828,7 +1809,6 @@
 				0220DC211ECE89FF004C298B /* YYFPSLabel */,
 				02E027DB1ECDC74B007DE90B /* EnlargeImage */,
 				021D2F731ECC4EE500D72716 /* WebProgressBar */,
-				021D2F571ECBEEA100D72716 /* ChartViewManagerGroup */,
 				02E253A01EC823360008D819 /* AutoSearchTextField */,
 				025EAC581EC329AD0063ECEC /* CameraManager */,
 				025EAB8A1EC2EEEF0063ECEC /* CleanCache */,
@@ -1883,7 +1863,7 @@
 		C1A48AC5B56BB7281AD7F6DD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D92E640C20AD9F51A85EDC94 /* Pods_CarGPS.framework */,
+				051C31C8A5E2D185F538F93C /* libPods-CarGPS.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2230,7 +2210,6 @@
 				02AE1FF01E6FA14A00382F94 /* AppDelegate.m in Sources */,
 				02C5E0AB1EADE02000B94221 /* URLDictionary.m in Sources */,
 				02FCB2A61EC4350A00FE96EF /* DeviceInfoModel.m in Sources */,
-				021D2F6A1ECBF55A00D72716 /* PieChartViewController.m in Sources */,
 				027045C01EB31338003E28E4 /* DashBoardTableViewCell.m in Sources */,
 				0286A5101E96519900075582 /* NSString+FontAwesome.m in Sources */,
 				02C5E0C31EAE0FD600B94221 /* ShopModel.m in Sources */,
@@ -2319,7 +2298,6 @@
 				0220DC271ECE89FF004C298B /* YYWeakProxy.m in Sources */,
 				0237FDFF1E851ED700A9651B /* CallHttpManager.m in Sources */,
 				025EAB3E1EC01F4D0063ECEC /* MessageDetailTableViewCell.m in Sources */,
-				021D2F591ECBEEC600D72716 /* SwiftTest.swift in Sources */,
 				02E1CE1C1E9F109100A4F15C /* HLGifHeader.m in Sources */,
 				02C6915E1EADB2C0004636BB /* UITableView+EmptyData.m in Sources */,
 				02C5E0FD1EAF8F3500B94221 /* UIImage+SGHelper.m in Sources */,
@@ -2518,7 +2496,6 @@
 		02AE201C1E6FA14A00382F94 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 58FSFGRL4P;
 				INFOPLIST_FILE = CarGPSTests/Info.plist;
@@ -2532,7 +2509,6 @@
 		02AE201D1E6FA14A00382F94 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 58FSFGRL4P;
 				INFOPLIST_FILE = CarGPSTests/Info.plist;
@@ -2546,7 +2522,6 @@
 		02AE201F1E6FA14A00382F94 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 58FSFGRL4P;
 				INFOPLIST_FILE = CarGPSUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -2559,7 +2534,6 @@
 		02AE20201E6FA14A00382F94 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 58FSFGRL4P;
 				INFOPLIST_FILE = CarGPSUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

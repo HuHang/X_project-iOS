@@ -1,6 +1,0 @@
-framework module Pods_CarGPS {
-  umbrella header "Pods-CarGPS-umbrella.h"
-
-  export *
-  module * { export * }
-}
