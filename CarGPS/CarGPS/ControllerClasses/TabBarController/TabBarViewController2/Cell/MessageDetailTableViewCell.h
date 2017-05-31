@@ -19,8 +19,11 @@
 
 //vin
 @property (nonatomic,strong) UILabel *vinLabel;
-//商店
+//报警商店
+@property (nonatomic,strong) UILabel *currentShopLabel;
+//所属商店
 @property (nonatomic,strong) UILabel *shopLabel;
+
 @property (nonatomic,strong) UILabel *carTypeLabel;
 //
 @property (nonatomic,strong) UILabel *statusLabel;
@@ -30,6 +33,7 @@
 
 - (void)loadDataWithVin:(NSString *)vinStr
                    imei:(NSString *)imeiStr
+          alarmShopName:(NSString *)alarmShopNameStr
                shopName:(NSString *)shopNameStr
                 carType:(NSString *)carTypeStr
                carColor:(NSString *)carColor

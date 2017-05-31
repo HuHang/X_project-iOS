@@ -28,7 +28,7 @@
     [super viewDidLoad];
     self.selectedIndex = 0;
     self.view.backgroundColor = [UIColor whiteColor];
-    [self viewLayout];
+    
 
     // Do any additional setup after loading the view.
 }
@@ -38,16 +38,11 @@
     // Dispose of any resources that can be recreated.
 }
 
-//- (BOOL)shouldAutorotate{
-//    return YES;
-//}
-//
-//- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
-//    return UIInterfaceOrientationMaskLandscapeLeft;
-//}
+
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    [self viewLayout];
      [self.webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[self.urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]]];
 
 }

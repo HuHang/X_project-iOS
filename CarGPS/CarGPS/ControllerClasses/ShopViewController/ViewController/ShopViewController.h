@@ -11,8 +11,6 @@
 - (void)shopChanged;
 @end
 
-
-
 @interface ShopViewController : UIViewController
 @property BOOL singleSelection;
 

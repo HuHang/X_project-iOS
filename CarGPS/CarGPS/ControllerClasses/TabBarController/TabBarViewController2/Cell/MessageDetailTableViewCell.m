@@ -24,13 +24,15 @@
 
     UILabel *vinTitle = [UILabel labelWithString:@"车架号:" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(14.f)];
     UILabel *carTypeTitle = [UILabel labelWithString:@"车辆型号:" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
-    UILabel *shopTitle = [UILabel labelWithString:@"商户名称:" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
+    UILabel *shopTitle = [UILabel labelWithString:@"报警商户:" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
+    UILabel *currentShopTitle = [UILabel labelWithString:@"所属4S店:" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
     UILabel *imeiTitle = [UILabel labelWithString:@"设备编码:" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
     UILabel *timeTitle = [UILabel labelWithString:@"报警时间:" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
     
     self.vinLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor blackColor] withFont:SystemFont(16.f)];
     self.imeiLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor blackColor] withFont:SystemFont(12.f)];
     self.shopLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
+    self.currentShopLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
      self.carTypeLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
     
     self.statusLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor whiteColor] withFont:SystemFont(12.f)];
@@ -43,10 +45,12 @@
     [self.contentView addSubview:timeTitle];
     [self.contentView addSubview:vinTitle];
     [self.contentView addSubview:shopTitle];
+    [self.contentView addSubview:self.shopLabel];
+    [self.contentView addSubview:currentShopTitle];
     [self.contentView addSubview:imeiTitle];
     [self.contentView addSubview:self.imeiLabel];
     [self.contentView addSubview:self.vinLabel];
-    [self.contentView addSubview:self.shopLabel];
+    [self.contentView addSubview:self.currentShopLabel];
     [self.contentView addSubview:self.statusLabel];
     [self.contentView addSubview:self.timeLabel];
     [self.contentView addSubview:self.carTypeLabel];
@@ -54,15 +58,15 @@
     
 
     
-    NSArray *titleArray = @[vinTitle,carTypeTitle,shopTitle,imeiTitle,timeTitle];
-    NSArray *labelArray = @[self.vinLabel,self.carTypeLabel,self.shopLabel,self.imeiLabel,self.timeLabel];
+    NSArray *titleArray = @[vinTitle,carTypeTitle,currentShopTitle,shopTitle,imeiTitle,timeTitle];
+    NSArray *labelArray = @[self.vinLabel,self.carTypeLabel,self.currentShopLabel,self.shopLabel,self.imeiLabel,self.timeLabel];
     for (NSInteger i = 0; i < [titleArray count]; i ++) {
         UILabel *titleLabel = titleArray[i];
         UILabel *label = labelArray[i];
         [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(20);
-            make.top.mas_equalTo(0).with.mas_offset(24*i + 10);
-            make.size.mas_equalTo(CGSizeMake(60, 24));
+            make.top.mas_equalTo(0).with.mas_offset(22*i + 8);
+            make.size.mas_equalTo(CGSizeMake(60, 22));
         }];
         [label mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.and.top.equalTo(titleLabel);
@@ -89,6 +93,7 @@
 
 - (void)loadDataWithVin:(NSString *)vinStr
                    imei:(NSString *)imeiStr
+          alarmShopName:(NSString *)alarmShopNameStr
                shopName:(NSString *)shopNameStr
                 carType:(NSString *)carTypeStr
                carColor:(NSString *)carColor
@@ -98,8 +103,8 @@
              withStatus:(NSInteger)fenceState{
     self.vinLabel.text = vinStr;
     self.imeiLabel.text = imeiStr;
-    self.shopLabel.text = [NSString stringWithFormat:@"%@(%@)",shopNameStr,shopTypeStr];
-    
+    self.currentShopLabel.text = [NSString stringWithFormat:@"%@(%@)",alarmShopNameStr,shopTypeStr];
+    self.shopLabel.text = shopNameStr;
     self.carTypeLabel.text = [NSString stringWithFormat:@"%@--%@",carTypeStr,carColor];
     self.timeLabel.text = timeStr;
     self.statusLabel.text = statusStr;

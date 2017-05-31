@@ -104,7 +104,7 @@
 #define BaseURL @"baseUrlStr"
 #define BasePORT @"basePort"
 
-
+#define DefaultShopIDArray @"defaultShopIDArray"
 #define DefaultShopID @"defaultShopID"
 #define DefaultShopName @"defaultShopName"
 #define DefaultLatitude @"defaultLatitude"
@@ -116,7 +116,7 @@
 
 
 /*--------------------------------------importantStr------------------------------------*/
-#define Basic_Auth @"strForBasicAuth"
+
 
 /*----------------------------Application KeyWindow---------------------------------*/
 #define AppMainWindow [UIApplication sharedApplication].keyWindow

@@ -29,15 +29,21 @@ static NSInteger segmentViewHeight = 40;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.pageIndex = 0;
     [self createNavigationView];
     [self initTableView];
-    self.tableView.mj_header = [HLGifHeader headerWithRefreshingBlock:^{
-        [self setMJRefreshHeader];
+    __weak MessageDetailTableViewController *weakself = self;
+    self.tableView.mj_header = [HLNormalHeader headerWithRefreshingBlock:^{
+        weakself.pageIndex = 0;
+        [weakself setMJRefreshHeader];
+        [weakself.tableView.mj_footer resetNoMoreData];
     }];
-    [self setMJRefreshFooter];
+    self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        [weakself setMJRefreshFooter];
+    }];
     [self.tableView.mj_header beginRefreshing];
-    
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -45,6 +51,12 @@ static NSInteger segmentViewHeight = 40;
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    }
+}
 - (void)callHttpForMessageWithSelectedIndex{
     switch (self.segmentViewSelectedIndex) {
         case 0:
@@ -70,21 +82,11 @@ static NSInteger segmentViewHeight = 40;
 
 - (void)setMJRefreshFooter{
     __weak MessageDetailTableViewController *weakself = self;
-    self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            switch (weakself.segmentViewSelectedIndex) {
-                case 0:
-                    [weakself callHttpForMoreMessages:@"false"];
-                    break;
-                case 1:
-                    [weakself callHttpForMoreMessages:@"true"];
-                    break;
-                default:
-                    break;
-            }
-            [weakself.tableView.mj_footer endRefreshing];
-        });
-    }];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakself callHttpForMessageWithSelectedIndex];
+        [weakself.tableView.mj_footer endRefreshing];
+    });
+
 }
 
 - (NSMutableArray *)dataArray{
@@ -130,6 +132,7 @@ static NSInteger segmentViewHeight = 40;
     }
     return _coverView;
 }
+
 
 - (MKMapView *)mapView{
     if (_mapView == nil) {
@@ -188,61 +191,45 @@ static NSInteger segmentViewHeight = 40;
 #pragma mark - Http
 - (void)callHttpForMessages:(NSString *)is_read{
     __weak MessageDetailTableViewController *weakSelf = self;
-    NSString *dataStr = [NSString stringWithFormat:@"type=%ld&isRead=%@&pageIndex=%d",(long)self.keyValue,is_read,0];
-    HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary getAllMsgWithType_url],dataStr]);
-    [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@%@",[URLDictionary getAllMsgWithType_url],dataStr]
-                              success:^(id data) {
-                                  [weakSelf.dataArray removeAllObjects];
-                                  weakSelf.dataArray = [NSMutableArray arrayWithArray:[[MessageDetailModel alloc] getData:data]];
-                                  [weakSelf.tableView reloadData];
-                                  
-                                  weakSelf.pageIndex = 1;
-                                  [weakSelf.tableView.mj_footer resetNoMoreData];
-
-        
-    }
-                              failure:^(NSError *error) {
-        
-    }];
-}
-
-- (void)callHttpForMoreMessages:(NSString *)is_read{
-    __weak MessageDetailTableViewController *weakSelf = self;
+    [PCMBProgressHUD showLoadingImageInView:self.view.window isResponse:NO];
     NSString *dataStr = [NSString stringWithFormat:@"type=%ld&isRead=%@&pageIndex=%ld",(long)self.keyValue,is_read,(long)self.pageIndex];
     HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary getAllMsgWithType_url],dataStr]);
     [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@%@",[URLDictionary getAllMsgWithType_url],dataStr]
                               success:^(id data) {
                                   if ([data count] == 0) {
                                       [weakSelf.tableView.mj_footer endRefreshingWithNoMoreData];
-
                                   }else{
+                                      if (weakSelf.pageIndex == 0) {
+                                          [weakSelf.dataArray removeAllObjects];
+                                      }
                                       weakSelf.pageIndex ++;
-                                      NSArray *result = [[MessageDetailModel alloc] getData:data];
-                                      [weakSelf.dataArray addObjectsFromArray:result];
+                                      [weakSelf.dataArray addObjectsFromArray:[[MessageDetailModel alloc] getData:data]];
                                       [weakSelf.tableView reloadData];
                                   }
-                                  
-                                  
-                              }
+                                  [PCMBProgressHUD hideWithView:weakSelf.view.window];
+        
+    }
                               failure:^(NSError *error) {
-                                  
-                              }];
+                                  [PCMBProgressHUD hideWithView:weakSelf.view.window];
+        
+    }];
 }
+
 
 - (void)callHttpForReadAllMessage{
     __weak MessageDetailTableViewController *weakself = self;
-    [PCMBProgressHUD showLoadingImageInView:self.view isResponse:NO];
+    [PCMBProgressHUD showLoadingImageInView:self.view.window isResponse:NO];
     HHCodeLog(@"%@",[NSString stringWithFormat:@"%@type=%ld",[URLDictionary redAllMsg_url],(long)self.keyValue]);
     [CallHttpManager postWithUrlString:[NSString stringWithFormat:@"%@type=%ld",[URLDictionary redAllMsg_url],(long)self.keyValue] parameters:nil success:^(id data) {
-        [PCMBProgressHUD hideWithView:weakself.view];
+        [PCMBProgressHUD hideWithView:weakself.view.window];
         DefaultModel *resultMsg = [[DefaultModel alloc] getData:data];
         if (resultMsg.Success) {
-            [weakself callHttpForMessageWithSelectedIndex];
+            [weakself.tableView.mj_header beginRefreshing];
         }else{
             [PCMBProgressHUD showLoadingTipsInView:weakself.view title:@"失败" detail:resultMsg.Content withIsAutoHide:YES];
         }
     } failure:^(NSError *error) {
-        [PCMBProgressHUD hideWithView:weakself.view];
+        [PCMBProgressHUD hideWithView:weakself.view.window];
     }];
 }
 
@@ -280,14 +267,22 @@ static NSInteger segmentViewHeight = 40;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-
-    
     MessageDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([MessageDetailTableViewCell class])];
-    MessageDetailModel *item = (MessageDetailModel *)self.dataArray[indexPath.row];
     if (cell == nil) {
         cell = [[MessageDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([MessageDetailTableViewCell class])];
-        [cell loadDataWithVin:item.vin imei:item.imei shopName:item.shopName carType:item.carType carColor:item.carColor shopTypeStr:item.shopTypeDisplay time:item.createdAt status:item.AlarmFenceStateDisplay withStatus:[item.AlarmFenceState integerValue]];
     }
+    HHCodeLog(@"%lu",(unsigned long)self.dataArray.count);
+    MessageDetailModel *item = (MessageDetailModel *)self.dataArray[indexPath.row];
+    [cell loadDataWithVin:item.vin
+                     imei:item.imei
+            alarmShopName:item.AlarmCurrentShopName
+                 shopName:item.AlarmShopName
+                  carType:item.carType
+                 carColor:item.carColor
+              shopTypeStr:item.shopTypeDisplay
+                     time:[NSString formatDateTimeForCN:item.createdAt]
+                   status:item.AlarmFenceStateDisplay
+               withStatus:[item.AlarmFenceState integerValue]];
     return cell;
     
 }
@@ -435,20 +430,7 @@ static NSInteger segmentViewHeight = 40;
     return [[NSAttributedString alloc] initWithString:text attributes:attributes];
 }
 
-// 标题文本下面的详细描述，富文本样式
-//- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView {
-//    NSString *text = @"订阅您感兴趣的消息种类，您将在这里第一时间阅读并处理！";
-//    
-//    NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
-//    paragraph.lineBreakMode = NSLineBreakByWordWrapping;
-//    paragraph.alignment = NSTextAlignmentCenter;
-//    
-//    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0f],
-//                                 NSForegroundColorAttributeName: [UIColor lightGrayColor],
-//                                 NSParagraphStyleAttributeName: paragraph};
-//    
-//    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
-//}
+
 
 // 空白页的背景色
 - (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView {

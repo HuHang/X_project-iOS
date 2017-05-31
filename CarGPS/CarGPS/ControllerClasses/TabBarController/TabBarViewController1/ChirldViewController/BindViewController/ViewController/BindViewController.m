@@ -256,9 +256,9 @@
         [PCMBProgressHUD hideWithView:weakself.view];
         DefaultModel *result = [[DefaultModel alloc] getData:data];
         if (result.Success) {
-            [PCMBProgressHUD showLoadingTipsInView:weakself.view title:@"绑定成功" detail:result.Content withIsAutoHideTime:2.5f];
+            [PCMBProgressHUD showLoadingTipsInView:weakself.view.window title:@"绑定成功" detail:result.Content withIsAutoHideTime:2.5f];
         }else{
-            [PCMBProgressHUD showLoadingTipsInView:weakself.view title:@"失败" detail:result.Content withIsAutoHide:YES];
+            [PCMBProgressHUD showLoadingTipsInView:weakself.view.window title:@"失败" detail:result.Content withIsAutoHide:YES];
         }
         [weakself cleanData];
     } failure:^(NSError *error) {

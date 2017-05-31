@@ -22,5 +22,5 @@
 @property (copy, nonatomic)NSString *brand;
 @property (copy, nonatomic)NSString *fenceStateDisplay;
 
-- (NSArray *)getData:(NSArray *)array;
+- (MonitorModel *)getData:(NSDictionary *)dictionary;
 @end

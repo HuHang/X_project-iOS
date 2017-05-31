@@ -12,9 +12,12 @@
 @property (nonatomic, copy) void (^additionButtonTapAction)(id sender);
 
 @property (nonatomic,strong)UIImageView *signImageView;
+@property (nonatomic,strong)UIImageView *bankImageView;
+@property (nonatomic,strong)UIImageView *addressImageView;
 @property (nonatomic,strong)UILabel *nameLabel;
 @property (nonatomic,strong)UILabel *addressLabel;
+@property (nonatomic,strong)UILabel *bankLabel;
 @property (nonatomic,strong)UIButton *additionButton;
 
-- (void)setupWithName:(NSString *)name count:(NSString *)count addressText:(NSString *)address level:(NSInteger)level is_additionButtonSelected:(BOOL)is_additionButtonSelected;
+- (void)setupWithName:(NSString *)name count:(NSInteger)count addressText:(NSString *)address bankName:(NSString *)bankName shopType:(NSInteger)shopType level:(NSInteger)level is_additionButtonSelected:(BOOL)is_additionButtonSelected;
 @end

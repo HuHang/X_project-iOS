@@ -28,9 +28,11 @@
 + (NSString *) allMonitorDevice_url;
 + (NSString *) bindDeviceInfo_url;
 + (NSString *) searchDevice_url;
++ (NSString *) groupDeviceCount_url;
 /*--------------------------------------车辆------------------------------------*/
 + (NSString *) allCar_url;
 + (NSString *) searchCar_url;
++ (NSString *) groupCarsCount_url;
 /*--------------------------------------定位------------------------------------*/
 + (NSString *) lastCoordinate_url;
 + (NSString *) allCoordinate_url;
@@ -60,4 +62,8 @@
 
 /*--------------------------------------dashboard------------------------------------*/
 + (NSString *) getFirstDashboard_url;
+
+
+
++ (NSString *) test_allMonitorDevice_url;
 @end

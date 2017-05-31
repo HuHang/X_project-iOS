@@ -10,7 +10,8 @@
 #import "CarTableViewCell.h"
 #import "UnBindTableViewCell.h"
 #import "CarModel.h"
-#import "CarMapViewController.h"
+#import "GroupInfomationModel.h"
+#import "SignalDeviceOrCarMapViewController.h"
 #import "PopoverView.h"
 #import "UINavigationBar+Awesome.h"
 
@@ -20,6 +21,7 @@
 }
 @property (strong, nonatomic) NSMutableArray *searchResultArray;
 @property (nonatomic,strong)NSMutableArray *dataArray;
+@property (nonatomic,strong)NSArray *groupInfoArray;
 @property (nonatomic,strong)UIButton *titleButton;
 @property NSInteger selectedIndex;
 @property NSInteger pageIndex;
@@ -31,20 +33,28 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.selectedIndex = 1;
-    self.pageIndex = 0;
+    self.tableView.tableHeaderView = self.searchBar;
+    self.tableView.tableFooterView = [UIView new];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
     self.dataArray = [[NSMutableArray alloc] init];
     self.tableView.emptyDataSetSource = self;
     self.tableView.emptyDataSetDelegate = self;
     [self createNavigationView];
+    [self callHttpForCarCount];
     __weak CarListTableViewController *weakself = self;
     self.tableView.mj_header = [HLNormalHeader headerWithRefreshingBlock:^{
+        weakself.pageIndex = 0;
         [weakself setMJRefreshHeader];
+        [weakself.tableView.mj_footer resetNoMoreData];
+
     }];
-    self.tableView.tableHeaderView = self.searchBar;
-    self.tableView.tableFooterView = [UIView new];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        [weakself setMJRefreshFooter];
+    }];
+    
     [self.tableView.mj_header beginRefreshing];
-    [self setMJRefreshFooter];
+
 
 }
 
@@ -64,9 +74,15 @@
     }
     return _searchResultArray;
 }
+- (NSArray *)groupInfoArray{
+    if (_groupInfoArray == nil) {
+        _groupInfoArray = [NSArray new];
+    }
+    return _groupInfoArray;
+}
 
 - (void)createNavigationView{
-    self.titleButton = [UIButton buttonWithString:@"绑定车辆 ▾" withBackgroundColor:[UIColor clearColor] withTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor whiteColor] withFont:SystemFont(14.f)];
+    self.titleButton = [UIButton buttonWithString:@"已绑定" withBackgroundColor:[UIColor clearColor] withTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor whiteColor] withFont:SystemFont(14.f)];
     self.titleButton.frame = CGRectMake(0, 0, SCREEN_WIDTH/3, 40);
     self.navigationItem.titleView = self.titleButton;
     [self.titleButton addTarget:self action:@selector(titleViewSelect:) forControlEvents:(UIControlEventTouchUpInside)];
@@ -78,66 +94,48 @@
         _searchBar.frame = CGRectMake(0, 0 , SCREEN_WIDTH/2, 40);
         _searchBar.placeholder = @"搜索";
         _searchBar.delegate = self;
+        _searchBar.searchBarStyle = UISearchBarStyleMinimal;
     }
     return _searchBar;
 }
 
 
 - (void)setMJRefreshHeader{
+    __weak CarListTableViewController *weakself = self;
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        switch (self.selectedIndex) {
-            case 1:
-                [self callHttpForCarData:@"true"];
-                break;
-            case 2:
-                [self callHttpForCarData:@"false"];
-                break;
-            case 3:
-                [self callHttpForCarData:@""];
-                break;
-                
-            default:
-                break;
-        }
-        [self.tableView.mj_header endRefreshing];
+        [weakself callHttpWithType];
+        [weakself.tableView.mj_header endRefreshing];
     });
 }
 
 - (void)setMJRefreshFooter{
+    __weak CarListTableViewController *weakself = self;
+
     self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            switch (self.selectedIndex) {
-                case 1:
-                    [self callHttpForMoreCarData:@"true"];
-                    break;
-                case 2:
-                    [self callHttpForMoreCarData:@"false"];
-                    break;
-                case 3:
-                    [self callHttpForMoreCarData:@""];
-                    break;
-                    
-                default:
-                    break;
-            }
-        });
-        [self.tableView.mj_footer endRefreshing];
+        [weakself callHttpWithType];
+        [weakself.tableView.mj_footer endRefreshing];
     }];
 }
 
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-//{
-//    CGFloat offsetY = scrollView.contentOffset.y;
-//    if (offsetY > 0) {
-//        if (offsetY >= 44) {
-//            [self setNavigationBarTransformProgress:1];
-//        } else {
-//            [self setNavigationBarTransformProgress:(offsetY / 44)];
-//        }
-//    } else {
-//        [self setNavigationBarTransformProgress:0];
-//    }
-//}
+- (void)callHttpWithType{
+    switch (self.selectedIndex) {
+        case 1:
+            [self callHttpForCarData:@"true"];
+            break;
+        case 2:
+            [self callHttpForCarData:@"false"];
+            break;
+        case 3:
+            [self callHttpForCarData:@""];
+            break;
+            
+        default:
+            break;
+    }
+
+}
+
 - (void)setNavigationBarTransformProgress:(CGFloat)progress
 {
     [self.navigationController.navigationBar lt_setTranslationY:(-44 * progress)];
@@ -146,61 +144,80 @@
 
 
 #pragma mark - http
-- (void)callHttpForCarData:(NSString *)isBindStr{
-    __weak CarListTableViewController *weakself = self;
-    NSString *dataStr = [NSString stringWithFormat:@"%@&pageIndex=%d&isBind=%@",[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopID],0,isBindStr];
-    HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary allCar_url],dataStr]);
-    
-    [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@%@",[URLDictionary allCar_url],dataStr]
-                              success:^(id data) {
-                                  [weakself.dataArray removeAllObjects];
-                                  weakself.dataArray = [NSMutableArray arrayWithArray:[[CarModel alloc] getData:data]];
-                                  [weakself.tableView reloadData];
-                                  weakself.pageIndex = 1;
-                                  [weakself.tableView.mj_footer resetNoMoreData];
-                              }
-                              failure:^(NSError *error) {
-                                  
-                              }];
-}
-
-- (void)callHttpForMoreCarData:(NSString *)isBindStr{
-    __weak CarListTableViewController *weakself = self;
-    NSString *dataStr = [NSString stringWithFormat:@"%@&pageIndex=%ld&isBind=%@",[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopID],(long)self.pageIndex,isBindStr];
-    HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary allCar_url],dataStr]);
-    
-    [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@%@",[URLDictionary allCar_url],dataStr]
-                              success:^(id data) {
-                                  if ([data count] == 0) {
-                                      [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
-                                  }else{
-                                      [weakself.dataArray addObjectsFromArray:[[CarModel alloc] getData:data]];
-                                      [weakself.tableView reloadData];
-                                      weakself.pageIndex ++;
-                                  }
-                                  
-                              }
-                              failure:^(NSError *error) {
-                                  
-                              }];
-}
-
-- (void)callHttpForSearch:(NSString *)searchString{
+- (void)callHttpForCarCount{
     __weak CarListTableViewController *weakself= self;
-    NSString *dataStr = [NSString stringWithFormat:@"%@&searchStr=%@&isBind=&pageIndex=%d",[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopID],searchString,0];
-    HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary searchCar_url],dataStr]);
-    [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@%@",[URLDictionary searchCar_url],dataStr] success:^(id data) {
-        [weakself.searchResultArray addObjectsFromArray:[[CarModel alloc] getData:data]];
-        [weakself.tableView reloadData];
-//        weakself.pageIndex ++;
-//        if ([data count] < 5) {
-//            [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
-//        }
-    } failure:^(NSError *error) {
+    NSDictionary *params = @{@"shopIds":[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopIDArray]};
+    HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary groupCarsCount_url],params]);
+    [CallHttpManager postWithUrlString:[URLDictionary groupCarsCount_url]
+                            parameters:params
+                               success:^(id data) {
+        if ([data count] == 0) {
+            [PCMBProgressHUD showLoadingTipsInView:weakself.view title:nil detail:@"获取统计信息失败" withIsAutoHide:YES];
+        }else{
+            weakself.groupInfoArray = [[GroupInfomationModel alloc]getData:data];
+            [self.titleButton setTitle:[NSString stringWithFormat:@"%@ %u ▾",[[weakself.groupInfoArray firstObject] name],[[weakself.groupInfoArray firstObject] Count]] forState:(UIControlStateNormal)];
+        }
+        
+    }
+                               failure:^(NSError *error) {
         
     }];
     
 }
+
+- (void)callHttpForCarData:(NSString *)isBindStr{
+    __weak CarListTableViewController *weakself = self;
+    [PCMBProgressHUD showLoadingImageInView:self.view.window isResponse:NO];
+
+    NSDictionary *params = @{@"shopIds":[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopIDArray],
+                             @"pageIndex":[NSNumber numberWithInteger:self.pageIndex],
+                             @"isBind":isBindStr
+                             };
+    HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary allCar_url],params]);
+    
+    [CallHttpManager postWithUrlString:[URLDictionary allCar_url]
+                            parameters:params
+                              success:^(id data) {
+                                  if ([data count] == 0) {
+                                      [weakself.tableView.mj_footer endRefreshingWithNoMoreData];
+                                  }else{
+                                      if (weakself.pageIndex == 0) {
+                                          [weakself.dataArray removeAllObjects];
+                                      }
+                                      weakself.pageIndex ++;
+                                      [weakself.dataArray addObjectsFromArray:[[CarModel alloc] getData:data]];
+                                      [weakself.tableView reloadData];
+                                  }
+                                  [PCMBProgressHUD hideWithView:weakself.view.window];
+                              }
+                              failure:^(NSError *error) {
+                                  [PCMBProgressHUD hideWithView:weakself.view.window];
+
+                              }];
+}
+
+
+- (void)callHttpForSearch:(NSString *)searchString{
+    __weak CarListTableViewController *weakself= self;
+
+    NSDictionary *params = @{@"searchStr":searchString,
+                             @"shopIds":[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopIDArray],
+                             @"pageIndex":@0,
+                             @"isBind":@""
+                             };
+    HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary searchCar_url],params]);
+    [CallHttpManager postWithUrlString:[URLDictionary searchCar_url]
+                            parameters:params
+                              success:^(id data) {
+        [weakself.searchResultArray addObjectsFromArray:[[CarModel alloc] getData:data]];
+        [weakself.tableView reloadData];
+    }
+                              failure:^(NSError *error) {
+        
+    }];
+    
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -246,8 +263,10 @@
     if (item.deviceId == 0) {
         [PCMBProgressHUD showLoadingTipsInView:self.view.window title:@"提示" detail:@"车辆未绑定，暂无定位信息" withIsAutoHide:YES];
     }else{
-        CarMapViewController *mapView = [[CarMapViewController alloc] init];
+        SignalDeviceOrCarMapViewController *mapView = [[SignalDeviceOrCarMapViewController alloc] init];
         mapView.deviceID = item.deviceId;
+        mapView.vinNumber = item.vin;
+        mapView.is_Car = YES;
         [self presentViewController:mapView animated:YES completion:nil];
     }
     
@@ -296,32 +315,23 @@
 #pragma mark - action
 
 - (void)titleViewSelect:(UIButton *)sender{
-    PopoverAction *action1 = [PopoverAction actionWithTitle:@"绑定车辆" handler:^(PopoverAction *action) {
-        self.selectedIndex= 1;
-        [self.titleButton setTitle:@"绑定车辆 ▾" forState:(UIControlStateNormal)];
-        [self.tableView.mj_header beginRefreshing];
-
-        
-    }];
-    PopoverAction *action2 = [PopoverAction actionWithTitle:@"未绑车辆" handler:^(PopoverAction *action) {
-        self.selectedIndex= 2;
-        [self.titleButton setTitle:@"未绑车辆 ▾" forState:(UIControlStateNormal)];
-        [self.tableView.mj_header beginRefreshing];
-
-        
-    }];
-    PopoverAction *action3 = [PopoverAction actionWithTitle:@"全部" handler:^(PopoverAction *action) {
-        self.selectedIndex= 3;
-        [self.titleButton setTitle:@"全部 ▾" forState:(UIControlStateNormal)];
-        [self.tableView.mj_header beginRefreshing];
-
-        
-    }];
+    if (self.groupInfoArray.count == 0) {
+        return;
+    }
+    NSMutableArray *actionArray = [[NSMutableArray alloc] init];
+    for (NSInteger i = 0; i < self.groupInfoArray.count; i ++) {
+        PopoverAction *action = [PopoverAction actionWithTitle:[NSString stringWithFormat:@"%@ %u",[self.groupInfoArray[i] name],[self.groupInfoArray[i] Count]] handler:^(PopoverAction *action) {
+            self.selectedIndex= i + 1;
+            [self.titleButton setTitle:[NSString stringWithFormat:@"%@ %u ▾",[self.groupInfoArray[i] name],[self.groupInfoArray[i] Count]] forState:(UIControlStateNormal)];
+            [self.tableView.mj_header beginRefreshing];
+        }];
+        [actionArray addObject:action];
+    }
     
     PopoverView *popoverView = [PopoverView popoverView];
-    popoverView.style = PopoverViewStyleDark;
+    popoverView.style = PopoverViewStyleDefault;
     popoverView.showShade = YES;
-    [popoverView showToView:sender withActions:@[action1, action2,action3]];
+    [popoverView showToView:sender withActions:actionArray];
 }
 
 

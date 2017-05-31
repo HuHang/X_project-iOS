@@ -24,7 +24,7 @@
 
 
 
-- (NSArray *)getData:(NSArray *)array{
-    return [MonitorModel mj_objectArrayWithKeyValuesArray:array];
+- (MonitorModel *)getData:(NSDictionary *)dictionary{
+    return [MonitorModel mj_objectWithKeyValues:dictionary];
 }
 @end

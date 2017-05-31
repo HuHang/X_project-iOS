@@ -20,7 +20,8 @@
 @property (copy, nonatomic)NSString *AlarmFenceStateDisplay;
 @property (copy, nonatomic)NSString *AlarmFenceState;
 
-@property (copy, nonatomic)NSString *shopName;
+@property (copy, nonatomic)NSString *AlarmCurrentShopName;
+@property (copy, nonatomic)NSString *AlarmShopName;
 @property (copy, nonatomic)NSString *shopTypeDisplay;
 @property (copy, nonatomic)NSString *imei;
 @property (copy, nonatomic)NSString *vin;

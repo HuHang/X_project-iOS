@@ -25,12 +25,10 @@
 #import "DashBoardWithSublabelTableViewCell.h"
 #import "DashBoardWithListTableViewCell.h"
 #import "DashBoardWithImageTableViewCell.h"
-
 #import "ChartDataModel.h"
 
 static CGFloat functionHeaderViewHeight = 95;
 static CGFloat moreFuncationViewHeight = 70;
-
 static CGFloat buttonHeight = 26;
 static CGFloat widthFormWidth = 0.54;
 
@@ -49,8 +47,8 @@ static CGFloat widthFormWidth = 0.54;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    [self createNavigationView];
     [self viewLayout];
-    
 //    _fpsLabel = [YYFPSLabel new];
 //    _fpsLabel.frame = CGRectMake(200, 200, 50, 30);
 //    [_fpsLabel sizeToFit];
@@ -71,23 +69,11 @@ static CGFloat widthFormWidth = 0.54;
 
 
 - (void)viewDidAppear:(BOOL)animated{
-
     [super viewDidAppear:animated];
     if ([[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopID] length] == 0) {
-        if ([[[NSUserDefaults standardUserDefaults] valueForKey:USERSHOPID] isEqualToString:@"shopids[]=0"]) {
-            [self salesChange];
-        }else{
-            [[NSUserDefaults standardUserDefaults] setValue:[[NSUserDefaults standardUserDefaults] valueForKey:USERSHOPID] forKey:DefaultShopID];
-            [[NSUserDefaults standardUserDefaults] setValue:[[NSUserDefaults standardUserDefaults] valueForKey:USERSHOP] forKey:DefaultShopName];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            [self createNavigationView];
-        }
-        
-    }else{
-        [self createNavigationView];
+        [self salesChange];
     }
     [self callHttpForDashBoard];
-    HHCodeLog(@"HH==%@",[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopID]);
     
 }
 
@@ -361,7 +347,7 @@ static CGFloat widthFormWidth = 0.54;
 #pragma mark - collection delegate
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     if ([[[NSUserDefaults standardUserDefaults]valueForKey:USERROLETYPE] integerValue] == 100 || [[[NSUserDefaults standardUserDefaults]valueForKey:USERROLETYPE] integerValue] == 200) {
-        return 3;
+        return 2;
     }
     return 1;
 }
@@ -438,12 +424,14 @@ MoreFunctionCollectionViewCell *cell = [collectionView dequeueReusableCellWithRe
     ShopViewController *shopView = [[ShopViewController alloc] init];
     UINavigationController *shopNav = [[UINavigationController alloc] initWithRootViewController:shopView];
     shopView.singleSelection = NO;
+    shopView.delegate = self;
     [self presentViewController:shopNav animated:YES completion:nil];
 }
 
 - (void)shopChanged{
     self.shopButton.titleLabel.text = [[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopName];
     [self.shopButton setTitle:[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopName] forState:(UIControlStateNormal)];
+    HHCodeLog(@"1233555==%@",[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopName]);
 }
 
 

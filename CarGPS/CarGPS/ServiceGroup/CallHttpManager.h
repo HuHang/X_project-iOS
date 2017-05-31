@@ -22,7 +22,7 @@ typedef void (^HttpProgress)(NSProgress *progress);
 
 
 //post请求
-+(void)postWithUrlString:(NSString *)urlString parameters:(NSDictionary *)parameters success:(HttpSuccess)success failure:(HttpFailure)failure;
++(void)postWithUrlString:(NSString *)urlString parameters:(id)parameters success:(HttpSuccess)success failure:(HttpFailure)failure;
 //上传
 + (void)uploadWithUrlString:(NSString *)urlString parameters:(NSDictionary *)parameters dataArray:(NSArray *)dataArray progress:(HttpProgress)progress success:(HttpSuccess)success failure:(HttpFailure)failure;
 @end

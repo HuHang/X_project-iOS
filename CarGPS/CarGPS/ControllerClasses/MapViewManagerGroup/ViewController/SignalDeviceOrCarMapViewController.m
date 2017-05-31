@@ -1,14 +1,15 @@
 //
-//  DeviceMapViewController.m
+//  SignalDeviceOrCarMapViewController.m
 //  CarGPS
 //
-//  Created by Charlot on 2017/4/26.
+//  Created by Charlot on 2017/5/22.
 //  Copyright © 2017年 Charlot. All rights reserved.
 //
 
-#import "DeviceMapViewController.h"
+#import "SignalDeviceOrCarMapViewController.h"
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import "WGS84TOGCJ02.h"
 #import "MyAnnotation.h"
 #import "MyAnnotationNormal.h"
 #import "MKMapView+ZoomLevel.h"
@@ -22,9 +23,7 @@
 #import "EndAnnotation.h"
 #import "EnlargeImage.h"
 
-
-
-@interface DeviceMapViewController ()<MKMapViewDelegate>
+@interface SignalDeviceOrCarMapViewController ()<MKMapViewDelegate>
 @property(nonatomic,strong) MKMapView *mapView;
 @property (nonatomic,strong) MKPolyline *trailLine;
 @property (nonatomic,strong)UIButton *shopButton;
@@ -54,18 +53,21 @@
 @property (nonatomic,strong)UITapGestureRecognizer *tapGesture;
 @end
 
-@implementation DeviceMapViewController
+@implementation SignalDeviceOrCarMapViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.navigationController.navigationBar lt_setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0]];
-    [self.navigationController.navigationBar lt_setTranslationY:(-64)];
+    
     self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
     [self.view addSubview:self.mapView];
     self.mapView.delegate = self;
-    [self createNavigationView];
-    self.coordinateArray = [NSArray new];
-    [self dateLoad];
+    [self createBackButton];
+    if (self.is_Car) {
+        [self createRightItemButton];
+        self.coordinateArray = [NSArray new];
+        [self dateLoad];
+    }
+    
     
 }
 
@@ -76,13 +78,26 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
     [self callHttpForLastCoordinate];
+    if (self.is_Car) {
+        __weak SignalDeviceOrCarMapViewController *weakself = self;
+        [self.bindImage1 whenTapped:^{
+            [EnlargeImage scanBigImageWithImageView:weakself.bindImage1];
+        }];
+        [self.bindImage2 whenTapped:^{
+            [EnlargeImage scanBigImageWithImageView:weakself.bindImage2];
+        }];
+        
+        [self callHttpForCoordinates];
+    }
+    
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     
-
+    
 }
 -(void)dateLoad
 {
@@ -99,17 +114,40 @@
         [_coverView removeGestureRecognizer:_tapGesture];
     }
     if (_coverView) {
-        [_coverView removeFromSuperview];
+        [self.coverView removeFromSuperview];
     }
     if (_effectView) {
-        [_effectView removeFromSuperview];
+        [self.effectView removeFromSuperview];
     }
-    self.mapView.delegate = nil;
+    switch (self.mapView.mapType) {
+        case MKMapTypeHybrid:
+        {
+            self.mapView.mapType = MKMapTypeStandard;
+        }
+            
+            break;
+        case MKMapTypeStandard:
+        {
+            self.mapView.mapType = MKMapTypeHybrid;
+        }
+            
+            break;
+        default:
+            break;
+    }
+    self.mapView.mapType = MKMapTypeStandard;
+    _mapView.showsUserLocation = NO;
+    [_mapView.layer removeAllAnimations];
+    [_mapView removeAnnotations:_mapView.annotations];
+    [_mapView removeOverlays:_mapView.overlays];
+    [_mapView removeFromSuperview];
+    _mapView.delegate = nil;
+    _mapView = nil;
 }
 
 - (void)backToSuperView{
-    [self.navigationController.navigationBar lt_setBackgroundColor:ZDRedColor];
-    [self.navigationController popViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
+    //    [self.navigationController popViewControllerAnimated:YES];
 }
 
 
@@ -119,40 +157,52 @@
     }
     return _annitationArray;
 }
+
+
 #pragma mark - view
-- (void)createNavigationView{
+- (void)createBackButton{
     UIButton *backButton = [UIButton buttonWithBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.7] withNormalImage:@"icon_back" withSelectedImage:nil];
-    UIButton *rightButton = [UIButton buttonWithBackgroundColor:[UIColor whiteColor] withNormalImage:@"icon_historySetup" withSelectedImage:nil];
-    self.historyButton = [UIButton buttonWithBackgroundColor:[UIColor whiteColor] withNormalImage:@"icon_historyLineDefalut" withSelectedImage:@"icon_historyLine"];
-    
     [self.mapView addSubview:backButton];
-    [self.mapView addSubview:rightButton];
-    [self.mapView addSubview:self.historyButton];
     [backButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(26);
         make.left.mas_equalTo(20);
         make.size.mas_equalTo(CGSizeMake(36, 36));
     }];
-    [self.historyButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.and.top.equalTo(backButton);
-        make.right.mas_equalTo(-20);
-    }];
-    [rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.and.right.equalTo(self.historyButton);
-        make.top.equalTo(self.historyButton.mas_bottom).with.mas_offset(1);
-    }];
-    
-    
     backButton.contentEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
     backButton.layer.cornerRadius = 18;
     backButton.layer.masksToBounds = YES;
     [backButton addTarget:self action:@selector(backToSuperView) forControlEvents:(UIControlEventTouchUpInside)];
+
+}
+- (void)createRightItemButton{
     
-    self.historyButton.contentEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
-    self.historyButton.selected = NO;
-    self.historyButton.layer.cornerRadius = 5;
-    self.historyButton.layer.masksToBounds = YES;
-    [self.historyButton addTarget:self action:@selector(showHistoryLine:) forControlEvents:(UIControlEventTouchUpInside)];
+    UIButton *rightButton = [UIButton buttonWithBackgroundColor:[UIColor whiteColor] withNormalImage:@"icon_historySetup" withSelectedImage:nil];
+    //    self.historyButton = [UIButton buttonWithBackgroundColor:[UIColor whiteColor] withNormalImage:@"icon_historyLineDefalut" withSelectedImage:@"icon_historyLine"];
+    
+    [self.mapView addSubview:rightButton];
+    //    [self.mapView addSubview:self.historyButton];
+    
+    //    [self.historyButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    //        make.size.and.top.equalTo(backButton);
+    //        make.right.mas_equalTo(-20);
+    //    }];
+    //    [rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    //        make.size.and.right.equalTo(self.historyButton);
+    //        make.top.equalTo(self.historyButton.mas_bottom).with.mas_offset(1);
+    //    }];
+    [rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(26);
+        make.size.mas_equalTo(CGSizeMake(36, 36));
+        make.right.mas_equalTo(-20);
+    }];
+    
+    
+    
+    //    self.historyButton.contentEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
+    //    self.historyButton.selected = NO;
+    //    self.historyButton.layer.cornerRadius = 5;
+    //    self.historyButton.layer.masksToBounds = YES;
+    //    [self.historyButton addTarget:self action:@selector(showHistoryLine:) forControlEvents:(UIControlEventTouchUpInside)];
     
     rightButton.contentEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
     rightButton.layer.cornerRadius = 5;
@@ -160,7 +210,6 @@
     [rightButton addTarget:self action:@selector(showActionView) forControlEvents:(UIControlEventTouchUpInside)];
     
 }
-
 - (UITapGestureRecognizer *)tapGesture{
     if (_tapGesture == nil) {
         _tapGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeSubView)];
@@ -168,6 +217,7 @@
     }
     return _tapGesture;
 }
+
 //遮罩层
 - (UIView *)coverView{
     if (_coverView == nil) {
@@ -259,7 +309,7 @@
         }];
         
         //详情信息
-
+        
         UILabel *imeiTitleLabel = [UILabel labelWithString:@"设备号：" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
         UIImageView *latImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_lat"]];
         UIImageView *lngImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_lng"]];
@@ -276,7 +326,7 @@
         [_timeContentView addSubview:self.bindImage2];
         
         //布局
-
+        
         [imeiTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(CGSizeMake(50, 30));
             make.left.mas_equalTo(10);
@@ -337,13 +387,13 @@
 
 /**
  开始时间view
-
+ 
  @return 开始时间view
  */
 - (UIButton *)editStartTimeButton{
     if (_editStartTimeButton == nil) {
         _editStartTimeButton = [UIButton buttonWithString:self.startString withBackgroundColor:[UIColor clearColor] withTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor blackColor] withFont:SystemFont(12.f)];
-
+        
         [_editStartTimeButton addTarget:self action:@selector(selectedTime:) forControlEvents:(UIControlEventTouchUpInside)];
     }
     return _editStartTimeButton;
@@ -351,7 +401,7 @@
 
 /**
  结束时间view
-
+ 
  @return 结束时间view
  */
 - (UIButton *)editEndTimeButton{
@@ -365,7 +415,7 @@
 
 /**
  vinlabel
-
+ 
  @return vinlabel
  */
 
@@ -378,7 +428,7 @@
 
 /**
  地址
-
+ 
  @return 地址
  */
 - (UILabel *)locationLabel{
@@ -392,7 +442,7 @@
 
 /**
  纬度
-
+ 
  @return 纬度
  */
 - (UILabel *)latLabel{
@@ -404,7 +454,7 @@
 
 /**
  经度
-
+ 
  @return 经度
  */
 - (UILabel *)lngLabel{
@@ -417,11 +467,6 @@
 - (UIImageView *)bindImage1{
     if (_bindImage1 == nil) {
         _bindImage1 = [[UIImageView alloc] init];
-        [_bindImage1 whenTapped:^{
-//            __weak DeviceMapViewController *weakself = self;
-            [EnlargeImage scanBigImageWithImageView:_bindImage1];
-        }];
-
     }
     return _bindImage1;
 }
@@ -429,10 +474,6 @@
 - (UIImageView *)bindImage2{
     if (_bindImage2 == nil) {
         _bindImage2 = [[UIImageView alloc] init];
-        [_bindImage2 whenTapped:^{
-//            __weak DeviceMapViewController *weakself = self;
-            [EnlargeImage scanBigImageWithImageView:_bindImage2];
-        }];
     }
     return _bindImage2;
 }
@@ -450,25 +491,25 @@
 
 #pragma mark - http
 - (void)callHttpForLastCoordinate{
-    __weak DeviceMapViewController *weakself = self;
+    __weak SignalDeviceOrCarMapViewController *weakself = self;
     HHCodeLog(@"%@",[NSString stringWithFormat:@"%@id=%ld",[URLDictionary lastCoordinate_url],(long)self.deviceID]);
     [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@id=%ld",[URLDictionary lastCoordinate_url],(long)self.deviceID]
                               success:^(id data) {
                                   DeviceCoordinateModel *item = [[DeviceCoordinateModel alloc] getData:data];
-                                  
                                   [weakself.mapView setCenterCoordinate:CLLocationCoordinate2DMake(item.lat, item.lng) zoomLevel:9 animated:YES];
                                   if (item.fenceState == 100) {
-                                      [weakself.mapView addAnnotation:[[MyAnnotationNormal alloc] initWithCoordinates:CLLocationCoordinate2DMake(item.lat, item.lng) title:@"当前位置(围栏内)" subTitle:[NSString stringWithFormat:@"车架号:%@",item.vin]]];
+                                      [weakself.mapView addAnnotation:[[MyAnnotationNormal alloc] initWithCoordinates:[WGS84TOGCJ02 transformFromWGSToGCJ:CLLocationCoordinate2DMake(item.lat, item.lng)] title:[NSString stringWithFormat:@"车架号:%@",item.vin] subTitle:nil]];
                                   }else{
-                                      [weakself.mapView addAnnotation:[[MyAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake(item.lat, item.lng) title:@"当前位置（围栏外）" subTitle:[NSString stringWithFormat:@"车架号:%@",item.vin]]];
+                                      [weakself.mapView addAnnotation:[[MyAnnotation alloc] initWithCoordinates:[WGS84TOGCJ02 transformFromWGSToGCJ:CLLocationCoordinate2DMake(item.lat, item.lng)] title:[NSString stringWithFormat:@"车架号:%@",item.vin] subTitle:nil]];
                                   }
+                                  
                               }
                               failure:^(NSError *error) {
                                   
                               }];
 }
 - (void)callHttpForBindInfo{
-    __weak DeviceMapViewController *weakself = self;
+    __weak SignalDeviceOrCarMapViewController *weakself = self;
     HHCodeLog(@"%@",[NSString stringWithFormat:@"%@vin=%@",[URLDictionary bindDeviceInfo_url],self.vinNumber]);
     [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@vin=%@",[URLDictionary bindDeviceInfo_url],self.vinNumber]
                               success:^(id data) {
@@ -476,8 +517,13 @@
                                   weakself.imeiLabel.text = item.imei;
                                   weakself.lngLabel.text = [NSString stringWithFormat:@"%f",item.currentLatitude];
                                   weakself.latLabel.text = [NSString stringWithFormat:@"%f",item.currentLongitude];
-                                  [weakself.bindImage1 sd_setImageWithURL:[NSURL URLWithString:[item.imagesUrl firstObject]] placeholderImage:[UIImage imageNamed:@"icon_webImageDefault"]];
-                                  [weakself.bindImage2 sd_setImageWithURL:[NSURL URLWithString:[item.imagesUrl lastObject]] placeholderImage:[UIImage imageNamed:@"icon_webImageDefault"]];
+                                  if (item.imagesUrl.count > 0) {
+                                      [weakself.bindImage1 sd_setImageWithURL:[NSURL URLWithString:[item.imagesUrl firstObject]] placeholderImage:[UIImage imageNamed:@"icon_webImageDefault"] options:SDWebImageCacheMemoryOnly];
+                                      [weakself.bindImage2 sd_setImageWithURL:[NSURL URLWithString:[item.imagesUrl lastObject]] placeholderImage:[UIImage imageNamed:@"icon_webImageDefault"] options:SDWebImageCacheMemoryOnly];
+                                  }else{
+                                      [weakself.bindImage1 setImage:[UIImage imageNamed:@"icon_webImageDefault"]];
+                                      [weakself.bindImage2 setImage:[UIImage imageNamed:@"icon_webImageDefault"]];
+                                  }
                                   [weakself formatAddressWithLatitude:item.currentLatitude longitude:item.currentLongitude];
                               }
                               failure:^(NSError *error) {
@@ -486,7 +532,7 @@
 }
 
 - (void)callHttpForCoordinates{
-    __weak DeviceMapViewController *weakself = self;
+    __weak SignalDeviceOrCarMapViewController *weakself = self;
     HHCodeLog(@"%@",[NSString stringWithFormat:@"%@id=%ld&startTime=%@&endTime=%@",[URLDictionary allCoordinate_url],(long)self.deviceID,self.editStartTimeButton.titleLabel.text,self.editEndTimeButton.titleLabel.text]);
     [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@id=%ld&startTime=%@&endTime=%@",[URLDictionary allCoordinate_url],(long)self.deviceID,self.editStartTimeButton.titleLabel.text,self.editEndTimeButton.titleLabel.text]
                               success:^(id data) {
@@ -506,11 +552,19 @@
                               }];
 }
 
+
 #pragma mark - mapview delegate
 
 -(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
     MKAnnotationView *result = nil;
+    
+    if (!self.is_Car) {
+        MKAnnotationView *annotationView = [[MKAnnotationView alloc]init];
+        annotationView.image = [UIImage imageNamed:@"icon_deviceAnnotation"];
+        annotationView.canShowCallout = YES;
+        return annotationView;
+    }
     
     if ([annotation isKindOfClass:[MyAnnotation class]]) {
         MKAnnotationView *annotationView = [[MKAnnotationView alloc]init];
@@ -555,7 +609,7 @@
 - (void)loadMapLineData{
     CLLocationCoordinate2D pointsToUse[self.coordinateArray.count];
     for (NSInteger i = 0; i < [self.coordinateArray count]; i ++) {
-        pointsToUse[i] = CLLocationCoordinate2DMake([(CoordinatesModel *)self.coordinateArray[i] lat], [(CoordinatesModel *)self.coordinateArray[i] lng]);
+        pointsToUse[i] = [WGS84TOGCJ02 transformFromWGSToGCJ:CLLocationCoordinate2DMake([(CoordinatesModel *)self.coordinateArray[i] lat], [(CoordinatesModel *)self.coordinateArray[i] lng])];
     }
     self.trailLine = [MKPolyline polylineWithCoordinates:pointsToUse count:self.coordinateArray.count];
     [self.mapView addOverlay:self.trailLine];
@@ -584,8 +638,8 @@
 
 - (void)addAnnotationsForHistory{
     [self.annitationArray removeAllObjects];
-    [self.annitationArray addObject:[[StartAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake([(CoordinatesModel *)self.coordinateArray.firstObject lat], [(CoordinatesModel *)self.coordinateArray.firstObject lng]) title:@"起点" subTitle:[(CoordinatesModel *)self.coordinateArray.firstObject signalTime]]];
-     [self.annitationArray addObject:[[EndAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake([(CoordinatesModel *)self.coordinateArray.lastObject lat], [(CoordinatesModel *)self.coordinateArray.lastObject lng]) title:@"终点" subTitle:[(CoordinatesModel *)self.coordinateArray.lastObject signalTime]]];
+    [self.annitationArray addObject:[[StartAnnotation alloc] initWithCoordinates:[WGS84TOGCJ02 transformFromWGSToGCJ:CLLocationCoordinate2DMake([(CoordinatesModel *)self.coordinateArray.firstObject lat], [(CoordinatesModel *)self.coordinateArray.firstObject lng])] title:@"起点" subTitle:[(CoordinatesModel *)self.coordinateArray.firstObject signalTime]]];
+    [self.annitationArray addObject:[[EndAnnotation alloc] initWithCoordinates:[WGS84TOGCJ02 transformFromWGSToGCJ:CLLocationCoordinate2DMake([(CoordinatesModel *)self.coordinateArray.lastObject lat], [(CoordinatesModel *)self.coordinateArray.lastObject lng])] title:@"终点" subTitle:[(CoordinatesModel *)self.coordinateArray.lastObject signalTime]]];
     [self.mapView addAnnotations:self.annitationArray];
 }
 
@@ -597,7 +651,7 @@
         HHCodeLog(@"_coverView == nil");
         [self.view.window addSubview:self.coverView];
         [self.view.window insertSubview:self.effectView aboveSubview:_coverView];
-        __weak DeviceMapViewController *weakself = self;
+        __weak SignalDeviceOrCarMapViewController *weakself = self;
         [UIView animateWithDuration:0.5 animations:^{
             [weakself.effectView setFrame:CGRectMake(0, SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT/2)];
         } completion:^(BOOL finished) {
@@ -605,8 +659,8 @@
         }];
     }else{
         HHCodeLog(@"_coverView != nil");
-
-        __weak DeviceMapViewController *weakself = self;
+        
+        __weak SignalDeviceOrCarMapViewController *weakself = self;
         [UIView animateWithDuration:0.5 animations:^{
             [weakself.effectView setFrame:CGRectMake(0, SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT/2)];
         } completion:^(BOOL finished) {
@@ -618,7 +672,7 @@
     
 }
 - (void)closeSubView{
-    __weak DeviceMapViewController *weakself = self;
+    __weak SignalDeviceOrCarMapViewController *weakself = self;
     [UIView animateWithDuration:0.5 animations:^{
         [weakself.effectView setFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT/2)];
     } completion:^(BOOL finished) {
@@ -634,7 +688,7 @@
     sender.selected = !sender.selected;
 }
 - (void)selectedTime:(UIButton *)sender{
-    __weak DeviceMapViewController *weakself = self;
+    __weak SignalDeviceOrCarMapViewController *weakself = self;
     WSDatePickerView *datepicker = [[WSDatePickerView alloc] initWithCompleteBlock:^(NSDate *startDate) {
         NSString *resultForDate = [startDate stringWithFormat:@"yyyy-MM-dd HH:mm"];
         sender.titleLabel.text = resultForDate;
@@ -642,7 +696,7 @@
         if (!weakself.historyButton.selected) {
             weakself.historyButton.selected = YES;
         }
-//        [weakself closeSubView];
+        //        [weakself closeSubView];
         [weakself callHttpForCoordinates];
     }];
     
@@ -654,7 +708,7 @@
 
 #pragma mark - 反编码
 - (void)formatAddressWithLatitude:(double)latitude longitude:(double)longitude{
-    __weak DeviceMapViewController *weakSelf = self;
+    __weak SignalDeviceOrCarMapViewController *weakSelf = self;
     CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
     CLGeocoder * geocoder = [[CLGeocoder alloc]init];
     
@@ -673,4 +727,6 @@
         
     }];
 }
+
+
 @end

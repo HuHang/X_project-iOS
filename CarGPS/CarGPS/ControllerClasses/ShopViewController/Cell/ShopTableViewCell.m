@@ -23,18 +23,22 @@
 - (void)initLayout{
     self.signImageView = [[UIImageView alloc] init];
     self.nameLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor blackColor] withFont:SystemFont(14.f)];
+    self.bankLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor lightGrayColor] withFont:SystemFont(12.f)];
     self.addressLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor lightGrayColor] withFont:SystemFont(12.f)];
     self.additionButton = [UIButton buttonWithBackgroundColor:[UIColor clearColor] withNormalImage:@"icon_unSelect" withSelectedImage:@"icon_select"];
+    self.bankImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_shopBank"]];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_address"]];
     
     [self.contentView addSubview:self.signImageView];
     [self.contentView addSubview:self.nameLabel];
     [self.contentView addSubview:self.additionButton];
     [self.contentView addSubview:self.addressLabel];
+    [self.contentView addSubview:self.bankLabel];
     [self.contentView addSubview:imageView];
+    [self.contentView addSubview:_bankImageView];
     
     [self.signImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(20, 20));
+        make.size.mas_equalTo(CGSizeMake(15, 15));
         make.left.mas_equalTo(5);
         make.centerY.mas_equalTo(0);
     }];
@@ -48,31 +52,45 @@
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(5);
         make.left.equalTo(self.signImageView.mas_right).with.mas_offset(5);
-        make.height.mas_equalTo(40);
+        make.height.mas_equalTo(26);
         make.right.equalTo(self.additionButton.mas_left);
+    }];
+    
+    [self.bankImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(15, 15));
+        make.top.equalTo(self.nameLabel.mas_bottom);
+        make.left.equalTo(self.nameLabel);
+    }];
+    [self.bankLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(20);
+        make.left.equalTo(_bankImageView.mas_right).with.mas_offset(10);
+        make.right.equalTo(self.additionButton.mas_left);
+        make.top.equalTo(_bankImageView);
+    }];
+    
+    
+    [self.addressLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.bankLabel.mas_bottom);
+        make.bottom.mas_equalTo(0);
+        make.left.equalTo(_nameLabel).with.mas_offset(25);
+        make.right.equalTo(self.nameLabel);
     }];
     
     [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(15, 15));
-        make.top.equalTo(self.nameLabel.mas_bottom);
-        make.left.equalTo(self.nameLabel).with.mas_offset(10);
+        make.left.equalTo(_nameLabel);
+        make.centerY.equalTo(self.addressLabel);
+        
+        
     }];
+
     
-    [self.addressLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(imageView);
-        make.height.mas_equalTo(40);
-        make.left.equalTo(imageView.mas_right).with.mas_offset(10);
-        make.right.equalTo(self.nameLabel);
-    }];
-    
-//    self.nameLabel.adjustsFontSizeToFitWidth = YES;
-//    self.addressLabel.adjustsFontSizeToFitWidth = YES;
     self.addressLabel.numberOfLines = 0;
     self.addressLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [self.additionButton addTarget:self action:@selector(additionButtonTapped:) forControlEvents:(UIControlEventTouchUpInside)];
 }
 
-- (void)setupWithName:(NSString *)name count:(NSString *)count addressText:(NSString *)address level:(NSInteger)level is_additionButtonSelected:(BOOL)is_additionButtonSelected
+- (void)setupWithName:(NSString *)name count:(NSInteger)count addressText:(NSString *)address bankName:(NSString *)bankName shopType:(NSInteger)shopType level:(NSInteger)level is_additionButtonSelected:(BOOL)is_additionButtonSelected
 {
     self.signImageView.image = [UIImage imageNamed:@"icon_shopUnselected"];
     self.addressLabel.text = address;
@@ -82,13 +100,24 @@
         make.left.equalTo(self.signImageView.mas_right).with.mas_offset(30*level + 10);
     }];
     if (level == 1) {
+
+        if (shopType == 3) {
+            self.bankLabel.text = @"二网";
+        }else{
+            self.bankLabel.text = @"二库";
+        }
         self.nameLabel.text = name;
         self.backgroundColor = UIColorFromHEX(0xf6f6f6,1.0);
         self.signImageView.hidden = YES;
     }else{
-        self.nameLabel.text = [NSString stringWithFormat:@"%@(%@)",name,count];
+        self.nameLabel.text = [NSString stringWithFormat:@"%@(%ld)",name,(long)count];
+        self.bankLabel.text = bankName;
         self.backgroundColor = [UIColor whiteColor];
-        self.signImageView.hidden = NO;
+        if (count == 0) {
+            self.signImageView.hidden = YES;
+        }else{
+            self.signImageView.hidden = NO;
+        }
     }
     
 }

@@ -1,14 +1,15 @@
 //
-//  CarMapViewController.m
+//  MainMapDetailMapViewController.m
 //  CarGPS
 //
-//  Created by Charlot on 2017/5/17.
+//  Created by Charlot on 2017/5/22.
 //  Copyright © 2017年 Charlot. All rights reserved.
 //
 
-#import "CarMapViewController.h"
+#import "MainMapDetailMapViewController.h"
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import "WGS84TOGCJ02.h"
 #import "MyAnnotation.h"
 #import "MyAnnotationNormal.h"
 #import "MKMapView+ZoomLevel.h"
@@ -22,8 +23,7 @@
 #import "EndAnnotation.h"
 #import "EnlargeImage.h"
 
-
-@interface CarMapViewController ()<MKMapViewDelegate>
+@interface MainMapDetailMapViewController ()<MKMapViewDelegate>
 @property(nonatomic,strong) MKMapView *mapView;
 @property (nonatomic,strong) MKPolyline *trailLine;
 @property (nonatomic,strong)UIButton *shopButton;
@@ -51,16 +51,18 @@
 @property (nonatomic,strong)UIImageView *bindImage2;
 
 @property (nonatomic,strong)UITapGestureRecognizer *tapGesture;
+
 @end
 
-@implementation CarMapViewController
+@implementation MainMapDetailMapViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-    [self.view addSubview:self.mapView];
-    self.mapView.delegate = self;
+//    [self.navigationController.navigationBar lt_setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0]];
+//    [self.navigationController.navigationBar lt_setTranslationY:(-64)];
+    _mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    [self.view addSubview:_mapView];
+    _mapView.delegate = self;
     [self createNavigationView];
     self.coordinateArray = [NSArray new];
     [self dateLoad];
@@ -68,17 +70,34 @@
 }
 
 - (void)didReceiveMemoryWarning {
+    HHCodeLog(@"MainMapDetailMapViewController didReceiveMemoryWarning");
     [super didReceiveMemoryWarning];
+    if ([self.view window] == nil)
+    {
+//        [[SDWebImageManager sharedManager] cancelAll];
+//        [[SDWebImageManager sharedManager].imageCache clearDiskOnCompletion:nil];
+//        [[SDWebImageManager sharedManager].imageCache clearMemory];
+        self.view = nil;
+    }
     // Dispose of any resources that can be recreated.
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    __weak MainMapDetailMapViewController *weakself = self;
+    [self.bindImage1 whenTapped:^{
+        [EnlargeImage scanBigImageWithImageView:weakself.bindImage1];
+    }];
+    [self.bindImage2 whenTapped:^{
+        [EnlargeImage scanBigImageWithImageView:weakself.bindImage2];
+    }];
     [self callHttpForLastCoordinate];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    [_coverView removeFromSuperview];
+    [self removeTrailLine];
     
     
 }
@@ -96,17 +115,39 @@
     if (_tapGesture) {
         [_coverView removeGestureRecognizer:_tapGesture];
     }
-    if (_coverView) {
-        [self.coverView removeFromSuperview];
-    }
     if (_effectView) {
-        [self.effectView removeFromSuperview];
+        [_effectView removeFromSuperview];
     }
-    self.mapView.delegate = nil;
+    switch (self.mapView.mapType) {
+        case MKMapTypeHybrid:
+        {
+            self.mapView.mapType = MKMapTypeStandard;
+        }
+            
+            break;
+        case MKMapTypeStandard:
+        {
+            self.mapView.mapType = MKMapTypeHybrid;
+        }
+            
+            break;
+        default:
+            break;
+    }
+    self.mapView.mapType = MKMapTypeStandard;
+    _mapView.showsUserLocation = NO;
+    [_mapView.layer removeAllAnimations];
+    [_mapView removeAnnotations:_mapView.annotations];
+    [_mapView removeOverlays:_mapView.overlays];
+    [_mapView removeFromSuperview];
+    _mapView.delegate = nil;
+    _mapView = nil;
+    
 }
 
 - (void)backToSuperView{
     [self dismissViewControllerAnimated:YES completion:nil];
+//    [self.navigationController.navigationBar lt_setBackgroundColor:ZDRedColor];
 //    [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -117,27 +158,39 @@
     }
     return _annitationArray;
 }
+
+
 #pragma mark - view
 - (void)createNavigationView{
     UIButton *backButton = [UIButton buttonWithBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.7] withNormalImage:@"icon_back" withSelectedImage:nil];
     UIButton *rightButton = [UIButton buttonWithBackgroundColor:[UIColor whiteColor] withNormalImage:@"icon_historySetup" withSelectedImage:nil];
-    self.historyButton = [UIButton buttonWithBackgroundColor:[UIColor whiteColor] withNormalImage:@"icon_historyLineDefalut" withSelectedImage:@"icon_historyLine"];
+    
+    /*
+     遇到丝毫不懂用户交互的上级，故而隐藏此按钮。。。
+     */
+    
+    //    self.historyButton = [UIButton buttonWithBackgroundColor:[UIColor whiteColor] withNormalImage:@"icon_historyLineDefalut" withSelectedImage:@"icon_historyLine"];
     
     [self.mapView addSubview:backButton];
     [self.mapView addSubview:rightButton];
-    [self.mapView addSubview:self.historyButton];
+    //    [self.mapView addSubview:self.historyButton];
     [backButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(26);
         make.left.mas_equalTo(20);
         make.size.mas_equalTo(CGSizeMake(36, 36));
     }];
-    [self.historyButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    //    [self.historyButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    //        make.size.and.top.equalTo(backButton);
+    //        make.right.mas_equalTo(-20);
+    //    }];
+    //    [rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    //        make.size.and.right.equalTo(self.historyButton);
+    //        make.top.equalTo(self.historyButton.mas_bottom).with.mas_offset(1);
+    //    }];
+    
+    [rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.and.top.equalTo(backButton);
         make.right.mas_equalTo(-20);
-    }];
-    [rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.and.right.equalTo(self.historyButton);
-        make.top.equalTo(self.historyButton.mas_bottom).with.mas_offset(1);
     }];
     
     
@@ -146,11 +199,11 @@
     backButton.layer.masksToBounds = YES;
     [backButton addTarget:self action:@selector(backToSuperView) forControlEvents:(UIControlEventTouchUpInside)];
     
-    self.historyButton.contentEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
-    self.historyButton.selected = NO;
-    self.historyButton.layer.cornerRadius = 5;
-    self.historyButton.layer.masksToBounds = YES;
-    [self.historyButton addTarget:self action:@selector(showHistoryLine:) forControlEvents:(UIControlEventTouchUpInside)];
+    //    self.historyButton.contentEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
+    //    self.historyButton.selected = NO;
+    //    self.historyButton.layer.cornerRadius = 5;
+    //    self.historyButton.layer.masksToBounds = YES;
+    //    [self.historyButton addTarget:self action:@selector(showHistoryLine:) forControlEvents:(UIControlEventTouchUpInside)];
     
     rightButton.contentEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
     rightButton.layer.cornerRadius = 5;
@@ -158,6 +211,7 @@
     [rightButton addTarget:self action:@selector(showActionView) forControlEvents:(UIControlEventTouchUpInside)];
     
 }
+
 - (UITapGestureRecognizer *)tapGesture{
     if (_tapGesture == nil) {
         _tapGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeSubView)];
@@ -165,7 +219,6 @@
     }
     return _tapGesture;
 }
-
 //遮罩层
 - (UIView *)coverView{
     if (_coverView == nil) {
@@ -216,6 +269,7 @@
 //详情view
 - (UIView *)timeContentView{
     if (_timeContentView == nil) {
+        __weak MainMapDetailMapViewController *weakSelf = self;
         _timeContentView = [[UIView alloc] initWithFrame:CGRectMake(0, 36, SCREEN_WIDTH, SCREEN_HEIGHT/2 - 36)];
         //时间选择
         UILabel *startTimeLabel = [UILabel labelWithString:@"开始时间" withTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(14.f)];
@@ -294,39 +348,39 @@
         }];
         [latImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(CGSizeMake(16, 16));
-            make.right.equalTo(_latLabel.mas_left);
-            make.centerY.equalTo(_latLabel);
+            make.right.equalTo(weakSelf.latLabel.mas_left);
+            make.centerY.equalTo(weakSelf.latLabel);
         }];
         
         [_lngLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.equalTo(endTimeLabel);
-            make.size.and.top.equalTo(_latLabel);
+            make.size.and.top.equalTo(weakSelf.latLabel);
         }];
         [lngImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.size.and.centerY.equalTo(latImageView);
-            make.right.equalTo(_lngLabel.mas_left);
+            make.right.equalTo(weakSelf.lngLabel.mas_left);
         }];
         
         [_locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(imeiTitleLabel).with.mas_offset(30);
-            make.bottom.equalTo(_latLabel.mas_top);
-            make.right.equalTo(_imeiLabel);
+            make.bottom.equalTo(weakSelf.latLabel.mas_top);
+            make.right.equalTo(weakSelf.imeiLabel);
             make.height.mas_equalTo(30);
         }];
         [addressImage mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(imeiTitleLabel);
-            make.centerY.equalTo(_locationLabel);
+            make.centerY.equalTo(weakSelf.locationLabel);
             make.size.mas_equalTo(CGSizeMake(12, 12));
         }];
         [_bindImage1 mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(imeiTitleLabel.mas_bottom);
-            make.bottom.equalTo(_locationLabel.mas_top);
+            make.bottom.equalTo(weakSelf.locationLabel.mas_top);
             make.left.mas_equalTo(imeiTitleLabel.mas_right);
-            make.right.equalTo(_timeContentView.mas_centerX).with.mas_offset(-5);
+            make.right.equalTo(weakSelf.timeContentView.mas_centerX).with.mas_offset(-5);
         }];
         [_bindImage2 mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(_timeContentView.mas_centerX).with.mas_offset(5);
-            make.size.and.top.mas_equalTo(_bindImage1);
+            make.left.equalTo(weakSelf.timeContentView.mas_centerX).with.mas_offset(5);
+            make.size.and.top.mas_equalTo(weakSelf.bindImage1);
         }];
     }
     return _timeContentView;
@@ -415,10 +469,6 @@
 - (UIImageView *)bindImage1{
     if (_bindImage1 == nil) {
         _bindImage1 = [[UIImageView alloc] init];
-        [_bindImage1 whenTapped:^{
-            //            __weak DeviceMapViewController *weakself = self;
-            [EnlargeImage scanBigImageWithImageView:_bindImage1];
-        }];
         
     }
     return _bindImage1;
@@ -427,10 +477,6 @@
 - (UIImageView *)bindImage2{
     if (_bindImage2 == nil) {
         _bindImage2 = [[UIImageView alloc] init];
-        [_bindImage2 whenTapped:^{
-            //            __weak DeviceMapViewController *weakself = self;
-            [EnlargeImage scanBigImageWithImageView:_bindImage2];
-        }];
     }
     return _bindImage2;
 }
@@ -448,25 +494,27 @@
 
 #pragma mark - http
 - (void)callHttpForLastCoordinate{
-    __weak CarMapViewController *weakself = self;
+    __weak MainMapDetailMapViewController *weakself = self;
     HHCodeLog(@"%@",[NSString stringWithFormat:@"%@id=%ld",[URLDictionary lastCoordinate_url],(long)self.deviceID]);
     [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@id=%ld",[URLDictionary lastCoordinate_url],(long)self.deviceID]
                               success:^(id data) {
                                   DeviceCoordinateModel *item = [[DeviceCoordinateModel alloc] getData:data];
-                                  [weakself.mapView setCenterCoordinate:CLLocationCoordinate2DMake(item.lat, item.lng) zoomLevel:9 animated:YES];
+                                  
+                                  [weakself.mapView setCenterCoordinate:[WGS84TOGCJ02 transformFromWGSToGCJ:CLLocationCoordinate2DMake(item.lat, item.lng)] zoomLevel:9 animated:YES];
                                   if (item.fenceState == 100) {
-                                      [weakself.mapView addAnnotation:[[MyAnnotationNormal alloc] initWithCoordinates:CLLocationCoordinate2DMake(item.lat, item.lng) title:@"当前位置(围栏内)" subTitle:[NSString stringWithFormat:@"车架号:%@",item.vin]]];
+                                      [weakself.mapView addAnnotation:[[MyAnnotationNormal alloc] initWithCoordinates:[WGS84TOGCJ02 transformFromWGSToGCJ:CLLocationCoordinate2DMake(item.lat, item.lng)] title:[NSString stringWithFormat:@"车架号:%@",item.vin] subTitle:nil]];
                                   }else{
-                                      [weakself.mapView addAnnotation:[[MyAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake(item.lat, item.lng) title:@"当前位置（围栏外）" subTitle:[NSString stringWithFormat:@"车架号:%@",item.vin]]];
+                                      [weakself.mapView addAnnotation:[[MyAnnotation alloc] initWithCoordinates:[WGS84TOGCJ02 transformFromWGSToGCJ:CLLocationCoordinate2DMake(item.lat, item.lng)] title:[NSString stringWithFormat:@"车架号:%@",item.vin] subTitle:nil]];
                                   }
                                   
+                                  [weakself callHttpForCoordinates];
                               }
                               failure:^(NSError *error) {
                                   
                               }];
 }
 - (void)callHttpForBindInfo{
-    __weak CarMapViewController *weakself = self;
+    __weak MainMapDetailMapViewController *weakself = self;
     HHCodeLog(@"%@",[NSString stringWithFormat:@"%@vin=%@",[URLDictionary bindDeviceInfo_url],self.vinNumber]);
     [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@vin=%@",[URLDictionary bindDeviceInfo_url],self.vinNumber]
                               success:^(id data) {
@@ -474,8 +522,13 @@
                                   weakself.imeiLabel.text = item.imei;
                                   weakself.lngLabel.text = [NSString stringWithFormat:@"%f",item.currentLatitude];
                                   weakself.latLabel.text = [NSString stringWithFormat:@"%f",item.currentLongitude];
-                                  [weakself.bindImage1 sd_setImageWithURL:[NSURL URLWithString:[item.imagesUrl firstObject]] placeholderImage:[UIImage imageNamed:@"icon_webImageDefault"]];
-                                  [weakself.bindImage2 sd_setImageWithURL:[NSURL URLWithString:[item.imagesUrl lastObject]] placeholderImage:[UIImage imageNamed:@"icon_webImageDefault"]];
+                                  if (item.imagesUrl.count > 0) {
+                                      [weakself.bindImage1 sd_setImageWithURL:[NSURL URLWithString:[item.imagesUrl firstObject]] placeholderImage:[UIImage imageNamed:@"icon_webImageDefault"] options:SDWebImageCacheMemoryOnly];
+                                      [weakself.bindImage2 sd_setImageWithURL:[NSURL URLWithString:[item.imagesUrl lastObject]] placeholderImage:[UIImage imageNamed:@"icon_webImageDefault"] options:SDWebImageCacheMemoryOnly];
+                                  }else{
+                                      [weakself.bindImage1 setImage:[UIImage imageNamed:@"icon_webImageDefault"]];
+                                      [weakself.bindImage2 setImage:[UIImage imageNamed:@"icon_webImageDefault"]];
+                                  }
                                   [weakself formatAddressWithLatitude:item.currentLatitude longitude:item.currentLongitude];
                               }
                               failure:^(NSError *error) {
@@ -484,7 +537,7 @@
 }
 
 - (void)callHttpForCoordinates{
-    __weak CarMapViewController *weakself = self;
+    __weak MainMapDetailMapViewController *weakself = self;
     HHCodeLog(@"%@",[NSString stringWithFormat:@"%@id=%ld&startTime=%@&endTime=%@",[URLDictionary allCoordinate_url],(long)self.deviceID,self.editStartTimeButton.titleLabel.text,self.editEndTimeButton.titleLabel.text]);
     [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@id=%ld&startTime=%@&endTime=%@",[URLDictionary allCoordinate_url],(long)self.deviceID,self.editStartTimeButton.titleLabel.text,self.editEndTimeButton.titleLabel.text]
                               success:^(id data) {
@@ -503,7 +556,6 @@
                                   
                               }];
 }
-
 
 #pragma mark - mapview delegate
 
@@ -554,7 +606,8 @@
 - (void)loadMapLineData{
     CLLocationCoordinate2D pointsToUse[self.coordinateArray.count];
     for (NSInteger i = 0; i < [self.coordinateArray count]; i ++) {
-        pointsToUse[i] = CLLocationCoordinate2DMake([(CoordinatesModel *)self.coordinateArray[i] lat], [(CoordinatesModel *)self.coordinateArray[i] lng]);
+        pointsToUse[i] = [WGS84TOGCJ02 transformFromWGSToGCJ:CLLocationCoordinate2DMake([(CoordinatesModel *)self.coordinateArray[i] lat], [(CoordinatesModel *)self.coordinateArray[i] lng])];
+        
     }
     self.trailLine = [MKPolyline polylineWithCoordinates:pointsToUse count:self.coordinateArray.count];
     [self.mapView addOverlay:self.trailLine];
@@ -583,29 +636,29 @@
 
 - (void)addAnnotationsForHistory{
     [self.annitationArray removeAllObjects];
-    [self.annitationArray addObject:[[StartAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake([(CoordinatesModel *)self.coordinateArray.firstObject lat], [(CoordinatesModel *)self.coordinateArray.firstObject lng]) title:@"起点" subTitle:[(CoordinatesModel *)self.coordinateArray.firstObject signalTime]]];
-    [self.annitationArray addObject:[[EndAnnotation alloc] initWithCoordinates:CLLocationCoordinate2DMake([(CoordinatesModel *)self.coordinateArray.lastObject lat], [(CoordinatesModel *)self.coordinateArray.lastObject lng]) title:@"终点" subTitle:[(CoordinatesModel *)self.coordinateArray.lastObject signalTime]]];
+    [self.annitationArray addObject:[[StartAnnotation alloc] initWithCoordinates:[WGS84TOGCJ02 transformFromWGSToGCJ: CLLocationCoordinate2DMake([(CoordinatesModel *)self.coordinateArray.firstObject lat], [(CoordinatesModel *)self.coordinateArray.firstObject lng]) ] title:@"起点" subTitle:[(CoordinatesModel *)self.coordinateArray.firstObject signalTime]]];
+    [self.annitationArray addObject:[[EndAnnotation alloc] initWithCoordinates:[WGS84TOGCJ02 transformFromWGSToGCJ: CLLocationCoordinate2DMake([(CoordinatesModel *)self.coordinateArray.lastObject lat], [(CoordinatesModel *)self.coordinateArray.lastObject lng])] title:@"终点" subTitle:[(CoordinatesModel *)self.coordinateArray.lastObject signalTime]]];
     [self.mapView addAnnotations:self.annitationArray];
 }
 
 
 #pragma mark - action
 - (void)showActionView{
-    [self callHttpForBindInfo];
     if (_coverView == nil) {
         HHCodeLog(@"_coverView == nil");
         [self.view.window addSubview:self.coverView];
         [self.view.window insertSubview:self.effectView aboveSubview:_coverView];
-        __weak CarMapViewController *weakself = self;
+        __weak MainMapDetailMapViewController *weakself = self;
         [UIView animateWithDuration:0.5 animations:^{
             [weakself.effectView setFrame:CGRectMake(0, SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT/2)];
         } completion:^(BOOL finished) {
             weakself.coverView.alpha = 0.8f;
         }];
+        [self callHttpForBindInfo];
     }else{
         HHCodeLog(@"_coverView != nil");
         
-        __weak CarMapViewController *weakself = self;
+        __weak MainMapDetailMapViewController *weakself = self;
         [UIView animateWithDuration:0.5 animations:^{
             [weakself.effectView setFrame:CGRectMake(0, SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT/2)];
         } completion:^(BOOL finished) {
@@ -617,13 +670,14 @@
     
 }
 - (void)closeSubView{
-    __weak CarMapViewController *weakself = self;
+    __weak MainMapDetailMapViewController *weakself = self;
     [UIView animateWithDuration:0.5 animations:^{
         [weakself.effectView setFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT/2)];
     } completion:^(BOOL finished) {
         weakself.coverView.alpha = 0.f;
     }];
 }
+
 - (void)showHistoryLine:(UIButton *)sender{
     if (sender.selected) {
         [self removeTrailLine];
@@ -632,8 +686,9 @@
     }
     sender.selected = !sender.selected;
 }
+
 - (void)selectedTime:(UIButton *)sender{
-    __weak CarMapViewController *weakself = self;
+    __weak MainMapDetailMapViewController *weakself = self;
     WSDatePickerView *datepicker = [[WSDatePickerView alloc] initWithCompleteBlock:^(NSDate *startDate) {
         NSString *resultForDate = [startDate stringWithFormat:@"yyyy-MM-dd HH:mm"];
         sender.titleLabel.text = resultForDate;
@@ -653,7 +708,7 @@
 
 #pragma mark - 反编码
 - (void)formatAddressWithLatitude:(double)latitude longitude:(double)longitude{
-    __weak CarMapViewController *weakSelf = self;
+    __weak MainMapDetailMapViewController *weakSelf = self;
     CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
     CLGeocoder * geocoder = [[CLGeocoder alloc]init];
     
@@ -672,5 +727,6 @@
         
     }];
 }
+
 
 @end

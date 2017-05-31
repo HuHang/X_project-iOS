@@ -74,12 +74,15 @@
 }
 
 //POST请求
-+(void)postWithUrlString:(NSString *)urlString parameters:(NSDictionary *)parameters success:(HttpSuccess)success failure:(HttpFailure)failure{
++(void)postWithUrlString:(NSString *)urlString parameters:(id)parameters success:(HttpSuccess)success failure:(HttpFailure)failure{
     //创建请求管理者
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     //
+    
     manager.requestSerializer.timeoutInterval = 20;
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+//    manager.requestSerializer= [AFJSONRequestSerializer serializer];
+    
     [manager.requestSerializer setValue:[[NSUserDefaults standardUserDefaults] valueForKey:Basic_Auth] forHTTPHeaderField:@"Authorization"];
     //内容类型
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/json",@"text/javascript",@"text/html", nil];
@@ -115,6 +118,8 @@
     manager.requestSerializer.timeoutInterval = 20;
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/plain", @"multipart/form-data", @"application/json", @"text/html", @"image/jpeg", @"image/png", @"application/octet-stream", @"text/json", nil];
     // 在parameters里存放照片以外的对象
+    urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    HHCodeLog(@"------%@",urlString);
     [manager POST:urlString parameters:dic constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         // formData: 专门用于拼接需要上传的数据,在此位置生成一个要上传的数据体
         // 这里的_photoArr是你存放图片的数组

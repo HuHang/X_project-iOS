@@ -1,14 +1,14 @@
 //
-//  CarMapViewController.h
+//  MainMapDetailMapViewController.h
 //  CarGPS
 //
-//  Created by Charlot on 2017/5/17.
+//  Created by Charlot on 2017/5/22.
 //  Copyright © 2017年 Charlot. All rights reserved.
 //
 
-#import "DeviceMapViewController.h"
+#import <UIKit/UIKit.h>
 
-@interface CarMapViewController : UIViewController
+@interface MainMapDetailMapViewController : UIViewController
 @property NSInteger deviceID;
 @property (nonatomic,strong)NSString *vinNumber;
 @end

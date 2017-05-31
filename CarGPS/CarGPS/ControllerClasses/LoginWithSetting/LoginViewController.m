@@ -278,7 +278,6 @@
     NSString *basicAuth = [NSString stringWithFormat:@"Basic %@",[kerWithValue base64EncodedString]];
     [user setObject:basicAuth forKey:Basic_Auth];
     
-    
     [user setValue:[NSString stringWithFormat:@"%u",infoDic.ID] forKey:USERID];
     [user setValue:infoDic.name forKey:USERNAME];
     [user setValue:infoDic.loginId forKey:USERLOGINNAME];
@@ -287,7 +286,14 @@
     [user setValue:[NSString stringWithFormat:@"%u",infoDic.roleType ]forKey:USERROLETYPE];
     [user setValue:infoDic.roleTypeDisplay forKey:USERROLETYPEDISPLAY];
     [user setValue:infoDic.shopName forKey:USERSHOP];
+    
+    NSArray *shopIdArray = @[[NSNumber numberWithInteger:infoDic.shopId]];
+    [user setObject:shopIdArray forKey:DefaultShopIDArray];
+    [user setValue:[NSString stringWithFormat:@"%u",infoDic.shopId]forKey:BindShopID];
+    [user setValue:infoDic.shopName forKey:BindShopName];
     [user setValue:[NSString stringWithFormat:@"shopids[]=%u",infoDic.shopId]forKey:USERSHOPID];
+    [user setValue:[NSString stringWithFormat:@"shopids[]=%u",infoDic.shopId]forKey:DefaultShopID];
+    [user setValue:infoDic.shopName forKey:DefaultShopName];
     [user setValue:infoDic.bankName forKey:USERBANCK];
     [user setValue:[NSString stringWithFormat:@"%u",infoDic.bankId]forKey:USERBANCKID];
     [user setValue:infoDic.token forKey:TOKEN];

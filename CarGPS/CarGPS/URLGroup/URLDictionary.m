@@ -97,7 +97,7 @@
  @return 所有设备
  */
 + (NSString *) allDevice_url{
-    NSString *url = @"/api/devices/AllByShopIdsWithPage?";
+    NSString *url = @"/api/devices/AllByShopIdsWithPageWithList";
     return  [NSString stringWithFormat:@"%@%@",[self baseUrlWithPort],url];
 }
 
@@ -112,21 +112,41 @@
  @return 设备搜索
  */
 + (NSString *) searchDevice_url{
-    NSString *url = @"/api/devices/FuzzySearch?";
+    NSString *url = @"/api/devices/FuzzySearchWithList";
     return  [NSString stringWithFormat:@"%@%@",[self baseUrlWithPort],url];
 }
 
 /**
- 所有监控设备
- 
- @return 所有设备
+ 设备统计
+ shopIds
+ @return 设备统计
  */
-+ (NSString *) allMonitorDevice_url{
-    NSString *url = @"/api/Shops/GetBindedByShops?";
++ (NSString *) groupDeviceCount_url{
+    NSString *url = @"/api/devices/GroupDeviceCountWithList";
     return  [NSString stringWithFormat:@"%@%@",[self baseUrlWithPort],url];
 }
 
 
+
+/**
+ 监控
+
+ @return 监控
+ */
++ (NSString *) allMonitorDevice_url{
+    NSString *url = @"/api/Shops/GetBindedGroupByShopsWithList";
+    return  [NSString stringWithFormat:@"%@%@",[self baseUrlWithPort],url];
+}
+
+/**
+ 测试
+ 
+ @return 测试监控
+ */
++ (NSString *) test_allMonitorDevice_url{
+    NSString *url = @"/api/Shops/GetBindedGroupByShopsWithList";
+    return  [NSString stringWithFormat:@"%@%@",[self baseUrlWithPort],url];
+}
 /**
  绑定检查 get
  int shopId: 127,
@@ -292,7 +312,7 @@
  @return 所有车辆
  */
 + (NSString *) allCar_url{
-    NSString *url = @"/api/cars/AllByShopIdsWithPage?";
+    NSString *url = @"/api/cars/AllByShopIdsWithPageWithList";
     return  [NSString stringWithFormat:@"%@%@",[self baseUrlWithPort],url];
 }
 
@@ -307,7 +327,17 @@
  @return 车辆搜索
  */
 + (NSString *) searchCar_url{
-    NSString *url = @"/api/cars/FuzzySearch?";
+    NSString *url = @"/api/cars/FuzzySearchWithList";
+    return  [NSString stringWithFormat:@"%@%@",[self baseUrlWithPort],url];
+}
+
+/**
+ 车辆统计
+ shopIds
+ @return 车辆统计
+ */
++ (NSString *) groupCarsCount_url{
+    NSString *url = @"/api/cars/GroupCarsCountWithList";
     return  [NSString stringWithFormat:@"%@%@",[self baseUrlWithPort],url];
 }
 

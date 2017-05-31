@@ -23,23 +23,21 @@
 - (void)initLayout{
     UILabel *imeiTitle = [UILabel labelWithString:@"IMEI:" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor blackColor] withFont:SystemFont(12.f)];
     UILabel *vinTitle = [UILabel labelWithString:@"VIN:" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor blackColor] withFont:SystemFont(12.f)];
-    UILabel *shopTitle = [UILabel labelWithString:@"商店:" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
+
 
     
-    self.vinLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor blackColor] withFont:SystemFont(16.f)];
-    self.imeiLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor blackColor] withFont:SystemFont(16.f)];
-    self.shopLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
+    self.vinLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor blackColor] withFont:SystemFont(12.f)];
+    self.imeiLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor blackColor] withFont:SystemFont(12.f)];
+    self.shopLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor blackColor] withFont:SystemFont(12.f)];
     self.statusLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor whiteColor] withFont:SystemFont(10.f)];
     
-    self.brandLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
-    self.carTypeLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
+    self.brandLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
+    self.carTypeLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
 
-    
     self.timeLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor blackColor] withFont:SystemFont(12.f)];
     
     [self.contentView addSubview:imeiTitle];
     [self.contentView addSubview:vinTitle];
-    [self.contentView addSubview:shopTitle];
     [self.contentView addSubview:self.imeiLabel];
     [self.contentView addSubview:self.vinLabel];
     [self.contentView addSubview:self.shopLabel];
@@ -49,15 +47,15 @@
     [self.contentView addSubview:self.timeLabel];
     
     
-    NSArray *titleArray = @[vinTitle,imeiTitle,shopTitle];
-    NSArray *labelArray = @[self.vinLabel,self.imeiLabel,self.shopLabel];
+    NSArray *titleArray = @[vinTitle,imeiTitle];
+    NSArray *labelArray = @[self.vinLabel,self.imeiLabel];
     for (NSInteger i = 0; i < [titleArray count]; i ++) {
         UILabel *titleLabel = titleArray[i];
         UILabel *label = labelArray[i];
         [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(10);
+            make.left.mas_equalTo(30);
             make.top.mas_equalTo(0).with.mas_offset(20*i + 10);
-            make.size.mas_equalTo(CGSizeMake(40, 24));
+            make.size.mas_equalTo(CGSizeMake(40, 20));
         }];
         [label mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.and.top.equalTo(titleLabel);
@@ -76,8 +74,8 @@
     
     //品牌
     [self.brandLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(shopTitle);
-        make.top.equalTo(shopTitle.mas_bottom);
+        make.left.equalTo(imeiTitle);
+        make.top.equalTo(imeiTitle.mas_bottom);
         make.size.mas_equalTo(CGSizeMake((SCREEN_WIDTH-30)/3, 20));
     }];
     
@@ -87,15 +85,17 @@
         make.left.equalTo(self.brandLabel.mas_right);
     }];
     
-
-    
-    
-    [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.height.equalTo(shopTitle);
+    [self.shopLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.height.equalTo(imeiTitle);
         make.top.equalTo(self.brandLabel.mas_bottom);
         make.right.equalTo(self.statusLabel);
     }];
-    self.statusLabel.layer.cornerRadius = 12.f;
+    
+    [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.and.left.equalTo(self.shopLabel);
+        make.top.equalTo(self.shopLabel.mas_bottom);
+    }];
+    self.statusLabel.layer.cornerRadius = 10.f;
     self.statusLabel.layer.borderWidth = 1.f;
     self.statusLabel.layer.borderColor = [UIColor grayColor].CGColor;
     self.statusLabel.layer.masksToBounds = YES;
@@ -113,7 +113,7 @@
              withStatus:(NSInteger)fenceState{
     self.vinLabel.text = vinStr;
     self.imeiLabel.text = imeiStr;
-    self.shopLabel.text = shopNameStr;
+    self.shopLabel.text = [NSString stringWithFormat:@"当前商户：%@",shopNameStr];
     self.brandLabel.text = [NSString stringWithFormat:@"品牌：%@",brandStr];
     self.carTypeLabel.text = [NSString stringWithFormat:@"车型：%@",carTypeStr];
     self.timeLabel.text = [NSString stringWithFormat:@"定位时间：%@",timeStr];
