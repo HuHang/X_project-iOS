@@ -26,6 +26,7 @@
 #import "DashBoardWithListTableViewCell.h"
 #import "DashBoardWithImageTableViewCell.h"
 #import "ChartDataModel.h"
+#import "ShopModel.h"
 
 static CGFloat functionHeaderViewHeight = 95;
 static CGFloat moreFuncationViewHeight = 70;
@@ -49,6 +50,7 @@ static CGFloat widthFormWidth = 0.54;
     self.view.backgroundColor = [UIColor whiteColor];
     [self createNavigationView];
     [self viewLayout];
+    [self callHttpForShopData];
 //    _fpsLabel = [YYFPSLabel new];
 //    _fpsLabel.frame = CGRectMake(200, 200, 50, 30);
 //    [_fpsLabel sizeToFit];
@@ -70,9 +72,9 @@ static CGFloat widthFormWidth = 0.54;
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    if ([[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopID] length] == 0) {
-        [self salesChange];
-    }
+//    if ([[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopID] length] == 0) {
+//        [self salesChange];
+//    }
     [self callHttpForDashBoard];
     
 }
@@ -200,6 +202,23 @@ static CGFloat widthFormWidth = 0.54;
         [weakself.tableView reloadData];
     } failure:^(NSError *error) {
         
+    }];
+}
+- (void)callHttpForShopData{
+    __weak typeof(self) weakself = self;
+    HHCodeLog(@"%@",[URLDictionary allShop_url]);
+    [CallHttpManager getWithUrlString:[URLDictionary allShop_url] success:^(id data) {
+        NSMutableArray *shopArrayID = [[NSMutableArray alloc] init];
+        for (ShopModel *shop in [[ShopModel alloc] getData:data]) {
+            [shopArrayID addObject:[NSNumber numberWithInteger:shop.ID]];
+            for (ShopModel *item in [[ShopModel alloc] getData:shop.ChildShops]) {
+                [shopArrayID addObject:[NSNumber numberWithInteger:item.ID]];
+            }
+        }
+        [[NSUserDefaults standardUserDefaults]setObject:shopArrayID forKey:DefaultShopIDArray];
+        [[NSUserDefaults standardUserDefaults]synchronize];
+    } failure:^(NSError *error) {
+        [PCMBProgressHUD hideWithView:weakself.view];
     }];
 }
 #pragma mark -

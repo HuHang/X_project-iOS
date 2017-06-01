@@ -13,9 +13,10 @@
 @property (assign, nonatomic)double latitude;
 
 @property (copy, nonatomic)NSString *name;
+@property (copy, nonatomic)NSString *parentShopName;
 @property (copy, nonatomic)NSString *shopTypeDisplay;
 @property (copy, nonatomic)NSString *allBankPath;
-
+@property unsigned int shopType;
 
 - (ShopInfoModel *)getData:(NSDictionary *)dictionary;
 @end

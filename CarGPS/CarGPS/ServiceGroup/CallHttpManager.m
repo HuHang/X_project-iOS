@@ -49,7 +49,7 @@
 +(void)getWithUrlString:(NSString *)urlString success:(HttpSuccess)success failure:(HttpFailure)failure{
     //创建请求管理者
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    manager.requestSerializer.timeoutInterval = 20;
+    manager.requestSerializer.timeoutInterval = 60;
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     [manager.requestSerializer setValue:[[NSUserDefaults standardUserDefaults] valueForKey:Basic_Auth] forHTTPHeaderField:@"Authorization"];
     //内容类型
@@ -79,7 +79,7 @@
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     //
     
-    manager.requestSerializer.timeoutInterval = 20;
+    manager.requestSerializer.timeoutInterval = 60;
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
 //    manager.requestSerializer= [AFJSONRequestSerializer serializer];
     
@@ -115,7 +115,7 @@
     NSDictionary *dic;
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     [manager.requestSerializer setValue:[[NSUserDefaults standardUserDefaults] valueForKey:Basic_Auth] forHTTPHeaderField:@"Authorization"];
-    manager.requestSerializer.timeoutInterval = 20;
+    manager.requestSerializer.timeoutInterval = 60;
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/plain", @"multipart/form-data", @"application/json", @"text/html", @"image/jpeg", @"image/png", @"application/octet-stream", @"text/json", nil];
     // 在parameters里存放照片以外的对象
     urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

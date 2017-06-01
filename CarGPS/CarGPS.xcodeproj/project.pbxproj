@@ -97,7 +97,6 @@
 		026595981ED411FA0016176A /* ShopGroupModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 026595971ED411FA0016176A /* ShopGroupModel.m */; };
 		0265959B1ED412700016176A /* ShopInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0265959A1ED412700016176A /* ShopInfoModel.m */; };
 		0265959D1ED423070016176A /* icon_mapHeaderViewBac.png in Resources */ = {isa = PBXBuildFile; fileRef = 0265959C1ED423070016176A /* icon_mapHeaderViewBac.png */; };
-		0265959F1ED425040016176A /* icon_mapShop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0265959E1ED425040016176A /* icon_mapShop@2x.png */; };
 		026595A21ED42C8A0016176A /* ShopAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 026595A11ED42C8A0016176A /* ShopAnnotation.m */; };
 		0270454D1EB1861D003E28E4 /* icon_battery0.png in Resources */ = {isa = PBXBuildFile; fileRef = 027045411EB1861D003E28E4 /* icon_battery0.png */; };
 		0270454E1EB1861D003E28E4 /* icon_battery0@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 027045421EB1861D003E28E4 /* icon_battery0@2x.png */; };
@@ -130,6 +129,13 @@
 		0286A5371E97289300075582 /* PCMBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 0286A5361E97289300075582 /* PCMBProgressHUD.m */; };
 		0286A53D1E972FF300075582 /* MHRadioButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0286A53A1E972FF300075582 /* MHRadioButton.m */; };
 		0286A53E1E972FF300075582 /* UIButton+MHExtra.m in Sources */ = {isa = PBXBuildFile; fileRef = 0286A53C1E972FF300075582 /* UIButton+MHExtra.m */; };
+		028CCAF41EDFCAB000A11F91 /* ShopSignalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 028CCAF31EDFCAB000A11F91 /* ShopSignalViewController.m */; };
+		028CCAF71EDFEFAE00A11F91 /* ParentAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 028CCAF61EDFEFAE00A11F91 /* ParentAnnotation.m */; };
+		028CCAFA1EDFEFC300A11F91 /* ChildShopAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 028CCAF91EDFEFC300A11F91 /* ChildShopAnnotation.m */; };
+		028CCAFD1EDFEFE800A11F91 /* ChildNetAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 028CCAFC1EDFEFE800A11F91 /* ChildNetAnnotation.m */; };
+		028CCB371EE0156800A11F91 /* icon_map_4Sstore@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 028CCB341EE0156800A11F91 /* icon_map_4Sstore@2x.png */; };
+		028CCB381EE0156800A11F91 /* icon_map_twolibrary@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 028CCB351EE0156800A11F91 /* icon_map_twolibrary@2x.png */; };
+		028CCB391EE0156800A11F91 /* icon_map_twonet@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 028CCB361EE0156800A11F91 /* icon_map_twonet@2x.png */; };
 		0299C5AE1ED2793400F11515 /* WGS84TOGCJ02.m in Sources */ = {isa = PBXBuildFile; fileRef = 0299C5AD1ED2793400F11515 /* WGS84TOGCJ02.m */; };
 		02AE1FED1E6FA14A00382F94 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 02AE1FEC1E6FA14A00382F94 /* main.m */; };
 		02AE1FF01E6FA14A00382F94 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 02AE1FEF1E6FA14A00382F94 /* AppDelegate.m */; };
@@ -441,7 +447,6 @@
 		026595991ED412700016176A /* ShopInfoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopInfoModel.h; sourceTree = "<group>"; };
 		0265959A1ED412700016176A /* ShopInfoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopInfoModel.m; sourceTree = "<group>"; };
 		0265959C1ED423070016176A /* icon_mapHeaderViewBac.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_mapHeaderViewBac.png; sourceTree = "<group>"; };
-		0265959E1ED425040016176A /* icon_mapShop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_mapShop@2x.png"; sourceTree = "<group>"; };
 		026595A01ED42C8A0016176A /* ShopAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopAnnotation.h; sourceTree = "<group>"; };
 		026595A11ED42C8A0016176A /* ShopAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopAnnotation.m; sourceTree = "<group>"; };
 		027045411EB1861D003E28E4 /* icon_battery0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_battery0.png; sourceTree = "<group>"; };
@@ -486,6 +491,17 @@
 		0286A53A1E972FF300075582 /* MHRadioButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MHRadioButton.m; sourceTree = "<group>"; };
 		0286A53B1E972FF300075582 /* UIButton+MHExtra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+MHExtra.h"; sourceTree = "<group>"; };
 		0286A53C1E972FF300075582 /* UIButton+MHExtra.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+MHExtra.m"; sourceTree = "<group>"; };
+		028CCAF21EDFCAB000A11F91 /* ShopSignalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopSignalViewController.h; sourceTree = "<group>"; };
+		028CCAF31EDFCAB000A11F91 /* ShopSignalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopSignalViewController.m; sourceTree = "<group>"; };
+		028CCAF51EDFEFAE00A11F91 /* ParentAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParentAnnotation.h; sourceTree = "<group>"; };
+		028CCAF61EDFEFAE00A11F91 /* ParentAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParentAnnotation.m; sourceTree = "<group>"; };
+		028CCAF81EDFEFC300A11F91 /* ChildShopAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChildShopAnnotation.h; sourceTree = "<group>"; };
+		028CCAF91EDFEFC300A11F91 /* ChildShopAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChildShopAnnotation.m; sourceTree = "<group>"; };
+		028CCAFB1EDFEFE800A11F91 /* ChildNetAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChildNetAnnotation.h; sourceTree = "<group>"; };
+		028CCAFC1EDFEFE800A11F91 /* ChildNetAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChildNetAnnotation.m; sourceTree = "<group>"; };
+		028CCB341EE0156800A11F91 /* icon_map_4Sstore@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_map_4Sstore@2x.png"; sourceTree = "<group>"; };
+		028CCB351EE0156800A11F91 /* icon_map_twolibrary@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_map_twolibrary@2x.png"; sourceTree = "<group>"; };
+		028CCB361EE0156800A11F91 /* icon_map_twonet@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_map_twonet@2x.png"; sourceTree = "<group>"; };
 		0299C5AC1ED2793400F11515 /* WGS84TOGCJ02.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WGS84TOGCJ02.h; sourceTree = "<group>"; };
 		0299C5AD1ED2793400F11515 /* WGS84TOGCJ02.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WGS84TOGCJ02.m; sourceTree = "<group>"; };
 		02AE1FE81E6FA14A00382F94 /* CarGPS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CarGPS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -711,6 +727,12 @@
 				021CB97B1ECA9E7400448E8B /* EndAnnotation.m */,
 				026595A01ED42C8A0016176A /* ShopAnnotation.h */,
 				026595A11ED42C8A0016176A /* ShopAnnotation.m */,
+				028CCAF51EDFEFAE00A11F91 /* ParentAnnotation.h */,
+				028CCAF61EDFEFAE00A11F91 /* ParentAnnotation.m */,
+				028CCAF81EDFEFC300A11F91 /* ChildShopAnnotation.h */,
+				028CCAF91EDFEFC300A11F91 /* ChildShopAnnotation.m */,
+				028CCAFB1EDFEFE800A11F91 /* ChildNetAnnotation.h */,
+				028CCAFC1EDFEFE800A11F91 /* ChildNetAnnotation.m */,
 			);
 			path = Annotation;
 			sourceTree = "<group>";
@@ -1479,7 +1501,6 @@
 		0286A51D1E96529800075582 /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				0265959E1ED425040016176A /* icon_mapShop@2x.png */,
 				02E253B11EC982370008D819 /* icon_shopUnselected@2x.png */,
 				02E253B21EC982370008D819 /* icon_shopSelected@2x.png */,
 				026595911ED3EB2A0016176A /* icon_shopBank@2x.png */,
@@ -1662,7 +1683,8 @@
 				026595991ED412700016176A /* ShopInfoModel.h */,
 				0265959A1ED412700016176A /* ShopInfoModel.m */,
 			);
-			path = Model;
+			name = Model;
+			path = ../Model;
 			sourceTree = "<group>";
 		};
 		02C5E0CE1EAF069500B94221 /* View */ = {
@@ -1681,6 +1703,7 @@
 				02DB4ACE1ED2CB550063035A /* MainMapDetailMapViewController.m */,
 				02DB4AD01ED2CC320063035A /* SignalDeviceOrCarMapViewController.h */,
 				02DB4AD11ED2CC320063035A /* SignalDeviceOrCarMapViewController.m */,
+				02C5E0CD1EAF069500B94221 /* Model */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -1752,6 +1775,9 @@
 		02C5E1221EB086B100B94221 /* mapAnnotation */ = {
 			isa = PBXGroup;
 			children = (
+				028CCB341EE0156800A11F91 /* icon_map_4Sstore@2x.png */,
+				028CCB351EE0156800A11F91 /* icon_map_twolibrary@2x.png */,
+				028CCB361EE0156800A11F91 /* icon_map_twonet@2x.png */,
 				02DB4ADF1ED2D6D80063035A /* icon_deviceAnnotation.png */,
 				02DB4ADB1ED2D29E0063035A /* icon_mapend.png */,
 				02DB4AD91ED2D21A0063035A /* icon_mapbegin.png */,
@@ -1843,6 +1869,8 @@
 			children = (
 				02C6916A1EADCF12004636BB /* ShopViewController.h */,
 				02C6916B1EADCF12004636BB /* ShopViewController.m */,
+				028CCAF21EDFCAB000A11F91 /* ShopSignalViewController.h */,
+				028CCAF31EDFCAB000A11F91 /* ShopSignalViewController.m */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -1930,7 +1958,6 @@
 			isa = PBXGroup;
 			children = (
 				02C5E0CC1EAF069500B94221 /* Cell */,
-				02C5E0CD1EAF069500B94221 /* Model */,
 				02C5E0CE1EAF069500B94221 /* View */,
 				02C5E0CF1EAF069500B94221 /* ViewController */,
 			);
@@ -2181,6 +2208,7 @@
 				02FCB2B61EC465FC00FE96EF /* dash_chartImage0.png in Resources */,
 				027045541EB1861D003E28E4 /* icon_battery3@2x.png in Resources */,
 				02FCB29F1EC4178600FE96EF /* icon_historySetup.png in Resources */,
+				028CCB391EE0156800A11F91 /* icon_map_twonet@2x.png in Resources */,
 				02FCB2B21EC4380C00FE96EF /* icon_historyLineDefalut.png in Resources */,
 				02FCB3171EC5B21D00FE96EF /* icon_appVersion@2x.png in Resources */,
 				02E254381EC999CC0008D819 /* icon_loading22.png in Resources */,
@@ -2200,6 +2228,7 @@
 				0220DC481ECEF910004C298B /* icon_dashboard_datebackg2@2x.png in Resources */,
 				021CB98D1ECABAD600448E8B /* icon_tabBar_selected2.png in Resources */,
 				02C5E1301EB086B100B94221 /* icon_psdSelect.png in Resources */,
+				028CCB371EE0156800A11F91 /* icon_map_4Sstore@2x.png in Resources */,
 				02E253B31EC982370008D819 /* icon_shopUnselected@2x.png in Resources */,
 				027045561EB1861D003E28E4 /* icon_battery4@2x.png in Resources */,
 				0270454D1EB1861D003E28E4 /* icon_battery0.png in Resources */,
@@ -2214,7 +2243,6 @@
 				02FCB2B01EC4370600FE96EF /* icon_moreFunction_2@2x.png in Resources */,
 				027045501EB1861D003E28E4 /* icon_battery1@2x.png in Resources */,
 				021CB98E1ECABAD600448E8B /* icon_tabBar_selected2@2x.png in Resources */,
-				0265959F1ED425040016176A /* icon_mapShop@2x.png in Resources */,
 				02C5E1371EB086B100B94221 /* icon_unSelect@2x.png in Resources */,
 				02E2542A1EC999CC0008D819 /* icon_loading7.png in Resources */,
 				02C5E15B1EB0B23100B94221 /* shop.png in Resources */,
@@ -2249,6 +2277,7 @@
 				02C5E0B91EADFF9D00B94221 /* icomoon.ttf in Resources */,
 				02E254361EC999CC0008D819 /* icon_loading20.png in Resources */,
 				023EFA9D1EA0B36A00637A76 /* addImage.png in Resources */,
+				028CCB381EE0156800A11F91 /* icon_map_twolibrary@2x.png in Resources */,
 				02E254351EC999CC0008D819 /* icon_loading19.png in Resources */,
 				02C5E1351EB086B100B94221 /* icon_select@2x.png in Resources */,
 				027045F01EB33414003E28E4 /* dashBoard.png in Resources */,
@@ -2388,7 +2417,9 @@
 				0237FDDA1E84BEED00A9651B /* IPSettingViewController.m in Sources */,
 				02C6916C1EADCF12004636BB /* ShopViewController.m in Sources */,
 				021CB9781ECA9E1300448E8B /* MyAnnotationNormal.m in Sources */,
+				028CCAF41EDFCAB000A11F91 /* ShopSignalViewController.m in Sources */,
 				0265957B1ED3D3D10016176A /* InventoryOrderTableViewCell.m in Sources */,
+				028CCAFD1EDFEFE800A11F91 /* ChildNetAnnotation.m in Sources */,
 				026595A21ED42C8A0016176A /* ShopAnnotation.m in Sources */,
 				021CB97C1ECA9E7400448E8B /* EndAnnotation.m in Sources */,
 				025EAB8D1EC2EEFB0063ECEC /* SZKCleanCache.m in Sources */,
@@ -2412,6 +2443,7 @@
 				02AE1FF91E6FA14A00382F94 /* CarGPS.xcdatamodeld in Sources */,
 				02C5E1021EAF8F3500B94221 /* SGQRCodeScanningView.m in Sources */,
 				026595881ED3D3D10016176A /* MessageTypeTableViewCell.m in Sources */,
+				028CCAFA1EDFEFC300A11F91 /* ChildShopAnnotation.m in Sources */,
 				02C5E0FE1EAF8F3500B94221 /* SGQRCodeScanningVC.m in Sources */,
 				0265958D1ED3D3D10016176A /* CenterLabelTableViewCell.m in Sources */,
 				02E253AF1EC823DA0008D819 /* UILabel+Boldify.m in Sources */,
@@ -2432,6 +2464,7 @@
 				02FCB2EC1EC5904100FE96EF /* UserInfoModel.m in Sources */,
 				0299C5AE1ED2793400F11515 /* WGS84TOGCJ02.m in Sources */,
 				025EAB501EC165F00063ECEC /* NSDate+Extension.m in Sources */,
+				028CCAF71EDFEFAE00A11F91 /* ParentAnnotation.m in Sources */,
 				0265956C1ED3D3D10016176A /* DashBoardWithLabelTableViewCell.m in Sources */,
 				027045981EB1DBF2003E28E4 /* MovieViewController.m in Sources */,
 				026595901ED3D3D10016176A /* UserInfomationViewController.m in Sources */,

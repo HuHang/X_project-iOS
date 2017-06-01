@@ -289,7 +289,7 @@
     
     NSArray *shopIdArray = @[[NSNumber numberWithInteger:infoDic.shopId]];
     [user setObject:shopIdArray forKey:DefaultShopIDArray];
-    [user setValue:[NSString stringWithFormat:@"%u",infoDic.shopId]forKey:BindShopID];
+    [user setValue:[NSNumber numberWithInteger:infoDic.shopId] forKey:BindShopID];
     [user setValue:infoDic.shopName forKey:BindShopName];
     [user setValue:[NSString stringWithFormat:@"shopids[]=%u",infoDic.shopId]forKey:USERSHOPID];
     [user setValue:[NSString stringWithFormat:@"shopids[]=%u",infoDic.shopId]forKey:DefaultShopID];

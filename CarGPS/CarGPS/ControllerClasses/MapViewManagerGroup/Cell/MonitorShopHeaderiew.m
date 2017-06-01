@@ -23,38 +23,75 @@
 }
 
 - (void)initLayout{
-    UIImageView *signImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_mapShop"]];
+    self.signImageView = [[UIImageView alloc] init];
     self.shopNameLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor blackColor] withFont:SystemFont(14.f)];
-    self.bankNameLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
-
+    self.bankNameLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor lightGrayColor] withFont:SystemFont(12.f)];
+    self.carCountLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
+    UIView *backgroundView = [[UIView alloc] init];
+    backgroundView.backgroundColor = [UIColor whiteColor];
     
-    [self.contentView addSubview:signImageView];
-    [self.contentView addSubview:self.shopNameLabel];
-    [self.contentView addSubview:self.bankNameLabel];
+    [backgroundView addSubview:self.signImageView];
+    [backgroundView addSubview:self.shopNameLabel];
+    [backgroundView addSubview:self.bankNameLabel];
+    [backgroundView addSubview:self.carCountLabel];
+    [self.contentView addSubview:backgroundView];
     
-    [signImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(15, 15));
+    [backgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.contentView).with.insets(UIEdgeInsetsMake(0, 0, 1, 0));
+    }];
+    
+    [self.signImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(20, 20));
         make.left.mas_equalTo(10);
         make.centerY.mas_equalTo(0);
     }];
     [self.shopNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(26);
+        make.height.mas_equalTo(36);
         make.top.mas_equalTo(0);
-        make.left.equalTo(signImageView.mas_right).with.mas_offset(5);
+        make.left.equalTo(self.signImageView.mas_right).with.mas_offset(5);
         make.right.mas_equalTo(0);
     }];
+    [self.carCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.right.equalTo(self.shopNameLabel);
+        make.top.equalTo(self.shopNameLabel.mas_bottom);
+        make.height.mas_equalTo(20);
+    }];
     [self.bankNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.equalTo(_shopNameLabel);
-        make.top.equalTo(_shopNameLabel.mas_bottom);
+        make.left.and.right.equalTo(self.carCountLabel);
+        make.top.equalTo(self.carCountLabel.mas_bottom);
         make.bottom.mas_equalTo(0);
     }];
     
+//    self.shopNameLabel.adjustsFontSizeToFitWidth = YES;
+    self.shopNameLabel.numberOfLines = 0;
+    self.shopNameLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    self.signImageView.contentMode = UIViewContentModeCenter;
     
 }
 
-- (void)loadDataForHeaderViewWith:(NSString *)shopName bankName:(NSString *)bankName withCarCount:(NSInteger)count{
-    self.shopNameLabel.text = [NSString stringWithFormat:@"%@(%ld)",shopName,(long)count];
+- (void)loadDataForHeaderViewWith:(NSString *)shopName bankName:(NSString *)bankName withCarCount:(NSInteger)count shopType:(NSInteger)shopType parentShop:(NSString *)parentShopName{
     self.bankNameLabel.text = [NSString stringWithFormat:@"金融机构:%@",bankName];
+    switch (shopType) {
+        case 0:
+            self.shopNameLabel.text = [NSString stringWithFormat:@"%@",shopName];
+            self.signImageView.image = [UIImage imageNamed:@"icon_map_4Sstore"];
+            self.carCountLabel.text = [NSString stringWithFormat:@"在库：%ld 台",(long)count];
+            break;
+        case 2:
+            self.shopNameLabel.text = [NSString stringWithFormat:@"%@/%@",parentShopName,shopName];
+            self.signImageView.image = [UIImage imageNamed:@"icon_map_twolibrary"];
+            self.carCountLabel.text = [NSString stringWithFormat:@"移动：%ld 台",(long)count];
+            break;
+        case 3:
+            self.shopNameLabel.text = [NSString stringWithFormat:@"%@/%@",parentShopName,shopName];
+            self.signImageView.image = [UIImage imageNamed:@"icon_map_twonet"];
+            self.carCountLabel.text = [NSString stringWithFormat:@"移动：%ld 台",(long)count];
+            break;
+            
+        default:
+            break;
+    }
+    
 }
 
 

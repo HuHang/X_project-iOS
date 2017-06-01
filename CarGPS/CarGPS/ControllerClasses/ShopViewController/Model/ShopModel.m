@@ -10,11 +10,15 @@
 
 @implementation ShopModel
 - (id)mj_newValueFromOldValue:(id)oldValue property:(MJProperty *)property{
+//    if (property.type.isBoolType) {
+//        return @(YES);
+//    }
     if ([NSString isEmpty:oldValue]) {
         return  @"";
     }
     return oldValue;
 }
+
 
 + (NSDictionary *)mj_replacedKeyFromPropertyName
 {

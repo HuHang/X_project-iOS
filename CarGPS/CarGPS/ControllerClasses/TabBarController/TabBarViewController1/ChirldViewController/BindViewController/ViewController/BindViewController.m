@@ -226,7 +226,7 @@
 #pragma mark - http
 - (void)callHttpForCheck{
     __weak BindViewController *weakself = self;
-    NSString *urlData = [NSString stringWithFormat:@"shopId=%@&imei=%@&vin=%@",[[NSUserDefaults standardUserDefaults] valueForKey:BindShopID],self.imeiString,self.vinString];
+    NSString *urlData = [NSString stringWithFormat:@"shopId=%@&imei=%@&vin=%@",[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:BindShopID]],self.imeiString,self.vinString];
     HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary canBind_url],urlData]);
     [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@%@",[URLDictionary canBind_url],urlData]
                                success:^(id data) {
@@ -246,7 +246,7 @@
 
 - (void)callHttpForBind:(NSArray *)uploadPhotoArray{
     __weak BindViewController *weakself = self;
-    NSString *urlData = [NSString stringWithFormat:@"shopId=%@&imei=%@&vin=%@",[[NSUserDefaults standardUserDefaults] valueForKey:BindShopID],self.imeiString,self.vinString];
+    NSString *urlData = [NSString stringWithFormat:@"shopId=%@&imei=%@&vin=%@",[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:BindShopID]],self.imeiString,self.vinString];
     HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary bind_url],urlData]);
     [PCMBProgressHUD showLoadingImageInView:self.view text:@"上传图片..." isResponse:NO];
     [CallHttpManager uploadWithUrlString:[NSString stringWithFormat:@"%@%@",[URLDictionary bind_url],urlData] parameters:nil dataArray:uploadPhotoArray progress:^(NSProgress *progress) {
@@ -271,7 +271,7 @@
 
 - (void)callHttpForQS:(NSString *)searchString{
     __weak BindViewController *weakself = self;
-    NSString *dataString = [NSString stringWithFormat:@"searchStr=%@&shopId=%@&searchType=%@",searchString,[[NSUserDefaults standardUserDefaults] valueForKey:BindShopID],@"vin"];
+    NSString *dataString = [NSString stringWithFormat:@"searchStr=%@&shopId=%@&searchType=%@",searchString,[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:BindShopID]],@"vin"];
     HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary QSAll_url],dataString]);
 
     [CallHttpManager getWithUrlString:[NSString stringWithFormat:@"%@%@",[URLDictionary QSAll_url],dataString]

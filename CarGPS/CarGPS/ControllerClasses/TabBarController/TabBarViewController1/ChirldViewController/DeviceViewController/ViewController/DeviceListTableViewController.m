@@ -25,7 +25,6 @@
 @property (nonatomic,strong)NSArray *groupInfoArray;
 @property (nonatomic,strong)UIButton *shopSelectButton;
 @property (nonatomic,strong)UIButton *titleButton;
-@property (nonatomic,strong)NSString *selectesShopIDStr;
 @property NSInteger selectedIndex;
 @property NSInteger pageIndex;
 @property (strong, nonatomic)UISearchBar *searchBar;
@@ -42,7 +41,6 @@
     self.tableView.tableHeaderView = self.searchBar;
     self.tableView.tableFooterView = [UIView new];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.selectesShopIDStr = [[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopID];
     [self createNavigationView];
     [self callHttpForDeviceCount];
     

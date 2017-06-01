@@ -17,10 +17,10 @@
 {
     BOOL isbool;
 }
-@property (strong, nonatomic) NSArray *dataArray;
-@property (strong, nonatomic) NSMutableArray *searchResultArray;
-@property (strong, nonatomic) NSMutableArray *selectArray;
-@property (strong, nonatomic) NSMutableArray *alreadySelectedArray;
+@property (strong, nonatomic) NSArray *dataArray; //所有本库
+@property (strong, nonatomic) NSMutableArray *searchResultArray; //所有商店
+@property (strong, nonatomic) NSMutableArray *selectArray; //选择的ShopModel
+@property (strong, nonatomic) NSMutableArray *alreadySelectedArray; //上次选择的ShopID
 @property (strong, nonatomic) UISearchBar *searchBar;
 @property (weak, nonatomic) RATreeView *treeView;
 @property (strong, nonatomic) NSMutableArray *allShopArray;
@@ -36,6 +36,7 @@
     self.dataArray = [NSArray new];
     self.selectArray = [[NSMutableArray alloc] init];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"保存" style:(UIBarButtonItemStylePlain) target:self action:@selector(saveChange)];
+
     [self createTableView];
     [self callHttpForShopData];
 }
@@ -48,7 +49,7 @@
 - (NSMutableArray *)alreadySelectedArray{
     if (_alreadySelectedArray == nil) {
         if (self.singleSelection) {
-            _alreadySelectedArray = [[NSMutableArray alloc] initWithObjects:[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults]valueForKey:BindShopID]], nil];
+            _alreadySelectedArray = [[NSMutableArray alloc] initWithObjects:[[NSUserDefaults standardUserDefaults]valueForKey:BindShopID], nil];
         }else{
             _alreadySelectedArray = [[NSMutableArray alloc] initWithArray:[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopIDArray]];
         }
@@ -80,6 +81,15 @@
 }
 
 
+- (void)createRightNavigationItem{
+    if (!self.singleSelection) {
+        UIButton *button = [UIButton buttonWithString:@"全选" withBackgroundColor:[UIColor clearColor] withTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor whiteColor] withFont:SystemFont(16.f)];
+        button.frame = CGRectMake(0, 0, 60, 40);
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+        [button addTarget:self action:@selector(allSelect:) forControlEvents:(UIControlEventTouchUpInside)];
+        [button setTitle:@"全不选" forState:(UIControlStateSelected)];
+    }
+}
 - (void)createTableView{
     RATreeView *treeView = [[RATreeView alloc] initWithFrame:self.view.bounds];
     treeView.delegate = self;
@@ -112,6 +122,8 @@
     }else{
         shopData.is_selected = NO;
     }
+
+    
     [cell setupWithName:shopData.name count:[shopData.ChildShops count] addressText:shopData.address bankName:shopData.allBankPath shopType:shopData.shopType level:level is_additionButtonSelected:shopData.is_selected];
     
     __weak typeof(self) weakSelf = self;
@@ -133,6 +145,15 @@
     }
 }
 
+
+
+/**
+ 成员数
+
+ @param treeView treeview
+ @param item 成员
+ @return 返回每一层包含成员的个数
+ */
 - (NSInteger)treeView:(RATreeView *)treeView numberOfChildrenOfItem:(id)item
 {
     if (item == nil) {
@@ -147,6 +168,15 @@
     return [data.ChildShops count];
 }
 
+
+/**
+ 对象
+
+ @param treeView treeview
+ @param index index
+ @param item 成员
+ @return 成员数据
+ */
 - (id)treeView:(RATreeView *)treeView child:(NSInteger)index ofItem:(id)item
 {
     ShopModel *data = item;
@@ -171,10 +201,8 @@
     return 70;
 }
 
-- (BOOL)treeView:(RATreeView *)treeView canEditRowForItem:(id)item
-{
-    return NO;
-}
+
+
 
 - (void)treeView:(RATreeView *)treeView didSelectRowForItem:(nonnull id)item{
     [treeView deselectRowForItem:item animated:YES];
@@ -201,9 +229,12 @@
             [weakself.allShopArray addObjectsFromArray:parent.ChildShops];
         }
         [weakself.treeView reloadData];
+        HHCodeLog(@"%lu==%lu",(unsigned long)weakself.dataArray.count,(unsigned long)weakself.allShopArray.count);
         [PCMBProgressHUD hideWithView:weakself.view];
+        [weakself createRightNavigationItem];
     } failure:^(NSError *error) {
         [PCMBProgressHUD hideWithView:weakself.view];
+        weakself.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:(UIBarButtonItemStylePlain) target:self action:@selector(saveChange)];
     }];
 }
 
@@ -257,20 +288,12 @@
 -(void)synchronizeForselected{
     if (self.singleSelection) {
         ShopModel *item = (ShopModel *)self.selectArray.firstObject;
-        [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%u",item.ID] forKey:BindShopID];
+        [[NSUserDefaults standardUserDefaults]setValue:[NSNumber numberWithInteger:item.ID] forKey:BindShopID];
         [[NSUserDefaults standardUserDefaults]setValue:item.name forKey:BindShopName];
     }else{
-        NSMutableArray *selectedShopID = [[NSMutableArray alloc] init];
         ShopModel *item = (ShopModel *)self.selectArray.firstObject;
-        for (ShopModel *shop in self.selectArray) {
-            [selectedShopID addObject:[NSNumber numberWithInteger:shop.ID]];
-        }
+        [[NSUserDefaults standardUserDefaults]setObject:self.alreadySelectedArray forKey:DefaultShopIDArray];
         
-        [[NSUserDefaults standardUserDefaults]setObject:selectedShopID forKey:DefaultShopIDArray];
-        NSString *shopIDStr = [selectedShopID componentsJoinedByString:@"&shopids[]="];
-        shopIDStr = [@"shopids[]=" stringByAppendingString:shopIDStr];
-        
-        [[NSUserDefaults standardUserDefaults]setValue:shopIDStr forKey:DefaultShopID];
         [[NSUserDefaults standardUserDefaults]setValue:item.name forKey:DefaultShopName];
         [[NSUserDefaults standardUserDefaults]setDouble:item.longitude forKey:DefaultLongitude];
         [[NSUserDefaults standardUserDefaults]setDouble:item.latitude forKey:DefaultLatitude];
@@ -289,11 +312,31 @@
     
     if ([self.selectArray count] > 0) {
         [self synchronizeForselected];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }else{
+        if ([self.dataArray count] == 0) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
+        [PCMBProgressHUD showLoadingTipsInView:self.view title:@"提示" detail:@"您必须选择至少一家商店" withIsAutoHide:YES];
     }
-    [self dismissViewControllerAnimated:YES completion:nil];
+    
 }
 
-
+- (void)allSelect:(UIButton *)sender{
+    if (sender.selected) {
+        [self.selectArray removeAllObjects];
+        [self.alreadySelectedArray removeAllObjects];
+    }else{
+        for (ShopModel *shop in [[ShopModel alloc] getData:self.dataArray]) {
+            [self.alreadySelectedArray addObject:[NSNumber numberWithInteger:shop.ID]];
+            for (ShopModel *item in [[ShopModel alloc] getData:shop.ChildShops]) {
+                [self.alreadySelectedArray addObject:[NSNumber numberWithInteger:item.ID]];
+            }
+        }
+    }
+    sender.selected = !sender.selected;
+    [self.treeView reloadData];
+}
 
 
 

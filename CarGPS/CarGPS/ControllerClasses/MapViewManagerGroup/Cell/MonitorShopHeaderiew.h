@@ -12,6 +12,8 @@
 @interface MonitorShopHeaderiew : UITableViewHeaderFooterView
 @property (nonatomic,strong)UILabel *shopNameLabel;
 @property (nonatomic,strong)UILabel *bankNameLabel;
-- (void)loadDataForHeaderViewWith:(NSString *)shopName bankName:(NSString *)bankName withCarCount:(NSInteger)count;
+@property (nonatomic,strong)UILabel *carCountLabel;
+@property (nonatomic,strong)UIImageView *signImageView;
+- (void)loadDataForHeaderViewWith:(NSString *)shopName bankName:(NSString *)bankName withCarCount:(NSInteger)count shopType:(NSInteger)shopType parentShop:(NSString *)parentShopName;
 
 @end

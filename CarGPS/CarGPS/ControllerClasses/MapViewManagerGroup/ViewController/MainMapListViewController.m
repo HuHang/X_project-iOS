@@ -16,6 +16,12 @@
 #import "MyAnnotation.h"
 #import "MyAnnotationNormal.h"
 #import "ShopAnnotation.h"
+
+#import "ParentAnnotation.h"
+#import "ChildNetAnnotation.h"
+#import "ChildShopAnnotation.h"
+
+
 #import "MKMapView+ZoomLevel.h"
 #import "MainMapDetailMapViewController.h"
 #import "MonitorTableViewCell.h"
@@ -190,6 +196,7 @@ static CGFloat showTableButton_Height = 44.f;
 #pragma mark - http
 - (void)callHttpForAllCars{
     __weak typeof (self) weakself = self;
+    [PCMBProgressHUD showLoadingImageInView:self.view text:@"获取中..." isResponse:YES];
     NSDictionary *params = @{@"shopIds":[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopIDArray]};
     HHCodeLog(@"%@",[NSString stringWithFormat:@"%@%@",[URLDictionary allMonitorDevice_url],params]);
     [CallHttpManager postWithUrlString:[URLDictionary allMonitorDevice_url]
@@ -202,8 +209,10 @@ static CGFloat showTableButton_Height = 44.f;
                                   weakself.dataArray = [[ShopGroupModel alloc] getData:data];
                                   [weakself loadAnnotationDataForMap];
                                   [weakself createTableView];
+                                  [PCMBProgressHUD hideWithView:weakself.view];
     }
                               failure:^(NSError *error) {
+                                  [PCMBProgressHUD hideWithView:weakself.view];
                               }];
 }
 
@@ -213,7 +222,22 @@ static CGFloat showTableButton_Height = 44.f;
     for (ShopGroupModel *groupItem in self.dataArray) {
         j ++;
         ShopInfoModel *shop = [[ShopInfoModel alloc] getData:groupItem.shop];
-         [self.annotationsArray addObject:[[ShopAnnotation alloc] initWithCoordinates:[WGS84TOGCJ02 transformFromWGSToGCJ:CLLocationCoordinate2DMake(shop.latitude, shop.longitude)] title:shop.name subTitle:[NSString stringWithFormat:@"车辆数:%lu台",(unsigned long)[groupItem.cars count]]]];
+        
+        switch (shop.shopType) {
+            case 0:
+                [self.annotationsArray addObject:[[ShopAnnotation alloc] initWithCoordinates:[WGS84TOGCJ02 transformFromWGSToGCJ:CLLocationCoordinate2DMake(shop.latitude, shop.longitude)] title:shop.name subTitle:[NSString stringWithFormat:@"在库:%lu台",(unsigned long)[groupItem.cars count]]]];
+                break;
+                
+            case 2:
+                [self.annotationsArray addObject:[[ChildShopAnnotation alloc] initWithCoordinates:[WGS84TOGCJ02 transformFromWGSToGCJ:CLLocationCoordinate2DMake(shop.latitude, shop.longitude)] title:shop.name subTitle:[NSString stringWithFormat:@"移动:%lu台",(unsigned long)[groupItem.cars count]]]];
+                break;
+            case 3:
+                [self.annotationsArray addObject:[[ChildNetAnnotation alloc] initWithCoordinates:[WGS84TOGCJ02 transformFromWGSToGCJ:CLLocationCoordinate2DMake(shop.latitude, shop.longitude)] title:shop.name subTitle:[NSString stringWithFormat:@"移动:%lu台",(unsigned long)[groupItem.cars count]]]];
+                break;
+            default:
+                break;
+        }
+        
         for (NSDictionary *car in groupItem.cars) {
             i ++;
             MonitorModel *carInfo = [[MonitorModel alloc] getData:car];
@@ -253,7 +277,19 @@ static CGFloat showTableButton_Height = 44.f;
     }
     if ([annotation isKindOfClass:[ShopAnnotation class]]) {
         MKAnnotationView *annotationView = [[MKAnnotationView alloc]init];
-        annotationView.image = [UIImage imageNamed:@"icon_mapShop"];
+        annotationView.image = [UIImage imageNamed:@"icon_map_4Sstore"];
+        annotationView.canShowCallout = YES;
+        return annotationView;
+    }
+    if ([annotation isKindOfClass:[ChildShopAnnotation class]]) {
+        MKAnnotationView *annotationView = [[MKAnnotationView alloc]init];
+        annotationView.image = [UIImage imageNamed:@"icon_map_twolibrary"];
+        annotationView.canShowCallout = YES;
+        return annotationView;
+    }
+    if ([annotation isKindOfClass:[ChildNetAnnotation class]]) {
+        MKAnnotationView *annotationView = [[MKAnnotationView alloc]init];
+        annotationView.image = [UIImage imageNamed:@"icon_map_twonet"];
         annotationView.canShowCallout = YES;
         return annotationView;
     }
@@ -338,7 +374,7 @@ static CGFloat showTableButton_Height = 44.f;
     return 110.f;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 70.f;
+    return 80.f;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -359,13 +395,13 @@ static CGFloat showTableButton_Height = 44.f;
     [sectionHeaderView addGestureRecognizer:tap];
 
     ShopInfoModel *item = [[ShopInfoModel alloc] getData:[self.dataArray[section] shop]];
-    [sectionHeaderView loadDataForHeaderViewWith:item.name bankName:item.allBankPath withCarCount:[[self.dataArray[section] cars] count]];
+    [sectionHeaderView loadDataForHeaderViewWith:item.name bankName:item.allBankPath withCarCount:[[self.dataArray[section] cars] count] shopType:item.shopType parentShop:item.parentShopName];
     return sectionHeaderView;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
     if ([view isMemberOfClass:[MonitorShopHeaderiew class]]) {
-        ((MonitorShopHeaderiew *)view).backgroundView.backgroundColor = [[UIColor whiteColor]colorWithAlphaComponent:0.9];
+        ((MonitorShopHeaderiew *)view).backgroundView.backgroundColor = [UIColor clearColor];
     }
 }
 
