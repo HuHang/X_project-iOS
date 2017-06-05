@@ -1,15 +1,15 @@
 //
-//  DashBoardWithSublabelTableViewCell.m
+//  DashBoardWithSubTwoDataTableViewCell.m
 //  CarGPS
 //
-//  Created by Charlot on 2017/5/19.
+//  Created by Charlot on 2017/6/5.
 //  Copyright © 2017年 Charlot. All rights reserved.
 //
 
-#import "DashBoardWithSublabelTableViewCell.h"
+#import "DashBoardWithSubTwoDataTableViewCell.h"
 #import "SummaryModel.h"
 
-@implementation DashBoardWithSublabelTableViewCell
+@implementation DashBoardWithSubTwoDataTableViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -34,10 +34,6 @@
     self.secondCountLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:UIColorFromHEX(0xFF9094, 1.0) withFont:[UIFont fontWithName:@"STHeitiSC-Light" size:26.f]];
     self.secondSubLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
     
-    self.thirdTitleLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
-    self.thirdCountLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:UIColorFromHEX(0x79ADEA, 1.0) withFont:[UIFont fontWithName:@"STHeitiSC-Light" size:26.f]];
-    self.thirdSubLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
-    
     UIView *lineView = [[UIView alloc] init];
     UILabel *buttonLabel = [UILabel labelWithString:@"立即查看" withTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor lightGrayColor] withFont:SystemFont(12.f)];
     
@@ -53,9 +49,6 @@
     [backgroundview addSubview:self.secondCountLabel];
     [backgroundview addSubview:self.secondSubLabel];
     
-    [backgroundview addSubview:self.thirdTitleLabel];
-    [backgroundview addSubview:self.thirdCountLabel];
-    [backgroundview addSubview:self.thirdSubLabel];
     
     [backgroundview addSubview:lineView];
     [backgroundview addSubview:buttonLabel];
@@ -75,9 +68,9 @@
     }];
     
     //信息
-    NSArray *titleArray = @[self.firstTitleLabel,self.secondTitleLabel,self.thirdTitleLabel];
-    NSArray *countArray = @[self.firstCountLabel,self.secondCountLabel,self.thirdCountLabel];
-    NSArray *subArray = @[self.firstSubLabel,self.secondSubLabel,self.thirdSubLabel];
+    NSArray *titleArray = @[self.firstTitleLabel,self.secondTitleLabel];
+    NSArray *countArray = @[self.firstCountLabel,self.secondCountLabel];
+    NSArray *subArray = @[self.firstSubLabel,self.secondSubLabel];
     
     for (NSInteger i = 0; i < [titleArray count]; i ++) {
         UILabel *titleLabel = titleArray[i];
@@ -100,7 +93,7 @@
             make.top.equalTo(titleLabel.mas_bottom).with.mas_offset(14);
         }];
     }
-
+    
     
     [buttonLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.right.and.bottom.mas_equalTo(0);
@@ -127,86 +120,24 @@
 }
 
 - (void)setCellDataWithData:(NSArray *)dataAry withtitle:(NSString *)titleString withType:(int)type{
+    self.titleImageView.image = [UIImage imageNamed:@"icon_deshb_market"];
     self.titleLabel.text = titleString;
     NSArray *dataArray = [[SummaryModel alloc] getData:dataAry];
-    switch ([dataArray count]) {
-        case 4:
-        {
-
-            switch (type) {
-                case 4:
-                    self.titleImageView.image = [UIImage imageNamed:@"icon_deshb_carmanage"];
-                    break;
-                case 6:
-                    self.titleImageView.image = [UIImage imageNamed:@"icon_deshb_4sstore"];
-                    break;
-                    
-                default:
-                    self.titleImageView.image = [UIImage imageNamed:@"icon_deshb_distributed"];
-                    break;
-            }
-            
-            self.secondTitleLabel.text = [dataArray[0] typeDisplay];
-            self.secondCountLabel.text = [NSString stringWithFormat:@"%@",[dataArray[0] dataNr]];
-            NSArray *subArray = @[self.firstSubLabel,self.secondSubLabel,self.thirdSubLabel];
-            for (NSInteger i = 1 ; i < [dataArray count]; i ++) {
-                UILabel *subLabel = subArray[i - 1];
-                subLabel.text = [NSString stringWithFormat:@"%@ %@",[dataArray[i] typeDisplay],[dataArray[i] dataNr]];
-            }
-        }
-            break;
-        case 5:
-        {
-            self.titleImageView.image = [UIImage imageNamed:@""];
-            [self.firstSubLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH/2, 20));
-                make.left.mas_equalTo(0);
-                make.top.equalTo(self.firstTitleLabel.mas_bottom).with.mas_offset(14);
-            }];
-            [self.secondSubLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.size.and.top.equalTo(self.firstSubLabel);
-                make.left.equalTo(self.firstSubLabel.mas_right);
-            }];
-            
-            [self.thirdSubLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.size.mas_equalTo(CGSizeZero);
-                make.center.mas_equalTo(0);
-            }];
-            
-            NSArray *titleArray = @[self.firstTitleLabel,self.secondTitleLabel,self.thirdTitleLabel];
-            NSArray *countArray = @[self.firstCountLabel,self.secondCountLabel,self.thirdCountLabel];
-            for (NSInteger i = 0 ; i < [titleArray count]; i ++) {
-                UILabel *titleLabel = titleArray[i];
-                UILabel *countLabel = countArray[i];
-                titleLabel.text = [dataArray[i] typeDisplay];
-                countLabel.text = [NSString stringWithFormat:@"%@",[dataArray[i] dataNr]];
-            }
-            self.firstSubLabel.text = [NSString stringWithFormat:@"%@ %@",[dataArray[3] typeDisplay],[dataArray[3] dataNr]];
-            self.secondSubLabel.text = [NSString stringWithFormat:@"%@ %@",[dataArray[4] typeDisplay],[dataArray[4] dataNr]];
-        }
-            break;
-        case 6:
-        {
-            self.titleImageView.image = [UIImage imageNamed:@"icon_deshb_abnormalmanage"];
-            NSArray *titleArray = @[self.firstTitleLabel,self.secondTitleLabel,self.thirdTitleLabel];
-            NSArray *countArray = @[self.firstCountLabel,self.secondCountLabel,self.thirdCountLabel];
-            NSArray *subArray = @[self.firstSubLabel,self.secondSubLabel,self.thirdSubLabel];
-            for (NSInteger i = 0 ; i < [titleArray count]; i ++) {
-                UILabel *titleLabel = titleArray[i];
-                UILabel *countLabel = countArray[i];
-                UILabel *subLabel = subArray[i];
-                titleLabel.text = [dataArray[i] typeDisplay];
-                countLabel.text = [NSString stringWithFormat:@"%@",[dataArray[i] dataNr]];
-                subLabel.text = [NSString stringWithFormat:@"%@ %@",[dataArray[i + 3] typeDisplay],[dataArray[i + 3] dataNr]];
-            }
-        }
-            break;
-            
-        default:
-            break;
+    NSArray *titleArray = @[self.firstTitleLabel,self.secondTitleLabel];
+    NSArray *countArray = @[self.firstCountLabel,self.secondCountLabel];
+    NSArray *subArray = @[self.firstSubLabel,self.secondSubLabel];
+    for (NSInteger i = 0; i < [titleArray count]; i ++) {
+        UILabel *titleLabel = titleArray[i];
+        UILabel *countLabel = countArray[i];
+        UILabel *subLabel = subArray[i];
+        
+        countLabel.text = [NSString stringWithFormat:@"%@",[dataArray[i] dataNr]];
+        titleLabel.text = [dataArray[i] typeDisplay];
+        subLabel.text = [NSString stringWithFormat:@"%@ %@",[dataArray[i + 2] typeDisplay],[dataArray[i + 2] dataNr]];
     }
     
     
 }
+
 
 @end

@@ -10,4 +10,5 @@
 
 @interface CountryMapWebViewController : UIViewController
 @property (nonatomic,strong)NSString *urlStr;
+@property (nonatomic,strong)NSString *titleStr;
 @end

@@ -8,25 +8,19 @@
 
 #import "DashboardWebViewController.h"
 #import <WebKit/WebKit.h>
-#import "SegmentCustomStyleManager.h"
-#import "ChartDataModel.h"
+
 
 @interface DashboardWebViewController ()<WKNavigationDelegate>
 @property (nonatomic,strong)WKWebView *webView;
-@property (nonatomic,strong)UIScrollView *scrollView;
 @property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic, assign) CGFloat delayTime;
-@property NSInteger selectedIndex;
-@property (nonatomic,strong)NSArray *dataArray;
-@property (nonatomic,strong)UILabel *titleLabel;
-
+@property (nonatomic, strong) YYFPSLabel *fpsLabel;
 @end
 
 @implementation DashboardWebViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.selectedIndex = 0;
     self.view.backgroundColor = [UIColor whiteColor];
     
 
@@ -44,6 +38,10 @@
     [super viewWillAppear:animated];
     [self viewLayout];
      [self.webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[self.urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]]];
+        _fpsLabel = [YYFPSLabel new];
+        _fpsLabel.frame = CGRectMake(200, 200, 50, 30);
+        [_fpsLabel sizeToFit];
+        [self.view addSubview:_fpsLabel];
 
 }
 
@@ -52,35 +50,33 @@
     [self.webView removeObserver:self forKeyPath:@"estimatedProgress"];
     [self.webView removeObserver:self forKeyPath:@"title"];
     [self.webView.scrollView removeObserver:self forKeyPath:@"contentSize"];
-}
-- (NSArray *)dataArray{
-    if (_dataArray == nil) {
-        _dataArray = [NSArray new];
+    
+    self.webView.navigationDelegate = nil;
+    if ([[[UIDevice currentDevice] systemVersion] intValue ] > 8) {
+        NSArray * types = @[WKWebsiteDataTypeMemoryCache, WKWebsiteDataTypeDiskCache];  // 9.0之后才有的
+        NSSet *websiteDataTypes = [NSSet setWithArray:types];
+        NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
+        
+        [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:^{
+            
+        }];
+    }else{
+        NSString *libraryPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        
+        NSString *cookiesFolderPath = [libraryPath stringByAppendingString:@"/Cookies"];
+        NSLog(@"%@", cookiesFolderPath);
+        NSError *errors;
+        
+        [[NSFileManager defaultManager] removeItemAtPath:cookiesFolderPath error:&errors];
     }
-    return _dataArray;
 }
 
-- (UIScrollView *)scrollView{
-    if (_scrollView == nil) {
-        _scrollView = [[UIScrollView alloc] init];
-        _scrollView.contentSize = CGSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT);
-    }
-    return _scrollView;
-}
-
-
-- (UILabel *)titleLabel{
-    if (_titleLabel == nil) {
-        _titleLabel = [UILabel labelWithString:@"日常监管情况" withTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor whiteColor] withFont:SystemFont(16.f)];
-    }
-    return _titleLabel;
-}
 
 - (UIProgressView *)progressView{
     if (_progressView == nil) {
         _progressView = [[UIProgressView alloc] init];
-        _progressView.progressTintColor = ZDRedColor;
-        _progressView.trackTintColor = [UIColor brownColor];
+        _progressView.progressTintColor = UIColorFromHEX(0xffb7b7, 1.0);
+        _progressView.trackTintColor = [UIColor whiteColor];
     }
     return _progressView;
 }
@@ -88,8 +84,6 @@
     if (_webView == nil) {
         _webView = [[WKWebView alloc] init];
         _webView.navigationDelegate = self;
-        _webView.scrollView.scrollEnabled = NO;
-        _webView.backgroundColor = ZDRedColor;
     }
     return _webView;
 }
@@ -104,57 +98,22 @@
 
 #pragma mark - view
 - (void)viewLayout{
-    UIView *titleView = [[UIView alloc] init];
-    UIButton *backButton = [UIButton buttonWithString:@"返回" withBackgroundColor:[UIColor clearColor] withTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor blackColor] withFont:SystemFont(14.f)];
-   
+    self.navigationItem.title = self.titleStr;
     [self.view addSubview:self.progressView];
-    [self.view addSubview:self.scrollView];
-    [self.scrollView addSubview:titleView];
-    [self.scrollView addSubview:self.webView];
-    [titleView addSubview:backButton];
-    [titleView addSubview:self.titleLabel];
-    
+    [self.view addSubview:self.webView];
     [_progressView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH, 2));
-        make.left.and.top.mas_equalTo(0);
-    }];
-    [_scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT - 2));
         make.left.mas_equalTo(0);
-        make.top.mas_equalTo(2);
-    }];
-    
-    [titleView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH, 40));
-        make.top.mas_equalTo(0);
-        make.height.mas_equalTo(40);
-    }];
-    [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH/3, 30));
-        make.center.mas_equalTo(0);
+        make.top.mas_equalTo(64);
     }];
 
-    [backButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(30, 30));
-        make.centerY.mas_equalTo(0);
-        make.right.mas_equalTo(-10);
-    }];
     
     [_webView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH, 1));
-        make.left.mas_equalTo(0);
-        make.top.mas_equalTo(titleView.mas_bottom);
+        make.edges.equalTo(self.view).with.insets(UIEdgeInsetsMake(66, 0, 0, 0));
     }];
    
-    [backButton addTarget:self action:@selector(dissMissView) forControlEvents:(UIControlEventTouchUpInside)];
-
-    titleView.backgroundColor = [UIColor brownColor];
     [self addObserverForWebview];
 }
-
-
-
-
 
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
@@ -184,31 +143,22 @@
 
 
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation {
-    HHCodeLog(@"didStartProvisionalNavigation   ====    %@", navigation);
+    [PCMBProgressHUD showLoadingImageInView:self.view isResponse:YES];
 }
 
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
-    HHCodeLog(@"didFinishNavigation   ====    %@", navigation);
-    CGSize newSize = self.scrollView.contentSize;
-    newSize.height = self.webView.scrollView.contentSize.height + 70;
-    self.scrollView.contentSize = newSize;
-    [_webView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(self.webView.scrollView.contentSize.height);
-    }];
+    [PCMBProgressHUD hideWithView:self.view];
 }
 
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error {
     HHCodeLog(@"didFailProvisionalNavigation   ====    %@\nerror   ====   %@", navigation, error);
+    [PCMBProgressHUD showLoadingTipsInView:self.view title:@"网页错误" detail:@"请稍后重试" withIsAutoHide:YES];
 }
 
 
-#pragma mark - action
 
-- (void)dissMissView{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
 
 
 

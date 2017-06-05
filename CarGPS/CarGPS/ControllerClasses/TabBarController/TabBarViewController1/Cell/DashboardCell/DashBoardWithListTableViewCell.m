@@ -36,25 +36,27 @@
     self.titleImageView = [[UIImageView alloc] init];
     self.titleLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(14.f)];
     
-    self.leftTitleLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
-    self.leftCountLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(28.f)];
+    self.leftTitleLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor whiteColor] withFont:SystemFont(10.f)];
+    self.leftCountLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor whiteColor] withFont:[UIFont fontWithName:@"STHeitiSC-Light" size:20.f]];
     
-    self.firstLineLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
-    self.secondLineLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(28.f)];
-    self.thirdLineLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
+    self.firstLineLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
+    self.secondLineLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
+    self.thirdLineLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
     
     UIView *backgroundView = [[UIView alloc] init];
-    UIView *centerLineView = [[UIView alloc] init];
+    self.centerLineView = [[UIView alloc] init];
     UIView *lineView = [[UIView alloc] init];
     UILabel *buttonLabel = [UILabel labelWithString:@"立即查看" withTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor lightGrayColor] withFont:SystemFont(12.f)];
+    UIImageView *leftBackView = [[UIImageView alloc] init];
     
     [self.contentView addSubview:backgroundView];
-    [backgroundView addSubview:centerLineView];
+    [backgroundView addSubview:self.centerLineView];
     [backgroundView addSubview:self.titleImageView];
     [backgroundView addSubview:self.titleLabel];
     
-    [backgroundView addSubview:self.leftTitleLabel];
-    [backgroundView addSubview:self.leftCountLabel];
+    [backgroundView addSubview:leftBackView];
+    [leftBackView addSubview:self.leftTitleLabel];
+    [leftBackView addSubview:self.leftCountLabel];
     
     [backgroundView addSubview:self.firstLineLabel];
     [backgroundView addSubview:self.secondLineLabel];
@@ -77,19 +79,26 @@
         make.height.and.top.equalTo(self.titleImageView);
     }];
     
-    [centerLineView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.centerLineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(1, 100));
         make.center.mas_equalTo(0);
     }];
+    
+    [leftBackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(80, 80));
+        make.centerY.equalTo(backgroundView);
+        make.centerX.mas_equalTo(-SCREEN_WIDTH/4 + 20);
+    }];
+    
     [self.leftCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(50, 50));
-        make.right.equalTo(centerLineView.mas_left);
-        make.top.equalTo(centerLineView);
+        make.size.mas_equalTo(CGSizeMake(50, 20));
+        make.centerX.mas_equalTo(0);
+        make.bottom.equalTo(leftBackView.mas_centerY);
     }];
     [self.leftTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.and.left.equalTo(self.leftCountLabel);
-        make.height.mas_equalTo(40);
-        make.bottom.equalTo(centerLineView);
+        make.height.mas_equalTo(20);
+        make.top.equalTo(self.leftCountLabel.mas_bottom);
     }];
     //信息
     NSArray *subArray = @[self.firstLineLabel,self.secondLineLabel,self.thirdLineLabel];
@@ -97,10 +106,10 @@
     for (NSInteger i = 0; i < [subArray count]; i ++) {
         UILabel *subLabel = subArray[i];
         [subLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(centerLineView.mas_right);
-            make.right.mas_equalTo(0);
+            make.left.equalTo(self.centerLineView.mas_right);
+            make.right.mas_equalTo(-20);
             make.height.mas_equalTo(100/[subArray count]);
-            make.top.equalTo(centerLineView).with.mas_offset(i * 100/[subArray count]);
+            make.top.equalTo(self.centerLineView).with.mas_offset(i * 100/[subArray count]);
         }];
     }
     
@@ -115,10 +124,11 @@
         make.height.mas_equalTo(1);
     }];
     
-    
+    self.leftCountLabel.adjustsFontSizeToFitWidth = YES;
+    leftBackView.image = [UIImage imageNamed:@"icon_dashboard_datebackg1"];
     self.backgroundColor = [UIColor whiteColor];
     backgroundView.backgroundColor = [UIColor whiteColor];
-    centerLineView.backgroundColor = UIColorFromHEX(0xD9D9D9,1.0);
+    self.centerLineView.backgroundColor = UIColorFromHEX(0xD9D9D9,1.0);
     lineView.backgroundColor = UIColorFromHEX(0xD9D9D9,1.0);
 }
 
@@ -129,34 +139,41 @@
     switch ([dataArray count]) {
         case 3:
         {
-            NSArray *subArray = @[self.firstLineLabel,self.secondLineLabel];
+            if (type == 8) {
+                self.titleImageView.image = [UIImage imageNamed:@"icon_deshb_protocol"];
+            }else{
+                self.titleImageView.image = [UIImage imageNamed:@"icon_deshb_supervisor"];
+            }
+            
+            NSArray *subArray = @[self.firstLineLabel,self.thirdLineLabel];
             for (NSInteger i = 0; i < [subArray count]; i ++) {
                 UILabel *subLabel = subArray[i];
-                [subLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                    make.left.equalTo(self.contentView.mas_centerX).with.mas_offset(1);
-                    make.right.mas_equalTo(0);
-                    make.height.mas_equalTo(100/[subArray count]);
-                    make.bottom.equalTo(self.contentView.mas_centerY).with.mas_offset(i * 100/[subArray count]);
-                }];
-                subLabel.text = [NSString stringWithFormat:@"%@ %u",[dataArray[i + 1] typeDisplay],[dataArray[i + 1] dataNr]];
+                NSString *countStr = [NSString stringWithFormat:@"%@",[dataArray[i + 1] dataNr]];
+                NSString *labelSre = [NSString stringWithFormat:@"%@ %@",[dataArray[i + 1] typeDisplay],countStr];
+                NSMutableAttributedString *colorString = [[NSMutableAttributedString alloc]initWithString:labelSre];
+                [colorString addAttribute:NSForegroundColorAttributeName value:UIColorFromHEX(0xFFBF00, 1.0) range:NSMakeRange([[dataArray[i + 1] typeDisplay] length] + 1, [countStr length])];
+                subLabel.attributedText = colorString;
             }
-            [self.thirdLineLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.size.mas_equalTo(CGRectZero);
-                make.center.mas_equalTo(0);
-            }];
-            self.leftCountLabel.text = [NSString stringWithFormat:@"%u",[dataArray[0] dataNr]];
+            self.thirdLineLabel.text = @"";
+            self.leftCountLabel.text = [NSString stringWithFormat:@"%@",[dataArray[0] dataNr]];
             self.leftTitleLabel.text = [dataArray[0] typeDisplay];
         }
             break;
         case 4:
         {
+            self.centerLineView.backgroundColor = [UIColor whiteColor];
+            self.titleImageView.image = [UIImage imageNamed:@"icon_deshb_draft"];
             NSArray *subArray = @[self.firstLineLabel,self.secondLineLabel,self.thirdLineLabel];
-            for (NSInteger i = 0; i < [dataArray count]; i ++) {
-                UILabel *subLabel = subArray[i];
-                subLabel.text = [NSString stringWithFormat:@"%@ %u",[dataArray[i] typeDisplay],[dataArray[i] dataNr]];
+            for (NSInteger i = 1; i < [dataArray count]; i ++) {
+                UILabel *subLabel = subArray[i - 1];
+                NSString *countStr = [NSString stringWithFormat:@"%@",[dataArray[i] dataNr]];
+                NSString *labelSre = [NSString stringWithFormat:@"%@ %@",[dataArray[i] typeDisplay],countStr];
+                NSMutableAttributedString *colorString = [[NSMutableAttributedString alloc]initWithString:labelSre];
+                [colorString addAttribute:NSForegroundColorAttributeName value:UIColorFromHEX(0xFFBF00, 1.0) range:NSMakeRange([[dataArray[i] typeDisplay] length] + 1, [countStr length])];
+                subLabel.attributedText = colorString;
 
             }
-            self.leftCountLabel.text = [NSString stringWithFormat:@"%u",[dataArray[0] dataNr]];
+            self.leftCountLabel.text = [NSString stringWithFormat:@"%@",[dataArray[0] dataNr]];
             self.leftTitleLabel.text = [dataArray[0] typeDisplay];
         }
             break;

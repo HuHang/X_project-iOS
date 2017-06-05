@@ -17,5 +17,6 @@
 @property (nonatomic,copy)NSString *footer;
 @property (nonatomic,copy)NSString *url;
 @property (nonatomic,copy)NSArray *summary;
+@property (nonatomic,copy)NSString *defaultUrl;
 - (NSArray *)getData:(NSArray *)array;
 @end

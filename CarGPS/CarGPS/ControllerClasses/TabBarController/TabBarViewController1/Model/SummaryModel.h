@@ -12,6 +12,6 @@
 @property (nonatomic,copy)NSString *type;
 @property (nonatomic,copy)NSString *typeDisplay;
 @property (nonatomic,copy)NSString *remark;
-@property unsigned int dataNr;
+@property (nonatomic,copy)NSString *dataNr;
 - (NSArray *)getData:(NSArray *)array;
 @end

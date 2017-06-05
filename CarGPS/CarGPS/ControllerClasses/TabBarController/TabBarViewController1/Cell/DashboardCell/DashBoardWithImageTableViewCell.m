@@ -40,8 +40,9 @@
     self.titleImageView = [[UIImageView alloc] init];
     self.titleLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(14.f)];
     
-    self.firstTopTitle = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
-    self.secondTopTitle = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
+    self.firstTopTitle = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
+    self.secondTopTitle = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
+    
     self.firstCountTitle = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
     self.secondCountTitle = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
     self.firstTypeTitle = [UILabel labelWithTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor grayColor] withFont:SystemFont(12.f)];
@@ -70,7 +71,7 @@
     [backgroundView addSubview:buttonLabel];
     
     [backgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(backgroundView).with.insets(UIEdgeInsetsMake(5, 0, 5, 0));
+        make.edges.equalTo(self.contentView).with.insets(UIEdgeInsetsMake(5, 0, 5, 0));
     }];
     //标题view
     [self.titleImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -84,8 +85,8 @@
     }];
     
     [image1 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(80, 80));
-        make.centerY.equalTo(backgroundView.mas_centerY);
+        make.size.mas_equalTo(CGSizeMake(70, 70));
+        make.centerY.equalTo(backgroundView);
         make.right.equalTo(backgroundView.mas_centerX).with.mas_offset(-10);
     }];
     [image2 mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -113,7 +114,7 @@
         make.height.mas_equalTo(20);
     }];
     [self.secondCountTitle mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(image1).with.insets(UIEdgeInsetsMake(10, 10, 10, 10));
+        make.edges.equalTo(image2).with.insets(UIEdgeInsetsMake(10, 10, 10, 10));
     }];
     [self.secondTypeTitle mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.and.left.equalTo(self.secondCountTitle);
@@ -136,19 +137,23 @@
     self.backgroundColor = [UIColor clearColor];
     backgroundView.backgroundColor = [UIColor whiteColor];
     lineView.backgroundColor = UIColorFromHEX(0xD9D9D9,1.0);
+    
+    self.firstTopTitle.adjustsFontSizeToFitWidth = YES;
+    self.secondTopTitle.adjustsFontSizeToFitWidth = YES;
 
 }
 
 - (void)setCellDataWithData:(NSArray *)dataAry withtitle:(NSString *)titleString withType:(int)type{
+    self.titleImageView.image = [UIImage imageNamed:@"icon_deshb_windcontrol"];
     self.titleLabel.text = titleString;
     NSArray *dataArray = [[SummaryModel alloc] getData:dataAry];
     self.firstTopTitle.text = [dataArray[0] remark];
     self.secondTopTitle.text = [dataArray[1] remark];
     
-    self.firstCountTitle.text = [NSString stringWithFormat:@"%u",[dataArray[0] dataNr]];
-    self.firstTypeTitle.text = [dataArray[0] typeDisplay];
-    self.secondCountTitle.text = [NSString stringWithFormat:@"%u",[dataArray[1] dataNr]];
-    self.secondTypeTitle.text = [dataArray[1] typeDisplay];
+    self.firstCountTitle.text = [NSString stringWithFormat:@"%@",[dataArray[0] dataNr]];
+    self.firstTypeTitle.text = @"";//[dataArray[0] typeDisplay];
+    self.secondCountTitle.text = [NSString stringWithFormat:@"%@",[dataArray[1] dataNr]];
+    self.secondTypeTitle.text = @"";//[dataArray[1] typeDisplay];
 }
 
 @end

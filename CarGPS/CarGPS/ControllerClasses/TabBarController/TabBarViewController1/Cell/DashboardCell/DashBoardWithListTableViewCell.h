@@ -18,5 +18,7 @@
 @property (nonatomic,strong)UILabel *firstLineLabel;
 @property (nonatomic,strong)UILabel *secondLineLabel;
 @property (nonatomic,strong)UILabel *thirdLineLabel;
+
+@property (nonatomic,strong)UIView *centerLineView;
 - (void)setCellDataWithData:(NSArray *)dataAry withtitle:(NSString *)titleString withType:(int)type;
 @end

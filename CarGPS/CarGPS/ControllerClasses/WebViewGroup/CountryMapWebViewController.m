@@ -22,8 +22,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.navigationController.navigationBar lt_setBackgroundColor:UIColorFromHEX(0x333333, 1.0)];
+//    [self.navigationController.navigationBar lt_setBackgroundColor:UIColorFromHEX(0x333333, 1.0)];
     self.view.backgroundColor = [UIColor blackColor];
+    self.navigationItem.title = self.titleStr;
     [self.navigationController.navigationBar.layer addSublayer:self.webProgressLayer];
 //    [[UIDevice currentDevice] setValue: [NSNumber numberWithInteger: UIInterfaceOrientationLandscapeRight] forKey:@"orientation"];
     [self.view addSubview:self.tableView];

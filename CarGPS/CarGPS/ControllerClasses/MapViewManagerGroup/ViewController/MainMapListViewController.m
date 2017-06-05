@@ -21,6 +21,9 @@
 #import "ChildNetAnnotation.h"
 #import "ChildShopAnnotation.h"
 
+//#import "TBCoordinateQuadTree.h"
+//#import "TBClusterAnnotationView.h"
+//#import "TBClusterAnnotation.h"
 
 #import "MKMapView+ZoomLevel.h"
 #import "MainMapDetailMapViewController.h"
@@ -40,6 +43,7 @@ static CGFloat showTableButton_Height = 44.f;
 @property (nonatomic,strong)UIVisualEffectView *effectView;
 @property (nonatomic,strong)UILabel *carCountLabel;
 @property (nonatomic,strong)UILabel *shopCountLabel;
+//@property (strong, nonatomic) TBCoordinateQuadTree *coordinateQuadTree;
 @end
 
 @implementation MainMapListViewController
@@ -49,6 +53,7 @@ static CGFloat showTableButton_Height = 44.f;
     self.dataArray = [NSArray new];
     self.annotationsArray = [[NSMutableArray alloc] init];
     [self.view addSubview:self.mapView];
+//    [self.coordinateQuadTree buildTree];
     [self createNavigationView];
     
     NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
@@ -119,6 +124,13 @@ static CGFloat showTableButton_Height = 44.f;
     }
     return _mapView;
 }
+//- (TBCoordinateQuadTree *)coordinateQuadTree{
+//    if (_coordinateQuadTree == nil) {
+//        _coordinateQuadTree = [[TBCoordinateQuadTree alloc] init];
+//        _coordinateQuadTree.mapView = self.mapView;
+//    }
+//    return _coordinateQuadTree;
+//}
 
 #pragma mark - view
 - (void)createNavigationView{
@@ -249,6 +261,8 @@ static CGFloat showTableButton_Height = 44.f;
         }
     }
     [self.mapView addAnnotations:self.annotationsArray];
+    
+    
     [self.shopCountLabel setText:[NSString stringWithFormat:@"商店数：%lu",(long)j]];
     [self.carCountLabel setText:[NSString stringWithFormat:@"车辆数：%lu",(long)i]];
     if ([self.dataArray count] > 0) {
@@ -256,12 +270,33 @@ static CGFloat showTableButton_Height = 44.f;
         ShopInfoModel *item = [[ShopInfoModel alloc] getData:shop.shop];
         [self.mapView setCenterCoordinate:[WGS84TOGCJ02 transformFromWGSToGCJ:CLLocationCoordinate2DMake(item.latitude, item.longitude)] zoomLevel:7 animated:YES];
       }
+
+    for (NSInteger i = 0; i < self.annotationsArray.count; i ++) {
+        [self.mapView selectAnnotation:self.annotationsArray[i] animated:YES];
+    }
+    
 }
 
 #pragma mark - mapview delegate
 
 -(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
+    /*
+    static NSString *const TBAnnotatioViewReuseID = @"TBAnnotatioViewReuseID";
+    
+    TBClusterAnnotationView *annotationView = (TBClusterAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:TBAnnotatioViewReuseID];
+    
+    if (!annotationView) {
+        annotationView = [[TBClusterAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:TBAnnotatioViewReuseID];
+    }
+    
+    annotationView.canShowCallout = YES;
+    annotationView.count = [(TBClusterAnnotation *)annotation count];
+    
+    return annotationView;
+     */
+    
+  
     MKAnnotationView *result = nil;
     if ([annotation isKindOfClass:[MyAnnotation class]]) {
         MKAnnotationView *annotationView = [[MKAnnotationView alloc]init];
@@ -304,8 +339,6 @@ static CGFloat showTableButton_Height = 44.f;
         return result;
     }
     
-   
-    
 
     return result;
     
@@ -336,14 +369,64 @@ static CGFloat showTableButton_Height = 44.f;
     
 //    self.mapView.mapType = MKMapTypeStandard;
     
-    
-    
 }
+
+- (void)updateMapViewAnnotationsWithAnnotations:(NSArray *)annotations
+{
+    NSMutableSet *before = [NSMutableSet setWithArray:self.mapView.annotations];
+    [before removeObject:[self.mapView userLocation]];
+    NSSet *after = [NSSet setWithArray:annotations];
+    
+    NSMutableSet *toKeep = [NSMutableSet setWithSet:before];
+    [toKeep intersectSet:after];
+    
+    NSMutableSet *toAdd = [NSMutableSet setWithSet:after];
+    [toAdd minusSet:toKeep];
+    
+    NSMutableSet *toRemove = [NSMutableSet setWithSet:before];
+    [toRemove minusSet:after];
+    
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        [self.mapView addAnnotations:[toAdd allObjects]];
+        [self.mapView removeAnnotations:[toRemove allObjects]];
+    }];
+}
+- (void)addBounceAnnimationToView:(UIView *)view
+{
+    CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+    
+    bounceAnimation.values = @[@(0.05), @(1.1), @(0.9), @(1)];
+    
+    bounceAnimation.duration = 0.6;
+    NSMutableArray *timingFunctions = [[NSMutableArray alloc] initWithCapacity:bounceAnimation.values.count];
+    for (NSUInteger i = 0; i < bounceAnimation.values.count; i++) {
+        [timingFunctions addObject:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    }
+    [bounceAnimation setTimingFunctions:timingFunctions.copy];
+    bounceAnimation.removedOnCompletion = NO;
+    
+    [view.layer addAnimation:bounceAnimation forKey:@"bounce"];
+}
+
 -(void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
-    [self.mapView removeFromSuperview];
-    [self.view addSubview:mapView];
+//    [[NSOperationQueue new] addOperationWithBlock:^{
+//        double scale = self.mapView.bounds.size.width / self.mapView.visibleMapRect.size.width;
+//        NSArray *annotation = [self.coordinateQuadTree clusteredAnnotationsWithinMapRect:mapView.visibleMapRect withZoomScale:scale];
+//        [self updateMapViewAnnotationsWithAnnotations:annotation];
+//    }];
+    
+    
+//    [self.mapView removeFromSuperview];
+//    [self.view addSubview:mapView];
 //    [self applyMapViewMemoryHotFix];
+}
+
+- (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views
+{
+    for (UIView *view in views) {
+        [self addBounceAnnimationToView:view];
+    }
 }
 
 
