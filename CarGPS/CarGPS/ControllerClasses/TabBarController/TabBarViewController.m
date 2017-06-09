@@ -28,7 +28,6 @@
     [super viewDidLoad];
     [self initViewAppearance];
     [self CreateTabBar];
-    NSLog(@"1");
     // Do any additional setup after loading the view.
 }
 

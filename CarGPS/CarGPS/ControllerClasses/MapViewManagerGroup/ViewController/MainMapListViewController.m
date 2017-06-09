@@ -60,9 +60,7 @@ static CGFloat showTableButton_Height = 44.f;
 //    [self.shopButton setTitle:[user valueForKey:DefaultShopName] forState:(UIControlStateNormal)];
     [self.mapView setCenterCoordinate:CLLocationCoordinate2DMake([[user valueForKey:DefaultLatitude] doubleValue],[[user valueForKey:DefaultLongitude] doubleValue]) zoomLevel:7 animated:YES];
     [self callHttpForAllCars];
-    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
-        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    }
+    
 
     
 }
@@ -80,9 +78,6 @@ static CGFloat showTableButton_Height = 44.f;
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
-        self.navigationController.interactivePopGestureRecognizer.enabled = YES;
-    }
     [_annotationsArray removeAllObjects];
 }
 

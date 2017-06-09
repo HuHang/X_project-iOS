@@ -376,10 +376,7 @@
         [self performSelector:@selector(presentViewController) withObject:nil afterDelay:1.0];
     }
     
-    //保存到沙盒中
-//    [SZKImagePickerVC saveImageToSandbox:image andImageName:@"image" andResultBlock:^(BOOL success) {
-//        NSLog(@"保存成功");
-//    }];
+
 }
 
 

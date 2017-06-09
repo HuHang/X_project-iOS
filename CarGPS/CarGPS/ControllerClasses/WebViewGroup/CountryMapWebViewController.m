@@ -168,12 +168,10 @@
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
     [_webProgressLayer startLoad];
-    NSLog(@"webViewDidStartLoad");
 }
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     [_webProgressLayer finishedLoadWithError:error];
-    NSLog(@"didFailLoadWithError===%@", error);
 }
 
 #pragma  mark 横屏设置

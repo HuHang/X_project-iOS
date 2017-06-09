@@ -51,6 +51,9 @@ static CGFloat widthFormWidth = 0.54;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
     self.view.backgroundColor = [UIColor whiteColor];
     [self createNavigationView];
     [self viewLayout];
@@ -510,7 +513,6 @@ MoreFunctionCollectionViewCell *cell = [collectionView dequeueReusableCellWithRe
 
 // 点击中间的图片和文字时调用
 - (void)emptyDataSetDidTapView:(UIScrollView *)scrollView{
-    NSLog(@"点击了view");
 }
 
 

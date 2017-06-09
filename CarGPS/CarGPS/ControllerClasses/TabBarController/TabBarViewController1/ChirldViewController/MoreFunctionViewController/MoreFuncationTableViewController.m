@@ -115,7 +115,6 @@
 
 // 点击中间的图片和文字时调用
 - (void)emptyDataSetDidTapView:(UIScrollView *)scrollView{
-    NSLog(@"点击了view");
 }
 
 

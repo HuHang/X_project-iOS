@@ -26,6 +26,9 @@ static NSInteger segmentViewHeight = 40;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
     self.viewIsFirstLoad = YES;
     self.view.backgroundColor = [UIColor whiteColor];
     self.title = @"消息";

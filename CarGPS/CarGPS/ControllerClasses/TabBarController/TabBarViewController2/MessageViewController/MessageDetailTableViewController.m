@@ -41,9 +41,7 @@ static NSInteger segmentViewHeight = 40;
         [weakself setMJRefreshFooter];
     }];
     [self.tableView.mj_header beginRefreshing];
-    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
-        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    }
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -53,9 +51,7 @@ static NSInteger segmentViewHeight = 40;
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
-        self.navigationController.interactivePopGestureRecognizer.enabled = YES;
-    }
+
 }
 - (void)callHttpForMessageWithSelectedIndex{
     switch (self.segmentViewSelectedIndex) {

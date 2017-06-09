@@ -77,7 +77,6 @@
         self.progressView.alpha = 1.0;
         BOOL animated = self.wkWebView.estimatedProgress > self.progressView.progress;
         [self.progressView setProgress:self.wkWebView.estimatedProgress animated:animated];
-        NSLog(@"progress - - %.2f", self.progressView.progress);
         if(self.wkWebView.estimatedProgress >= 0.97) {
             [UIView animateWithDuration:0.1 delay:0.3 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 self.progressView.alpha = 0.0;

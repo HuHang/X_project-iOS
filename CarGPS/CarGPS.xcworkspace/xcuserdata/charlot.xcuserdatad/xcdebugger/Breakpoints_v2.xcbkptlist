@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CarGPS/ControllerClasses/TabBarController/TabBarViewController2/MessageViewController/MessageDetailTableViewController.m"
-            timestampString = "517305077.382825"
+            timestampString = "518669230.904366"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
             landmarkName = "-dataArray"
             landmarkType = "7">
          </BreakpointContent>

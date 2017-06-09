@@ -22,6 +22,7 @@
     [self.navigationBar lt_setBackgroundColor:ZDRedColor];
     
     self.interactivePopGestureRecognizer.delegate = self;
+    
 }
 
 - (void)didReceiveMemoryWarning {
