@@ -24,6 +24,8 @@
 @property (strong, nonatomic) UISearchBar *searchBar;
 @property (weak, nonatomic) RATreeView *treeView;
 @property (strong, nonatomic) NSMutableArray *allShopArray;//所有商店，搜索源
+
+//@property (nonatomic, strong) YYFPSLabel *fpsLabel;
 @end
 
 @implementation ShopViewController
@@ -39,6 +41,10 @@
 
     [self createTableView];
     [self callHttpForShopData];
+//            _fpsLabel = [YYFPSLabel new];
+//            _fpsLabel.frame = CGRectMake(200, 200, 50, 30);
+//            [_fpsLabel sizeToFit];
+//            [self.view addSubview:_fpsLabel];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -83,8 +89,8 @@
 
 - (void)createRightNavigationItem{
     if (!self.singleSelection) {
-        UIButton *button = [UIButton buttonWithString:@"全选" withBackgroundColor:[UIColor clearColor] withTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor whiteColor] withFont:SystemFont(16.f)];
-        button.frame = CGRectMake(0, 0, 60, 40);
+        UIButton *button = [UIButton buttonWithString:@"全选" withBackgroundColor:[UIColor clearColor] withTextAlignment:(NSTextAlignmentRight) withTextColor:[UIColor whiteColor] withFont:SystemFont(16.f)];
+        button.frame = CGRectMake(0, 0, 60, 30);
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
         [button addTarget:self action:@selector(allSelect:) forControlEvents:(UIControlEventTouchUpInside)];
         [button setTitle:@"全不选" forState:(UIControlStateSelected)];
@@ -128,7 +134,7 @@
     __weak typeof(self) weakSelf = self;
     cell.additionButtonTapAction = ^(id sender){
         shopData.is_selected = !shopData.is_selected;
-        
+    
         if (shopData.is_selected) {
             [weakSelf addObjectWithCheck:shopData];
             [weakSelf.alreadySelectedArray addObject:[NSNumber numberWithInteger:shopData.ID]];
@@ -136,9 +142,13 @@
             [weakSelf.selectArray removeObject:shopData];
             [weakSelf.alreadySelectedArray removeObject:[NSNumber numberWithInteger:shopData.ID]];
         }
-        
         if (!weakSelf.singleSelection) {
             if (level == 0) {
+                if (![treeView isCellForItemExpanded:item] && !isSearched) {
+                    [treeView expandRowForItem:item];
+                    [treeView reloadRowsForItems:@[item] withRowAnimation:(RATreeViewRowAnimationFade)];
+                }
+
                 for (ShopModel *parent in weakSelf.dataArray) {
                     if ([shopData isEqual:parent]) {
                         for (ShopModel *child in parent.ChildShops) {
@@ -151,12 +161,10 @@
                                 [weakSelf.alreadySelectedArray removeObject:[NSNumber numberWithInteger:child.ID]];
                             }
                         }
+                        [treeView reloadRowsForItems:parent.ChildShops withRowAnimation:(RATreeViewRowAnimationFade)];
                     }
                 }
-                if (![treeView isCellForItemExpanded:item] && !isSearched) {
-                    [treeView expandRowForItem:item];
-                }
-                [treeView reloadRows];
+//                [treeView reloadRows];
             }
         }
         
@@ -364,7 +372,7 @@
         }
     }
     sender.selected = !sender.selected;
-    [self.treeView reloadData];
+    [self.treeView reloadRows];
 }
 
 
