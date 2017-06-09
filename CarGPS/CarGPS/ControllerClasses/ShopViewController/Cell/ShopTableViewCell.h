@@ -19,5 +19,5 @@
 @property (nonatomic,strong)UILabel *bankLabel;
 @property (nonatomic,strong)UIButton *additionButton;
 
-- (void)setupWithName:(NSString *)name count:(NSInteger)count addressText:(NSString *)address bankName:(NSString *)bankName shopType:(NSInteger)shopType level:(NSInteger)level is_additionButtonSelected:(BOOL)is_additionButtonSelected;
+- (void)setupWithName:(NSString *)name count:(NSInteger)count addressText:(NSString *)address bankName:(NSString *)bankName shopType:(NSInteger)shopType level:(NSInteger)level is_additionButtonSelected:(BOOL)is_additionButtonSelected is_expanded:(BOOL)is_expanded;
 @end

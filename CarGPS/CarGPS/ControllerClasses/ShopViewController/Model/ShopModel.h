@@ -12,6 +12,7 @@
 
 @property (assign, nonatomic)unsigned int ID;
 @property (assign, nonatomic)unsigned int shopType;
+@property (assign, nonatomic)unsigned int parentId;
 @property (assign, nonatomic)double longitude;
 @property (assign, nonatomic)double latitude;
 @property (copy, nonatomic)NSString *name;

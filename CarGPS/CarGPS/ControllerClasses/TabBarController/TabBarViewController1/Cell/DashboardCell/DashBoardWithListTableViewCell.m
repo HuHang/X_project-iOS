@@ -42,26 +42,27 @@
     self.firstLineLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
     self.secondLineLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
     self.thirdLineLabel = [UILabel labelWithTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor grayColor] withFont:SystemFont(10.f)];
+    self.topLineView = [[UIView alloc] init];
     
     UIView *backgroundView = [[UIView alloc] init];
     self.centerLineView = [[UIView alloc] init];
     UIView *lineView = [[UIView alloc] init];
     UILabel *buttonLabel = [UILabel labelWithString:@"立即查看" withTextAlignment:(NSTextAlignmentCenter) withTextColor:[UIColor lightGrayColor] withFont:SystemFont(12.f)];
-    UIImageView *leftBackView = [[UIImageView alloc] init];
+    self.leftBackView = [[UIImageView alloc] init];
     
     [self.contentView addSubview:backgroundView];
     [backgroundView addSubview:self.centerLineView];
     [backgroundView addSubview:self.titleImageView];
     [backgroundView addSubview:self.titleLabel];
     
-    [backgroundView addSubview:leftBackView];
-    [leftBackView addSubview:self.leftTitleLabel];
-    [leftBackView addSubview:self.leftCountLabel];
+    [backgroundView addSubview:self.leftBackView];
+    [self.leftBackView addSubview:self.leftTitleLabel];
+    [self.leftBackView addSubview:self.leftCountLabel];
     
     [backgroundView addSubview:self.firstLineLabel];
     [backgroundView addSubview:self.secondLineLabel];
     [backgroundView addSubview:self.thirdLineLabel];
-    
+    [backgroundView addSubview:self.topLineView];
     [backgroundView addSubview:lineView];
     [backgroundView addSubview:buttonLabel];
     
@@ -84,7 +85,7 @@
         make.center.mas_equalTo(0);
     }];
     
-    [leftBackView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.leftBackView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(80, 80));
         make.centerY.equalTo(backgroundView);
         make.centerX.mas_equalTo(-SCREEN_WIDTH/4 + 20);
@@ -93,7 +94,7 @@
     [self.leftCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(50, 20));
         make.centerX.mas_equalTo(0);
-        make.bottom.equalTo(leftBackView.mas_centerY);
+        make.bottom.equalTo(self.leftBackView.mas_centerY);
     }];
     [self.leftTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.and.left.equalTo(self.leftCountLabel);
@@ -108,10 +109,15 @@
         [subLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.centerLineView.mas_right);
             make.right.mas_equalTo(-20);
-            make.height.mas_equalTo(100/[subArray count]);
-            make.top.equalTo(self.centerLineView).with.mas_offset(i * 100/[subArray count]);
+            make.height.mas_equalTo(80/[subArray count]);
+            make.top.equalTo(self.leftBackView).with.mas_offset(i * 80/[subArray count] + 2);
         }];
     }
+    [self.topLineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(20, 1));
+        make.left.equalTo(self.firstLineLabel);
+        make.bottom.equalTo(self.firstLineLabel.mas_top);
+    }];
     
     [buttonLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.right.and.bottom.mas_equalTo(0);
@@ -125,7 +131,7 @@
     }];
     
     self.leftCountLabel.adjustsFontSizeToFitWidth = YES;
-    leftBackView.image = [UIImage imageNamed:@"icon_dashboard_datebackg1"];
+    
     self.backgroundColor = [UIColor whiteColor];
     backgroundView.backgroundColor = [UIColor whiteColor];
     self.centerLineView.backgroundColor = UIColorFromHEX(0xD9D9D9,1.0);
@@ -139,6 +145,9 @@
     switch ([dataArray count]) {
         case 3:
         {
+            self.leftBackView.image = [UIImage imageNamed:@""];
+            self.topLineView.backgroundColor = [UIColor whiteColor];
+            self.centerLineView.backgroundColor = [UIColor lightGrayColor];
             if (type == 8) {
                 self.titleImageView.image = [UIImage imageNamed:@"icon_deshb_protocol"];
             }else{
@@ -161,7 +170,9 @@
             break;
         case 4:
         {
+            self.leftBackView.image = [UIImage imageNamed:@"icon_dashboard_datebackg1"];
             self.centerLineView.backgroundColor = [UIColor whiteColor];
+            self.topLineView.backgroundColor = UIColorFromHEX(0xFF9094, 1.0);
             self.titleImageView.image = [UIImage imageNamed:@"icon_deshb_draft"];
             NSArray *subArray = @[self.firstLineLabel,self.secondLineLabel,self.thirdLineLabel];
             for (NSInteger i = 1; i < [dataArray count]; i ++) {

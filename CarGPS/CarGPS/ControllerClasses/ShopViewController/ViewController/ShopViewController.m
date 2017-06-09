@@ -15,15 +15,15 @@
 
 @interface ShopViewController ()<RATreeViewDelegate, RATreeViewDataSource,UISearchBarDelegate,UISearchControllerDelegate>
 {
-    BOOL isbool;
+    BOOL isSearched;
 }
 @property (strong, nonatomic) NSArray *dataArray; //所有本库
-@property (strong, nonatomic) NSMutableArray *searchResultArray; //所有商店
+@property (strong, nonatomic) NSMutableArray *searchResultArray; //搜索结果
 @property (strong, nonatomic) NSMutableArray *selectArray; //选择的ShopModel
 @property (strong, nonatomic) NSMutableArray *alreadySelectedArray; //上次选择的ShopID
 @property (strong, nonatomic) UISearchBar *searchBar;
 @property (weak, nonatomic) RATreeView *treeView;
-@property (strong, nonatomic) NSMutableArray *allShopArray;
+@property (strong, nonatomic) NSMutableArray *allShopArray;//所有商店，搜索源
 @end
 
 @implementation ShopViewController
@@ -123,12 +123,12 @@
         shopData.is_selected = NO;
     }
 
-    
-    [cell setupWithName:shopData.name count:[shopData.ChildShops count] addressText:shopData.address bankName:shopData.allBankPath shopType:shopData.shopType level:level is_additionButtonSelected:shopData.is_selected];
+    [cell setupWithName:shopData.name count:[shopData.ChildShops count] addressText:shopData.address bankName:shopData.allBankPath shopType:shopData.shopType level:level is_additionButtonSelected:shopData.is_selected is_expanded:[treeView isCellForItemExpanded:item]];
     
     __weak typeof(self) weakSelf = self;
     cell.additionButtonTapAction = ^(id sender){
         shopData.is_selected = !shopData.is_selected;
+        
         if (shopData.is_selected) {
             [weakSelf addObjectWithCheck:shopData];
             [weakSelf.alreadySelectedArray addObject:[NSNumber numberWithInteger:shopData.ID]];
@@ -136,6 +136,28 @@
             [weakSelf.selectArray removeObject:shopData];
             [weakSelf.alreadySelectedArray removeObject:[NSNumber numberWithInteger:shopData.ID]];
         }
+        
+        if (level == 0) {
+            for (ShopModel *parent in weakSelf.dataArray) {
+                if ([shopData isEqual:parent]) {
+                    for (ShopModel *child in parent.ChildShops) {
+                        child.is_selected = shopData.is_selected;
+                        if (child.is_selected) {
+                            [weakSelf addObjectWithCheck:child];
+                            [weakSelf.alreadySelectedArray addObject:[NSNumber numberWithInteger:child.ID]];
+                        }else{
+                            [weakSelf.selectArray removeObject:child];
+                            [weakSelf.alreadySelectedArray removeObject:[NSNumber numberWithInteger:child.ID]];
+                        }
+                    }
+                }
+            }
+            if (![treeView isCellForItemExpanded:item] && !isSearched) {
+                [treeView expandRowForItem:item];
+            }
+            [treeView reloadRows];
+        }
+//        [weakSelf.treeView reloadRowsForItems:@[item] withRowAnimation:RATreeViewRowAnimationRight];
     };
     return cell;
 }
@@ -157,13 +179,11 @@
 - (NSInteger)treeView:(RATreeView *)treeView numberOfChildrenOfItem:(id)item
 {
     if (item == nil) {
-        if (!isbool) {
+        if (!isSearched) {
             return [self.dataArray count];
         }
         return [self.searchResultArray count];
-        
     }
-    
     ShopModel *data = item;
     return [data.ChildShops count];
 }
@@ -175,18 +195,21 @@
  @param treeView treeview
  @param index index
  @param item 成员
- @return 成员数据
+ @return 子成员数据
  */
 - (id)treeView:(RATreeView *)treeView child:(NSInteger)index ofItem:(id)item
 {
     ShopModel *data = item;
+    
     if (item == nil) {
-        if (!isbool) {
+        if (!isSearched) {
+            //父类数据
             return [self.dataArray objectAtIndex:index];
         }
         return [self.searchResultArray objectAtIndex:index];
         
     }
+//    子类数据
     return data.ChildShops[index];
 }
 
@@ -201,9 +224,6 @@
     return 70;
 }
 
-
-
-
 - (void)treeView:(RATreeView *)treeView didSelectRowForItem:(nonnull id)item{
     [treeView deselectRowForItem:item animated:YES];
     ShopTableViewCell *cell = (ShopTableViewCell *)[treeView cellForItem:item];
@@ -214,6 +234,12 @@
     }
 }
 
+- (BOOL)treeView:(RATreeView *)treeView shouldExpandRowForItem:(id)item{
+    if (isSearched) {
+        return NO;
+    }
+    return YES;
+}
 
 #pragma  mark - Http
 - (void)callHttpForShopData{
@@ -223,13 +249,11 @@
     [CallHttpManager getWithUrlString:[URLDictionary allShop_url] success:^(id data) {
         weakself.dataArray = [[ShopModel alloc] getData:data];
         [weakself.allShopArray addObjectsFromArray:weakself.dataArray];
-        for (NSInteger i = 0; i < [self.dataArray count]; i ++) {
-            ShopModel *parent = (ShopModel *)weakself.dataArray[i];
+        for (ShopModel *parent in weakself.dataArray) {
             parent.ChildShops = [[ShopModel alloc] getData:parent.ChildShops];
             [weakself.allShopArray addObjectsFromArray:parent.ChildShops];
         }
         [weakself.treeView reloadData];
-        HHCodeLog(@"%lu==%lu",(unsigned long)weakself.dataArray.count,(unsigned long)weakself.allShopArray.count);
         [PCMBProgressHUD hideWithView:weakself.view];
         [weakself createRightNavigationItem];
     } failure:^(NSError *error) {
@@ -245,12 +269,12 @@
     
     if(text.length == 0)
     {
-        isbool = NO;
+        isSearched = NO;
         [self.searchResultArray removeAllObjects];
     }
     else
     {
-        isbool = YES;
+        isSearched = YES;
         for (ShopModel *item in self.allShopArray) {
             if ([item.name rangeOfString:text options:NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch].location != NSNotFound)
             {
@@ -276,7 +300,7 @@
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
     searchBar.text=@"";
-    isbool= NO;
+    isSearched= NO;
     [searchBar setShowsCancelButton:NO animated:YES];
     [searchBar resignFirstResponder];
     [self.treeView reloadData];
@@ -304,6 +328,7 @@
     }
 }
 
+
 - (void)saveChange{
     if (self.singleSelection && [self.selectArray count] > 1) {
         [PCMBProgressHUD showLoadingTipsInView:self.view title:@"提示" detail:@"您只可选择唯一商店" withIsAutoHide:YES];
@@ -321,6 +346,7 @@
     }
     
 }
+
 
 - (void)allSelect:(UIButton *)sender{
     if (sender.selected) {

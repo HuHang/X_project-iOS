@@ -14,7 +14,7 @@
 @property (nonatomic,strong)WKWebView *webView;
 @property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic, assign) CGFloat delayTime;
-@property (nonatomic, strong) YYFPSLabel *fpsLabel;
+//@property (nonatomic, strong) YYFPSLabel *fpsLabel;
 @end
 
 @implementation DashboardWebViewController
@@ -38,10 +38,10 @@
     [super viewWillAppear:animated];
     [self viewLayout];
      [self.webView loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[self.urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]]];
-        _fpsLabel = [YYFPSLabel new];
-        _fpsLabel.frame = CGRectMake(200, 200, 50, 30);
-        [_fpsLabel sizeToFit];
-        [self.view addSubview:_fpsLabel];
+//        _fpsLabel = [YYFPSLabel new];
+//        _fpsLabel.frame = CGRectMake(200, 200, 50, 30);
+//        [_fpsLabel sizeToFit];
+//        [self.view addSubview:_fpsLabel];
 
 }
 

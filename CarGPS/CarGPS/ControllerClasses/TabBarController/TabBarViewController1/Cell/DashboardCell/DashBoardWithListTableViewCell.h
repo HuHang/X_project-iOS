@@ -10,6 +10,8 @@
 
 @interface DashBoardWithListTableViewCell : UITableViewCell
 @property (nonatomic,strong)UIImageView *titleImageView;
+@property (nonatomic,strong)UIView *topLineView;
+@property (nonatomic,strong)UIImageView *leftBackView;
 @property (nonatomic,strong)UILabel *titleLabel;
 
 @property (nonatomic,strong)UILabel *leftCountLabel;

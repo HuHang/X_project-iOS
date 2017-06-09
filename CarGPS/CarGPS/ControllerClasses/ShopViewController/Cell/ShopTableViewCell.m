@@ -90,9 +90,14 @@
     [self.additionButton addTarget:self action:@selector(additionButtonTapped:) forControlEvents:(UIControlEventTouchUpInside)];
 }
 
-- (void)setupWithName:(NSString *)name count:(NSInteger)count addressText:(NSString *)address bankName:(NSString *)bankName shopType:(NSInteger)shopType level:(NSInteger)level is_additionButtonSelected:(BOOL)is_additionButtonSelected
+- (void)setupWithName:(NSString *)name count:(NSInteger)count addressText:(NSString *)address bankName:(NSString *)bankName shopType:(NSInteger)shopType level:(NSInteger)level is_additionButtonSelected:(BOOL)is_additionButtonSelected is_expanded:(BOOL)is_expanded
 {
-    self.signImageView.image = [UIImage imageNamed:@"icon_shopUnselected"];
+    if (is_expanded) {
+        self.signImageView.image = [UIImage imageNamed:@"icon_shopSelected"];
+    }else{
+        self.signImageView.image = [UIImage imageNamed:@"icon_shopUnselected"];
+    }
+    
     self.addressLabel.text = address;
     self.additionButton.selected = is_additionButtonSelected;
     

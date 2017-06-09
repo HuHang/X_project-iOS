@@ -161,8 +161,13 @@
 }
 - (void)logOFF{
     NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+    NSString *ip = [user valueForKey:BaseURL];
+    NSString *port = [user valueForKey:BasePORT];
     NSString *bundle = [[NSBundle mainBundle] bundleIdentifier];
     [user removePersistentDomainForName:bundle];
+    
+    [user setValue:ip forKey:BaseURL];
+    [user setValue:port forKey:BasePORT];
     [user setBool:YES forKey:FIRSTLUNCH];
     [user synchronize];
 }
