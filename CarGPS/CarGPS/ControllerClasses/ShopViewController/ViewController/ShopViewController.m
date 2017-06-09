@@ -137,26 +137,29 @@
             [weakSelf.alreadySelectedArray removeObject:[NSNumber numberWithInteger:shopData.ID]];
         }
         
-        if (level == 0) {
-            for (ShopModel *parent in weakSelf.dataArray) {
-                if ([shopData isEqual:parent]) {
-                    for (ShopModel *child in parent.ChildShops) {
-                        child.is_selected = shopData.is_selected;
-                        if (child.is_selected) {
-                            [weakSelf addObjectWithCheck:child];
-                            [weakSelf.alreadySelectedArray addObject:[NSNumber numberWithInteger:child.ID]];
-                        }else{
-                            [weakSelf.selectArray removeObject:child];
-                            [weakSelf.alreadySelectedArray removeObject:[NSNumber numberWithInteger:child.ID]];
+        if (!weakSelf.singleSelection) {
+            if (level == 0) {
+                for (ShopModel *parent in weakSelf.dataArray) {
+                    if ([shopData isEqual:parent]) {
+                        for (ShopModel *child in parent.ChildShops) {
+                            child.is_selected = shopData.is_selected;
+                            if (child.is_selected) {
+                                [weakSelf addObjectWithCheck:child];
+                                [weakSelf.alreadySelectedArray addObject:[NSNumber numberWithInteger:child.ID]];
+                            }else{
+                                [weakSelf.selectArray removeObject:child];
+                                [weakSelf.alreadySelectedArray removeObject:[NSNumber numberWithInteger:child.ID]];
+                            }
                         }
                     }
                 }
+                if (![treeView isCellForItemExpanded:item] && !isSearched) {
+                    [treeView expandRowForItem:item];
+                }
+                [treeView reloadRows];
             }
-            if (![treeView isCellForItemExpanded:item] && !isSearched) {
-                [treeView expandRowForItem:item];
-            }
-            [treeView reloadRows];
         }
+        
 //        [weakSelf.treeView reloadRowsForItems:@[item] withRowAnimation:RATreeViewRowAnimationRight];
     };
     return cell;
