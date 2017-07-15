@@ -10,6 +10,7 @@
 #import "SettingViewController.h"
 #import "SettingDetailViewController.h"
 #import "UserInfomationViewController.h"
+#import "AboutAPPViewController.h"
 
 
 @interface SettingViewController ()<UITableViewDelegate,UITableViewDataSource>
@@ -87,10 +88,9 @@
                     if (cell == nil) {
                         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:NSStringFromClass([UITableViewCell class])];
                     }
-//                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     cell.imageView.image = [UIImage imageNamed:@"icon_appVersion"];
-                    cell.textLabel.text = @"版本信息";
-                    cell.detailTextLabel.text = app_Version;
+                    cell.textLabel.text = @"关于";
                     return cell;
                 }
                     break;
@@ -134,7 +134,8 @@
             switch (indexPath.row) {
                 case 0:
                 {
-                    
+                    AboutAPPViewController *view = [[AboutAPPViewController alloc] init];
+                    [self.navigationController pushViewController:view animated:YES];
                 }
                     break;
                     

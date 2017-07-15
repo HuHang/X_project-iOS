@@ -86,7 +86,7 @@ static CGFloat widthFormWidth = 0.54;
     self.shopButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.shopButton.frame = CGRectMake(0, 0, SCREEN_WIDTH *2/3, 20);
     [self.shopButton setImage:[UIImage imageNamed:@"toMap"] forState:UIControlStateNormal];
-    [self.shopButton setTitle:[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopName] forState:(UIControlStateNormal)];
+    [self.shopButton setTitle:@"选择经销商" forState:(UIControlStateNormal)];
     self.shopButton.titleLabel.textAlignment = NSTextAlignmentLeft;
     self.shopButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     self.shopButton.titleLabel.font = SystemFont(14.f);
@@ -129,7 +129,9 @@ static CGFloat widthFormWidth = 0.54;
     if (_functionHeaderView == nil) {
         _functionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH, functionHeaderViewHeight)];
         _functionHeaderView.backgroundColor = ZDRedColor;
-        NSArray *imageArray = @[@"icon_monitorBtn",@"icon_carBtn",@"icon_deviceBtn",@"icon_inventoryBtn"];
+//        NSArray *imageArray = @[@"icon_monitorBtn",@"icon_carBtn",@"icon_deviceBtn",@"icon_inventoryBtn"];
+        NSArray *imageArray = @[@"icon_monitorBtn",@"icon_carBtn",@"icon_deviceBtn"];
+
         for (NSInteger i = 0; i < [imageArray count]; i ++) {
             UIButton *button = [UIButton buttonWithBackgroundColor:[UIColor clearColor] withNormalImage:imageArray[i] withSelectedImage:nil];
             button.tag = i;
@@ -429,8 +431,8 @@ MoreFunctionCollectionViewCell *cell = [collectionView dequeueReusableCellWithRe
 }
 
 - (void)shopChanged{
-    self.shopButton.titleLabel.text = [[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopName];
-    [self.shopButton setTitle:[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopName] forState:(UIControlStateNormal)];
+    self.shopButton.titleLabel.text = @"选择经销商";
+    [self.shopButton setTitle:@"选择经销商" forState:(UIControlStateNormal)];
     HHCodeLog(@"1233555==%@",[[NSUserDefaults standardUserDefaults] valueForKey:DefaultShopName]);
 }
 

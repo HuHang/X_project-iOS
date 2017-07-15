@@ -49,16 +49,11 @@
     UIImageView *backgroundImage = [[UIImageView alloc]init];
     UIImageView *logoImage = [[UIImageView alloc] init];
     //输入框
-    UILabel *usernameLeft = [UILabel labelWithString:FontAweStr(FAIconUser)
-                                   withTextAlignment:(NSTextAlignmentCenter)
-                                       withTextColor:ZDRedColor
-                                            withFont:FontAweStrFont(20)];
-    UILabel *passwordLeft = [UILabel labelWithString:FontAweStr(FAIconLock)
-                                   withTextAlignment:(NSTextAlignmentCenter)
-                                       withTextColor:ZDRedColor
-                                            withFont:FontAweStrFont(20)];
+    UIImageView *usernameLeft = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_account"]];
+    UIImageView *passwordLeft = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_password"]];
     
-    usernameLeft.frame = CGRectMake(0, 0, 30, 30);
+    
+    usernameLeft.frame = CGRectMake(0, 0, 30, 22);
     passwordLeft.frame = usernameLeft.frame;
     
 
