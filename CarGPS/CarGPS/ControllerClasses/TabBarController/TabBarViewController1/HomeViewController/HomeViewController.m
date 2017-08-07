@@ -124,7 +124,7 @@ static CGFloat widthFormWidth = 0.54;
 
 #pragma mark - view
 
-//功能按键 4
+//主功能区
 - (UIView *)functionHeaderView{
     if (_functionHeaderView == nil) {
         _functionHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH, functionHeaderViewHeight)];
@@ -150,7 +150,7 @@ static CGFloat widthFormWidth = 0.54;
     return _functionHeaderView;
 }
 
-//更多按键
+//附加功能区
 - (UICollectionView *)moreFunctionView{
     if (_moreFunctionView == nil) {
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
