@@ -40,14 +40,14 @@
 }
 - (NSArray *)imageArray{
     if (_imageArray == nil) {
-        _imageArray = @[];
+        _imageArray = @[@[@"des_monitor",@"des_car"],@[@"des_device"],@[@"des_bind"],@[@"des_msg"],@[@"des_dashboard"]];
     }
     return _imageArray;
 }
 
 - (NSArray *)sectionArray{
     if (_sectionArray == nil) {
-        _sectionArray = @[@"一 监控车辆",@"二 管理设备",@"三 维护",@"四 消息通知",@"五 Dashboard"];
+        _sectionArray = @[@"一. 监控车辆",@"二. 管理设备",@"三. 维护",@"四. 消息通知",@"五. Dashboard"];
     }
     return _sectionArray;
 }
@@ -71,7 +71,7 @@
     if (cell == nil) {
         cell = [[FunctionDetailTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([FunctionDetailTableViewCell class])];
     }
-    [cell loadDataForCellWithfunctionLabel:self.titleArray[indexPath.section][indexPath.row] FunctionImageName:@"123"];
+    [cell loadDataForCellWithfunctionLabel:self.titleArray[indexPath.section][indexPath.row] FunctionImageName:self.imageArray[indexPath.section][indexPath.row]];
     return cell;
 }
 
@@ -82,7 +82,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 400.f;
+    return 440.f;
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     return self.sectionArray[section];

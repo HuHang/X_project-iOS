@@ -27,7 +27,7 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    self.textView.text = @"-更新日志：\n hahahahahhah \n hahahahahhah \n hahahahahhah";
+    self.textView.text = @"-更新日志：\n 1.修改已知bug； \n 2.优化了网络环境； \n 新增关于app的版本功能介绍。";
 }
 
 - (UITextView *)textView{
