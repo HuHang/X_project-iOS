@@ -161,7 +161,10 @@
                                 [weakSelf.alreadySelectedArray removeObject:[NSNumber numberWithInteger:child.ID]];
                             }
                         }
-                        [treeView reloadRowsForItems:parent.ChildShops withRowAnimation:(RATreeViewRowAnimationFade)];
+                        if (!isSearched) {
+                            [treeView reloadRowsForItems:parent.ChildShops withRowAnimation:(RATreeViewRowAnimationFade)];
+                        }
+                        
                     }
                 }
 //                [treeView reloadRows];
