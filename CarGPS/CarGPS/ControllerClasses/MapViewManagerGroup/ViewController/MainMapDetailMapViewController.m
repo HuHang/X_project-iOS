@@ -242,7 +242,7 @@
         [self.view.window addSubview:_effectView];
         //关闭按钮
         UIButton *button = [UIButton buttonWithBackgroundColor:[UIColor clearColor] withNormalImage:@"icon_dismissBtn" withSelectedImage:nil];
-        [_effectView addSubview:button];
+        [_effectView.contentView addSubview:button];
         [button mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(14);
             make.right.mas_equalTo(-10);
@@ -253,7 +253,7 @@
         [button addTarget:self action:@selector(closeSubView) forControlEvents:(UIControlEventTouchUpInside)];
         //标题
         UILabel *titleLabel = [UILabel labelWithString:@"设置及详情" withTextAlignment:(NSTextAlignmentLeft) withTextColor:[UIColor blackColor] withFont:SystemFont(16.f)];
-        [_effectView addSubview:titleLabel];
+        [_effectView.contentView addSubview:titleLabel];
         [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(10);
             make.top.and.height.equalTo(button);
@@ -261,7 +261,7 @@
         }];
         
         //历史轨迹
-        [_effectView addSubview:self.timeContentView];
+        [_effectView.contentView addSubview:self.timeContentView];
     }
     return _effectView;
 }

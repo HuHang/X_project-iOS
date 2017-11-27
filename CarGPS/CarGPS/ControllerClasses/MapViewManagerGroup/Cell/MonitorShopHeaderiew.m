@@ -89,6 +89,9 @@
             break;
             
         default:
+            self.shopNameLabel.text = [NSString stringWithFormat:@"%@",shopName];
+            self.signImageView.image = [UIImage imageNamed:@"icon_dismissBtn"];
+            self.carCountLabel.text = [NSString stringWithFormat:@"在库：%ld 台",(long)count];
             break;
     }
     

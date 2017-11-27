@@ -197,11 +197,11 @@ static NSInteger segmentViewHeight = 40;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     MessageTypeModel *item = (MessageTypeModel *)self.dataArray[indexPath.row];
-
     MessageDetailTableViewController *detailView = [[MessageDetailTableViewController alloc] init];
     detailView.titleName = item.KeyStr;
     detailView.keyValue = item.KeyValue;
     [self.navigationController pushViewController:detailView animated:YES];
+    
 }
 
 

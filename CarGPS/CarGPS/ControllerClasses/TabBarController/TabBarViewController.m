@@ -38,6 +38,7 @@
 
 
 
+
 - (void)initViewAppearance{
     UIView *bgView = [[UIView alloc]initWithFrame:self.tabBar.bounds];
     bgView.backgroundColor = [UIColor whiteColor];

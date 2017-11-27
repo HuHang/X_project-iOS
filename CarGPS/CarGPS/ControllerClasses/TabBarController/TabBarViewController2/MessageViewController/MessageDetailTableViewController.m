@@ -27,8 +27,12 @@ static NSInteger segmentViewHeight = 40;
 //getMessageTypeList_url
 @implementation MessageDetailTableViewController
 
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.dataArray = [[NSMutableArray alloc] init];
     [self createNavigationView];
     [self initTableView];
     __weak MessageDetailTableViewController *weakself = self;
@@ -42,7 +46,29 @@ static NSInteger segmentViewHeight = 40;
     }];
 
     [self.tableView.mj_header beginRefreshing];
+    HHCodeLog(@"hahahhahaq");
+
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    HHCodeLog(@"hahahhaha2");
+    HHCodeLog(@"hahahhaha2");
+    HHCodeLog(@"hahahhaha2");
+    HHCodeLog(@"hahahhaha2");
     
+    @try {
+    } @catch (NSException *exception) {
+        NSLog(@"exception:%@", exception);
+    } @finally {
+        
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+
+    [super viewDidAppear:animated];
+    HHCodeLog(@"hahahhaha");
 }
 
 - (void)didReceiveMemoryWarning {
@@ -150,13 +176,10 @@ static NSInteger segmentViewHeight = 40;
         [enlargeBtn.layer setShadowOpacity:0.8f];
         [enlargeBtn.layer setShadowOffset:CGSizeMake(1.0, 0)];
         [enlargeBtn.layer masksToBounds];
-        
-
     }
     return _mapView;
 }
 - (void)initTableView{
-    
     self.tableView.tableHeaderView = self.segmentView;
     self.tableView.tableFooterView = [UIView new];
     self.tableView.emptyDataSetSource = self;

@@ -155,6 +155,12 @@ static CGFloat showTableButton_Height = 44.f;
 
 - (void)createTableView{
     [_mapView addSubview:self.effectView];
+    UIButton *button = [UIButton buttonWithBackgroundColor:[UIColor clearColor] withNormalImage:@"icon_showTable" withSelectedImage:@"icon_disMisTable"];
+    button.selected = NO;
+    button.frame = CGRectMake(0, 0, SCREEN_WIDTH, showTableButton_Height);
+    button.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [button addTarget:self action:@selector(showTableView:) forControlEvents:(UIControlEventTouchUpInside)];
+    [_effectView.contentView addSubview:button];
 }
 
 - (UITableView *)tableView{
@@ -176,12 +182,7 @@ static CGFloat showTableButton_Height = 44.f;
         _effectView.frame = CGRectMake(0, SCREEN_HEIGHT - showTableButton_Height, SCREEN_WIDTH, SCREEN_HEIGHT);
         _effectView.layer.cornerRadius = 18.f;
         _effectView.layer.masksToBounds = YES;
-        UIButton *button = [UIButton buttonWithBackgroundColor:[UIColor clearColor] withNormalImage:@"icon_showTable" withSelectedImage:@"icon_disMisTable"];
-        button.selected = NO;
-        button.frame = CGRectMake(0, 0, SCREEN_WIDTH, showTableButton_Height);
-        button.imageView.contentMode = UIViewContentModeScaleAspectFit;
-        [button addTarget:self action:@selector(showTableView:) forControlEvents:(UIControlEventTouchUpInside)];
-        [_effectView addSubview:button];
+        
     }
     return _effectView;
 }
@@ -223,7 +224,6 @@ static CGFloat showTableButton_Height = 44.f;
                                       [weakself createTableView];
                                   }else{
                                       [UIAlertViewManager alertWithTitle:@"提示" message:responseShopGroup.message withCancelButton:true textFieldPlaceholders:@[] actionTitles:@[] textFieldHandler:nil actionHandler:nil];
-
                                   }
 
     }
@@ -502,8 +502,8 @@ static CGFloat showTableButton_Height = 44.f;
             shop.is_Opened = NO;
         }
     }
-//    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:tap.view.tag - 300] withRowAnimation:UITableViewRowAnimationFade];
-    [self.tableView reloadData];
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:tap.view.tag - 300] withRowAnimation:UITableViewRowAnimationFade];
+//    [self.tableView reloadData];
 }
 
 - (void)backToSuperView{
@@ -527,7 +527,7 @@ static CGFloat showTableButton_Height = 44.f;
             [weakself.effectView setFrame:CGRectMake(0, 20, SCREEN_WIDTH, SCREEN_HEIGHT - 10)];
             [weakself.navigationController.navigationBar lt_setTranslationY:(-64)];
         } completion:^(BOOL finished) {
-            [weakself.effectView addSubview:weakself.tableView];
+            [weakself.effectView.contentView addSubview:weakself.tableView];
 
         }];
         
