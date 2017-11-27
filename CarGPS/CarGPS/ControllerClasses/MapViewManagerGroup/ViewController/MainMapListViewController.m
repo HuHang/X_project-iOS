@@ -13,9 +13,11 @@
 #import "MonitorModel.h"
 #import "ShopInfoModel.h"
 #import "ShopGroupModel.h"
+#import "ResponseShopGroupModel.h"
 #import "MyAnnotation.h"
 #import "MyAnnotationNormal.h"
 #import "ShopAnnotation.h"
+#import "UIAlertViewManager.h"
 
 #import "ParentAnnotation.h"
 #import "ChildNetAnnotation.h"
@@ -209,14 +211,21 @@ static CGFloat showTableButton_Height = 44.f;
     [CallHttpManager postWithUrlString:[URLDictionary allMonitorDevice_url]
                             parameters:params
                               success:^(id data) {
-                                  if ([weakself.annotationsArray count] != 0) {
-                                      [weakself.mapView removeAnnotations:weakself.annotationsArray];
-                                      [weakself.annotationsArray removeAllObjects];
-                                  }
-                                  weakself.dataArray = [[ShopGroupModel alloc] getData:data];
-                                  [weakself loadAnnotationDataForMap];
-                                  [weakself createTableView];
                                   [PCMBProgressHUD hideWithView:weakself.view];
+                                  ResponseShopGroupModel *responseShopGroup = [[ResponseShopGroupModel alloc] getData:data];
+                                  if (responseShopGroup.result) {
+                                      if ([weakself.annotationsArray count] != 0) {
+                                          [weakself.mapView removeAnnotations:weakself.annotationsArray];
+                                          [weakself.annotationsArray removeAllObjects];
+                                      }
+                                      weakself.dataArray = [[ShopGroupModel alloc] getData:responseShopGroup.content];
+                                      [weakself loadAnnotationDataForMap];
+                                      [weakself createTableView];
+                                  }else{
+                                      [UIAlertViewManager alertWithTitle:@"提示" message:responseShopGroup.message withCancelButton:true textFieldPlaceholders:@[] actionTitles:@[] textFieldHandler:nil actionHandler:nil];
+
+                                  }
+
     }
                               failure:^(NSError *error) {
                                   [PCMBProgressHUD hideWithView:weakself.view];

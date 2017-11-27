@@ -40,6 +40,7 @@ static NSInteger segmentViewHeight = 40;
     self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
         [weakself setMJRefreshFooter];
     }];
+
     [self.tableView.mj_header beginRefreshing];
     
 }
@@ -233,7 +234,9 @@ static NSInteger segmentViewHeight = 40;
     __weak MessageDetailTableViewController *weakself = self;
     MessageDetailModel *item = (MessageDetailModel *)self.dataArray[indexPath.row];
     HHCodeLog(@"%@",[NSString stringWithFormat:@"%@id=%u",[URLDictionary readMsg_url],item.ID]);
+    [PCMBProgressHUD showLoadingImageInView:self.view.window isResponse:NO];
     [CallHttpManager postWithUrlString:[NSString stringWithFormat:@"%@id=%u",[URLDictionary readMsg_url],item.ID] parameters:nil success:^(id data) {
+        [PCMBProgressHUD hideWithView:weakself.view.window];
         DefaultModel *resultMsg = [[DefaultModel alloc] getData:data];
         if (resultMsg.Success) {
             [weakself.dataArray removeObjectAtIndex:indexPath.row];
@@ -242,13 +245,14 @@ static NSInteger segmentViewHeight = 40;
             [PCMBProgressHUD showLoadingTipsInView:weakself.view title:@"失败" detail:resultMsg.Content withIsAutoHide:YES];
         }
     } failure:^(NSError *error) {
-        
+        [PCMBProgressHUD hideWithView:weakself.view.window];
+    
     }];
 }
 #pragma mark - segment delegate
 - (void)segmentCustomView:(SegmentCustomStyleManager *)segmentCustomView index:(NSInteger)index{
     self.segmentViewSelectedIndex = index;
-    [self.tableView.mj_header beginRefreshing];
+    [self callHttpForMessageWithSelectedIndex];
     
 }
 

@@ -174,6 +174,7 @@
 		027045D61EB316C0003E28E4 /* icon_monitorBtn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 027045D21EB316C0003E28E4 /* icon_monitorBtn@2x.png */; };
 		027045F01EB33414003E28E4 /* dashBoard.png in Resources */ = {isa = PBXBuildFile; fileRef = 027045EE1EB33414003E28E4 /* dashBoard.png */; };
 		027045F11EB33414003E28E4 /* dashBoard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 027045EF1EB33414003E28E4 /* dashBoard@2x.png */; };
+		027503B51FCBCC6000FBB2C4 /* ResponseShopGroupModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 027503B41FCBCC6000FBB2C4 /* ResponseShopGroupModel.m */; };
 		0286A5031E964F2C00075582 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0286A5021E964F2C00075582 /* NavigationController.m */; };
 		0286A5101E96519900075582 /* NSString+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 0286A5051E96519900075582 /* NSString+FontAwesome.m */; };
 		0286A5111E96519900075582 /* NSString+Init.m in Sources */ = {isa = PBXBuildFile; fileRef = 0286A5071E96519900075582 /* NSString+Init.m */; };
@@ -554,6 +555,8 @@
 		027045D21EB316C0003E28E4 /* icon_monitorBtn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_monitorBtn@2x.png"; sourceTree = "<group>"; };
 		027045EE1EB33414003E28E4 /* dashBoard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dashBoard.png; sourceTree = "<group>"; };
 		027045EF1EB33414003E28E4 /* dashBoard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dashBoard@2x.png"; sourceTree = "<group>"; };
+		027503B31FCBCC6000FBB2C4 /* ResponseShopGroupModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResponseShopGroupModel.h; sourceTree = "<group>"; };
+		027503B41FCBCC6000FBB2C4 /* ResponseShopGroupModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResponseShopGroupModel.m; sourceTree = "<group>"; };
 		0286A5011E964F2C00075582 /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		0286A5021E964F2C00075582 /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		0286A5041E96519900075582 /* NSString+FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FontAwesome.h"; sourceTree = "<group>"; };
@@ -1797,6 +1800,8 @@
 				026595971ED411FA0016176A /* ShopGroupModel.m */,
 				026595991ED412700016176A /* ShopInfoModel.h */,
 				0265959A1ED412700016176A /* ShopInfoModel.m */,
+				027503B31FCBCC6000FBB2C4 /* ResponseShopGroupModel.h */,
+				027503B41FCBCC6000FBB2C4 /* ResponseShopGroupModel.m */,
 			);
 			name = Model;
 			path = ../Model;
@@ -2535,6 +2540,7 @@
 				0265957A1ED3D3D10016176A /* DeviceListTableViewController.m in Sources */,
 				026595721ED3D3D10016176A /* BindViewController.m in Sources */,
 				026595811ED3D3D10016176A /* UnBindViewController.m in Sources */,
+				027503B51FCBCC6000FBB2C4 /* ResponseShopGroupModel.m in Sources */,
 				0265956D1ED3D3D10016176A /* DashBoardWithListTableViewCell.m in Sources */,
 				026595841ED3D3D10016176A /* HomeViewController.m in Sources */,
 				0286A5131E96519900075582 /* UIButton+Util.m in Sources */,

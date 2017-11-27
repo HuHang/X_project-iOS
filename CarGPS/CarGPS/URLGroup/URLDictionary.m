@@ -134,7 +134,7 @@
  @return 监控
  */
 + (NSString *) allMonitorDevice_url{
-    NSString *url = @"/api/Shops/GetBindedGroupByShopsWithList";
+    NSString *url = @"/api/Shops/GetBindedGroupByShopsWithListAndLimit";
     return  [NSString stringWithFormat:@"%@%@",[self baseUrlWithPort],url];
 }
 
